@@ -5,10 +5,12 @@ import hashlib
 import hmac
 import secrets
 import smtplib
+import urllib.error
+import urllib.request
 from datetime import datetime, timedelta, timezone
+from email.mime.text import MIMEText
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from pathlib import Path
-from email.mime.text import MIMEText
 from urllib.parse import urlparse
 
 
@@ -36,6 +38,15 @@ DB_PATH = BASE_DIR / "database.sqlite"
 HOST = "0.0.0.0"
 PORT = int(os.environ.get("PORT", "3000"))
 OTP_EXP_MINUTES = 5
+
+# Modo recomendado: API de email (mais simples para configurar em produção)
+EMAIL_PROVIDER = os.environ.get("EMAIL_PROVIDER", "api").lower()
+EMAIL_API_URL = os.environ.get("EMAIL_API_URL", "https://api.brevo.com/v3/smtp/email")
+EMAIL_API_KEY = os.environ.get("EMAIL_API_KEY", "")
+EMAIL_API_SENDER_EMAIL = os.environ.get("EMAIL_API_SENDER_EMAIL", "")
+EMAIL_API_SENDER_NAME = os.environ.get("EMAIL_API_SENDER_NAME", "Gestão de Gastos")
+
+# Fallback SMTP (opcional)
 SMTP_HOST = os.environ.get("SMTP_HOST", "")
 SMTP_PORT = int(os.environ.get("SMTP_PORT", "587"))
 SMTP_USER = os.environ.get("SMTP_USER", "")
@@ -96,12 +107,53 @@ def generate_otp() -> str:
     return str(secrets.randbelow(900000) + 100000)
 
 
-def send_otp_email(target_email: str, otp_code: str):
+def send_otp_via_api(target_email: str, otp_code: str):
+    missing_fields = []
+    if not EMAIL_API_KEY:
+        missing_fields.append("EMAIL_API_KEY")
+    if not EMAIL_API_SENDER_EMAIL:
+        missing_fields.append("EMAIL_API_SENDER_EMAIL")
+
+    if missing_fields:
+        raise RuntimeError(f"Configuração da API de email ausente. Defina: {', '.join(missing_fields)}.")
+
+    payload = {
+        "sender": {"name": EMAIL_API_SENDER_NAME, "email": EMAIL_API_SENDER_EMAIL},
+        "to": [{"email": target_email}],
+        "subject": "Seu código OTP - Gestão de Gastos",
+        "textContent": (
+            f"Seu código OTP para login na Gestão de Gastos é: {otp_code}.\n\n"
+            f"Esse código expira em {OTP_EXP_MINUTES} minutos."
+        ),
+    }
+
+    request = urllib.request.Request(
+        EMAIL_API_URL,
+        data=json.dumps(payload).encode("utf-8"),
+        headers={
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+            "api-key": EMAIL_API_KEY,
+        },
+        method="POST",
+    )
+
+    try:
+        with urllib.request.urlopen(request, timeout=20) as response:
+            status = response.getcode()
+            if status < 200 or status >= 300:
+                raise RuntimeError(f"API de email retornou status {status}.")
+    except urllib.error.HTTPError as error:
+        details = error.read().decode("utf-8", errors="ignore")
+        raise RuntimeError(f"Falha na API de email (HTTP {error.code}): {details}") from error
+    except urllib.error.URLError as error:
+        raise RuntimeError(f"Não foi possível conectar na API de email: {error}") from error
+
+
+def send_otp_via_smtp(target_email: str, otp_code: str):
     missing_fields = []
     if not SMTP_HOST:
         missing_fields.append("SMTP_HOST")
-    if not SMTP_PORT:
-        missing_fields.append("SMTP_PORT")
     if not SMTP_SENDER:
         missing_fields.append("SMTP_SENDER")
 
@@ -112,8 +164,7 @@ def send_otp_email(target_email: str, otp_code: str):
             missing_fields.append("SMTP_PASSWORD")
 
     if missing_fields:
-        missing_csv = ", ".join(missing_fields)
-        raise RuntimeError(f"Configuração SMTP ausente. Defina: {missing_csv}.")
+        raise RuntimeError(f"Configuração SMTP ausente. Defina: {', '.join(missing_fields)}.")
 
     body = (
         "Seu código OTP para login na Gestão de Gastos é: "
@@ -131,6 +182,18 @@ def send_otp_email(target_email: str, otp_code: str):
         if SMTP_REQUIRE_AUTH:
             smtp.login(SMTP_USER, SMTP_PASSWORD)
         smtp.sendmail(SMTP_SENDER, [target_email], message.as_string())
+
+
+def send_otp_email(target_email: str, otp_code: str):
+    if EMAIL_PROVIDER == "smtp":
+        send_otp_via_smtp(target_email, otp_code)
+        return
+
+    if EMAIL_PROVIDER == "api":
+        send_otp_via_api(target_email, otp_code)
+        return
+
+    raise RuntimeError("EMAIL_PROVIDER inválido. Use 'api' ou 'smtp'.")
 
 
 class RequestHandler(BaseHTTPRequestHandler):
@@ -245,7 +308,7 @@ class RequestHandler(BaseHTTPRequestHandler):
             self._json_response(
                 200,
                 {
-                    "message": f"OTP gerado. Validade de {OTP_EXP_MINUTES} minutos.",
+                    "message": f"OTP enviado por email. Validade de {OTP_EXP_MINUTES} minutos.",
                 },
             )
             return
@@ -313,24 +376,40 @@ class RequestHandler(BaseHTTPRequestHandler):
         self._serve_file(target)
 
 
+def startup_email_warning() -> str:
+    if EMAIL_PROVIDER == "api":
+        missing = []
+        if not EMAIL_API_KEY:
+            missing.append("EMAIL_API_KEY")
+        if not EMAIL_API_SENDER_EMAIL:
+            missing.append("EMAIL_API_SENDER_EMAIL")
+        if missing:
+            return "[AVISO] API de email incompleta. Configure: " + ", ".join(missing)
+        return ""
+
+    if EMAIL_PROVIDER == "smtp":
+        missing = []
+        if not SMTP_HOST:
+            missing.append("SMTP_HOST")
+        if not SMTP_SENDER:
+            missing.append("SMTP_SENDER")
+        if SMTP_REQUIRE_AUTH and not SMTP_USER:
+            missing.append("SMTP_USER")
+        if SMTP_REQUIRE_AUTH and not SMTP_PASSWORD:
+            missing.append("SMTP_PASSWORD")
+        if missing:
+            return "[AVISO] SMTP incompleto. Configure: " + ", ".join(missing)
+        return ""
+
+    return "[AVISO] EMAIL_PROVIDER inválido. Use 'api' ou 'smtp'."
+
+
 if __name__ == "__main__":
     init_db()
 
-    smtp_missing = []
-    if not SMTP_HOST:
-        smtp_missing.append("SMTP_HOST")
-    if not SMTP_SENDER:
-        smtp_missing.append("SMTP_SENDER")
-    if SMTP_REQUIRE_AUTH and not SMTP_USER:
-        smtp_missing.append("SMTP_USER")
-    if SMTP_REQUIRE_AUTH and not SMTP_PASSWORD:
-        smtp_missing.append("SMTP_PASSWORD")
-
-    if smtp_missing:
-        print(
-            "[AVISO] SMTP incompleto. Configure: " + ", ".join(smtp_missing) + ". "
-            "O login com OTP por email retornará erro até isso ser configurado."
-        )
+    warning = startup_email_warning()
+    if warning:
+        print(warning + ". O login com OTP retornará erro até corrigir.")
 
     server = HTTPServer((HOST, PORT), RequestHandler)
     print(f"Servidor Python executando em http://localhost:{PORT}")
