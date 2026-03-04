@@ -1,9 +1,0 @@
-{
-  "name": "gestaogastos",
-  "version": "1.0.0",
-  "description": "Aplicação inicial para Gestão de Gastos com splash e login OTP",
-  "main": "server.js",
-  "scripts": {
-    "start": "node server.js"
-  }
-}
