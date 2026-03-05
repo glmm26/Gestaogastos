@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gestao de Gastos</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <section id="splash" class="splash active">
+      <div class="logo-wrap">
+        <h1>Gestao de Gastos</h1>
+        <p>Controle financeiro simples e seguro</p>
+        <button id="enter-app">Acessar</button>
+      </div>
+    </section>
+
+    <main id="auth-screen" class="auth-screen hidden">
+      <div class="auth-card">
+        <h2>Bem-vindo</h2>
+        <p class="subtitle">Crie sua conta ou faca login para acessar seu painel.</p>
+
+        <div class="tabs">
+          <button id="tab-register" class="tab active">Cadastro</button>
+          <button id="tab-login" class="tab">Login</button>
+        </div>
+
+        <form id="register-form" class="form active">
+          <label for="register-email">Email</label>
+          <input id="register-email" type="email" required />
+
+          <label for="register-password">Senha</label>
+          <input id="register-password" type="password" minlength="6" required />
+
+          <button type="submit">Criar conta</button>
+        </form>
+
+        <form id="login-form" class="form">
+          <label for="login-email">Email</label>
+          <input id="login-email" type="email" required />
+
+          <label for="login-password">Senha</label>
+          <input id="login-password" type="password" required />
+
+          <button type="submit">Entrar</button>
+        </form>
+
+        <p id="auth-message" class="message"></p>
+      </div>
+    </main>
+
+    <main id="verify-screen" class="verify-screen hidden">
+      <section class="verify-card">
+        <h2>Verificacao de email</h2>
+        <p class="subtitle">Digite o codigo de 6 digitos enviado para seu email.</p>
+
+        <form id="verify-email-form" class="verify-form">
+          <label for="verify-email">Email</label>
+          <input id="verify-email" type="email" required />
+
+          <label>Codigo</label>
+          <div id="otp-inputs" class="otp-inputs">
+            <input class="otp-digit" type="text" inputmode="numeric" maxlength="1" required />
+            <input class="otp-digit" type="text" inputmode="numeric" maxlength="1" required />
+            <input class="otp-digit" type="text" inputmode="numeric" maxlength="1" required />
+            <input class="otp-digit" type="text" inputmode="numeric" maxlength="1" required />
+            <input class="otp-digit" type="text" inputmode="numeric" maxlength="1" required />
+            <input class="otp-digit" type="text" inputmode="numeric" maxlength="1" required />
+          </div>
+
+          <button type="submit">Verificar codigo</button>
+          <button type="button" id="back-to-login" class="secondary">Voltar para login</button>
+        </form>
+
+        <p id="verify-message" class="message"></p>
+      </section>
+    </main>
+
+    <main id="home-screen" class="home-screen hidden">
+      <section class="dashboard-shell">
+        <header class="topbar">
+          <div>
+            <p class="kicker">PAINEL FINANCEIRO</p>
+            <h2>Painel Inicial</h2>
+            <p id="home-user-email" class="topbar-email"></p>
+          </div>
+          <button id="logout-button" class="secondary">Sair</button>
+        </header>
+
+        <section class="stats-grid">
+          <article id="income-card" class="stat-card income clickable-card">
+            <p>Entradas no mes</p>
+            <h3 id="income-total">R$ 0,00</h3>
+            <span>Valores recebidos cadastrados</span>
+          </article>
+          <article id="expense-card" class="stat-card expense clickable-card">
+            <p>Saidas no mes</p>
+            <h3 id="expense-total">R$ 0,00</h3>
+            <span>Valores gastos cadastrados</span>
+          </article>
+          <article class="stat-card balance">
+            <p>Saldo atual</p>
+            <h3 id="balance-total">R$ 0,00</h3>
+            <span>Entradas - Saidas</span>
+          </article>
+        </section>
+
+        <section class="dashboard-grid">
+          <article class="panel">
+            <h3 id="transactions-title">Ultimas movimentacoes</h3>
+            <ul id="transaction-list" class="transaction-list"></ul>
+          </article>
+
+          <article class="panel">
+            <h3>Adicionar movimentacao</h3>
+            <form id="transaction-form" class="transaction-form">
+              <label for="transaction-type">Tipo</label>
+              <select id="transaction-type" required>
+                <option value="income">Dinheiro recebido</option>
+                <option value="expense">Dinheiro gasto</option>
+              </select>
+
+              <label for="transaction-amount">Valor (R$)</label>
+              <input id="transaction-amount" type="number" min="0.01" step="0.01" required />
+
+              <label for="transaction-description">Descricao</label>
+              <input id="transaction-description" type="text" maxlength="120" placeholder="Ex: Salario, Mercado..." />
+
+              <button type="submit">Adicionar</button>
+            </form>
+            <p id="transaction-message" class="message"></p>
+          </article>
+        </section>
+      </section>
+    </main>
+
+    <script src="app.js"></script>
+  </body>
+</html>
