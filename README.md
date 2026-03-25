@@ -1,85 +1,128 @@
 # Gestao de Gastos
 
-Aplicacao web de painel financeiro com:
+Aplicacao web de gestao financeira com foco em simplicidade para iniciantes. O projeto roda com backend Node.js em `server.js`, persistencia local em `database.json` e interface SPA em HTML, CSS e JavaScript.
 
-- Splash screen e autenticacao com OTP de cadastro
-- Dashboard com saldo, entradas, saidas e graficos
-- Pagina de movimentacoes com categorias, filtros e cadastro
-- Pagina de investimentos com lucro/prejuizo e evolucao
-- Pagina de relatorios mensais com insights e exportacao HTML
+## O que o sistema oferece
 
-## Estrutura
+- Splash screen com progresso automatico e entrada para o painel
+- Cadastro com confirmacao por OTP enviado por email
+- Login com bloqueio ate a confirmacao do cadastro
+- Dashboard com resumo financeiro e graficos
+- Movimentacoes com cadastro, edicao, exclusao e filtros
+- Investimentos com simulacao guiada por perfil de risco
+- Relatorios com resumo mensal e grafico de pizza
+- Simulador de imposto de renda com aviso inicial e grafico simples
 
-- `server.js`: servidor HTTP e API
-- `db.js`: persistencia local em `database.json`
-- `public/index.html`: SPA com secoes Dashboard, Movimentacoes, Investimentos e Relatorios
+## Estrutura do projeto
+
+- `server.js`: servidor HTTP e API principal
+- `db.js`: leitura e escrita em `database.json`
+- `database.json`: base local usada pela aplicacao
+- `public/index.html`: estrutura da interface
 - `public/app.js`: logica do front-end
-- `public/styles.css`: interface da aplicacao
+- `public/styles.css`: estilos da aplicacao
+- `.env.example`: exemplo de configuracao de ambiente
+
+## Requisitos
+
+- Node.js 18 ou superior
 
 ## Como executar
 
-1. Opcional: copie o exemplo de ambiente
+1. Copie o arquivo de ambiente, se quiser configurar envio real de email:
 
 ```powershell
 copy .env.example .env
 ```
 
-2. Inicie o servidor
+2. Instale dependencias, se necessario:
 
 ```powershell
-node server.js
+npm install
 ```
 
-3. Abra no navegador
+3. Inicie o servidor:
+
+```powershell
+npm start
+```
+
+4. Abra no navegador:
 
 ```text
 http://localhost:3000
 ```
 
-## Fluxo de uso
+## Fluxo principal
 
-1. Crie uma conta com email e senha
-2. Confirme o cadastro com o OTP enviado por email
-3. Faca login com o mesmo email e senha
-4. Navegue entre:
+1. A splash screen aparece automaticamente ao abrir o sistema
+2. O usuario cria uma conta com email e senha
+3. O sistema envia um OTP para confirmar o cadastro
+4. Depois da confirmacao, o usuario faz login
+5. A navegacao libera acesso a:
    - `Dashboard`
    - `Movimentacoes`
    - `Investimentos`
+   - `Impostos`
    - `Relatorios`
 
-## Funcionalidades principais
+## Funcionalidades por area
 
 ### Dashboard
 
-- Resumo financeiro do mes
-- Grafico de pizza por categoria
-- Grafico de barras de entradas vs saidas
-- Ultimas movimentacoes
+- Saldo atual, entradas e saidas
+- Grafico por categoria
+- Grafico comparando entradas e saidas
+- Lista das movimentacoes recentes
 
 ### Movimentacoes
 
-- Cadastro com tipo, valor, data, categoria e observacoes
-- Categorias padrao: `Salario`, `Alimentacao`, `Transporte`, `Lazer`, `Moradia`, `Outros`
-- Categorias personalizadas
+- Cadastro de receitas e despesas
+- Categorias padrao e personalizadas
+- Edicao e exclusao de registros
 - Filtros por tipo, categoria e periodo
 
 ### Investimentos
 
-- Cadastro com tipo, valor, data e rentabilidade
-- Total investido
-- Lucro/prejuizo estimado
-- Grafico de evolucao
+- Simulacao simples por valor mensal
+- Escolha de perfil:
+  - `Baixo risco`: 8% ao ano
+  - `Medio risco`: 12% ao ano
+  - `Alto risco`: 18% ao ano
+- Escolha de prazo com botoes
+- Grafico de crescimento do dinheiro
+- Lista de simulacoes salvas com detalhes, edicao e exclusao
+
+### Impostos
+
+- Simulador simples de imposto de renda
+- Aviso inicial com opcao de nao mostrar novamente
+- Campos para renda, outras rendas, dependentes, saude e educacao
+- Resultado com faixa, aliquota, imposto estimado e renda liquida
+- Sugestoes educativas e modal com dicas para reduzir imposto
 
 ### Relatorios
 
-- Geracao manual por mes
-- Atualizacao automatica com base nos dados salvos
-- Totais do mes, categorias principais e insights
-- Exportacao em HTML
+- Resumo geral do periodo
+- Totais de entrada e saida
+- Grafico de pizza por categoria
+- Insights simples para leitura rapida
 
-## Observacoes
+## OTP e email
 
-- Os dados ficam salvos localmente em `database.json`
-- O front usa `Chart.js` via CDN
-- A API manteve compatibilidade com `/api/verify-email` e `/api/verify-otp`
+O projeto usa confirmacao por OTP no cadastro. O envio tenta usar as variaveis de ambiente configuradas para email. Se o servico de email nao estiver disponivel, o backend pode retornar `devOtp` para testes locais.
+
+## Observacoes importantes
+
 - O backend ativo do projeto e `server.js`
+- O antigo `app.py` nao faz parte do fluxo atual
+- Os dados ficam salvos localmente em `database.json`
+- Os graficos usam `Chart.js` carregado no front-end
+
+## Scripts
+
+```json
+{
+  "start": "node server.js"
+}
+```
