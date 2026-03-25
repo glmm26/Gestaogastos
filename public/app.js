@@ -71,6 +71,21 @@ const investmentYearsButtons = Array.from(document.querySelectorAll('[data-inves
 const riskProfileHelp = document.getElementById('risk-profile-help');
 const investmentHeadline = document.getElementById('investment-headline');
 const investmentSubheadline = document.getElementById('investment-subheadline');
+const goalForm = document.getElementById('goal-form');
+const goalMessage = document.getElementById('goal-message');
+const goalsList = document.getElementById('goals-list');
+const goalSubmitButton = document.getElementById('goal-submit-button');
+const cancelGoalEditButton = document.getElementById('cancel-goal-edit');
+const goalNameInput = document.getElementById('goal-name');
+const goalTargetInput = document.getElementById('goal-target');
+const goalCurrentInput = document.getElementById('goal-current');
+const goalDueDateInput = document.getElementById('goal-due-date');
+const goalCategoryInput = document.getElementById('goal-category');
+const goalFilterButtons = Array.from(document.querySelectorAll('[data-goal-filter]'));
+const goalsTotalCount = document.getElementById('goals-total-count');
+const goalsProgressCount = document.getElementById('goals-progress-count');
+const goalsCompletedCount = document.getElementById('goals-completed-count');
+const goalsFailedCount = document.getElementById('goals-failed-count');
 const taxForm = document.getElementById('tax-form');
 const clearTaxFormButton = document.getElementById('clear-tax-form');
 const taxMessage = document.getElementById('tax-message');
@@ -98,12 +113,15 @@ const reportForm = document.getElementById('report-form');
 const reportMonthInput = document.getElementById('report-month');
 const reportMessage = document.getElementById('report-message');
 const exportReportButton = document.getElementById('export-report');
+const exportReportPdfButton = document.getElementById('export-report-pdf');
 const reportsHistory = document.getElementById('reports-history');
 const reportTitle = document.getElementById('report-title');
 const reportIncome = document.getElementById('report-income');
 const reportExpense = document.getElementById('report-expense');
 const reportBalance = document.getElementById('report-balance');
 const reportTransactionsCount = document.getElementById('report-transactions-count');
+const reportGoalsCount = document.getElementById('report-goals-count');
+const reportGoalsCompleted = document.getElementById('report-goals-completed');
 const reportTopCategories = document.getElementById('report-top-categories');
 const reportInsights = document.getElementById('report-insights');
 
@@ -113,9 +131,12 @@ let categoriesCache = [];
 let selectedReportMonth = new Date().toISOString().slice(0, 7);
 let editingTransactionId = null;
 let editingInvestmentId = null;
+let editingGoalId = null;
 let selectedInvestmentViewId = null;
 let selectedRiskProfile = 'low';
 let selectedInvestmentYears = 3;
+let selectedGoalFilter = 'all';
+let goalCelebrationId = null;
 let pendingSectionAfterWarning = null;
 const chartInstances = {};
 let authParticlesAnimationId = null;
@@ -169,6 +190,10 @@ function showTransactionMessage(text, type = '') {
 
 function showInvestmentMessage(text, type = '') {
   showMessage(investmentMessage, text, type);
+}
+
+function showGoalMessage(text, type = '') {
+  showMessage(goalMessage, text, type);
 }
 
 function showReportMessage(text, type = '') {
@@ -445,6 +470,7 @@ function showHome(email) {
   setActiveSection('dashboard-section');
   resetTransactionForm();
   resetInvestmentForm();
+  resetGoalForm();
   filtersForm.reset();
   reportMonthInput.value = selectedReportMonth;
   loadAllData();
@@ -487,6 +513,12 @@ function setInvestmentEditMode(item = null) {
   cancelInvestmentEditButton.classList.toggle('hidden', !item);
 }
 
+function setGoalEditMode(item = null) {
+  editingGoalId = item ? item.id : null;
+  goalSubmitButton.textContent = item ? 'Salvar alteracoes' : 'Salvar meta';
+  cancelGoalEditButton.classList.toggle('hidden', !item);
+}
+
 function resetTransactionForm() {
   transactionForm.reset();
   document.getElementById('transaction-date').value = new Date().toISOString().slice(0, 10);
@@ -502,6 +534,13 @@ function resetInvestmentForm() {
   syncInvestmentChoices();
   updateInvestmentPreview();
   setInvestmentEditMode();
+}
+
+function resetGoalForm() {
+  goalForm.reset();
+  goalCurrentInput.value = '0';
+  goalDueDateInput.value = new Date().toISOString().slice(0, 10);
+  setGoalEditMode();
 }
 
 function calculateInvestmentProjection(monthlyAmount, annualRate, years) {
@@ -827,6 +866,230 @@ function buildInvestmentSimulationItem(item) {
   return li;
 }
 
+function getGoalStatusMeta(status) {
+  if (status === 'completed') {
+    return { label: 'Meta concluida', className: 'is-completed', progressClass: 'is-completed' };
+  }
+  if (status === 'failed') {
+    return { label: 'Meta nao concluida', className: 'is-failed', progressClass: 'is-failed' };
+  }
+  return { label: 'Em andamento', className: 'is-progress', progressClass: 'is-progress' };
+}
+
+function createGoalConfettiPiece(index) {
+  const piece = document.createElement('span');
+  piece.className = 'goal-confetti-piece';
+  piece.style.setProperty('--goal-confetti-index', String(index));
+  piece.style.setProperty('--goal-confetti-rotate', `${index * 19}deg`);
+  return piece;
+}
+
+function triggerGoalCelebration(goalId) {
+  const goalCard = goalsList.querySelector(`[data-goal-id="${goalId}"]`);
+  if (!goalCard) return;
+
+  goalCard.classList.remove('is-celebrating');
+  void goalCard.offsetWidth;
+  goalCard.classList.add('is-celebrating');
+
+  const burst = document.createElement('div');
+  burst.className = 'goal-confetti-burst';
+  for (let index = 0; index < 12; index += 1) {
+    burst.appendChild(createGoalConfettiPiece(index));
+  }
+  goalCard.appendChild(burst);
+
+  window.setTimeout(() => {
+    goalCard.classList.remove('is-celebrating');
+    burst.remove();
+  }, 2600);
+}
+
+function buildGoalCard(item) {
+  const article = document.createElement('article');
+  const statusMeta = getGoalStatusMeta(item.status);
+  const progressValue = item.status === 'completed' ? 100 : item.progress;
+  article.className = `goal-card ${statusMeta.className}`;
+  article.dataset.goalId = String(item.id);
+
+  article.innerHTML = `
+    <div class="goal-card-header">
+      <div>
+        <p class="goal-badge">${item.category || 'Meta financeira'}</p>
+        <h4>${item.name}</h4>
+        <span class="goal-deadline">Prazo: ${formatDate(item.dueDate)}</span>
+      </div>
+      <strong class="goal-status">${statusMeta.label}</strong>
+    </div>
+    <div class="goal-amounts">
+      <span>${formatCurrency(item.currentAmount)} guardados</span>
+      <strong>${formatCurrency(item.targetAmount)}</strong>
+    </div>
+    <div class="goal-progress-track">
+      <div class="goal-progress-fill ${statusMeta.progressClass}" style="width: ${Math.min(progressValue, 100)}%"></div>
+    </div>
+    <div class="goal-progress-text">
+      <span>${progressValue.toFixed(1)}% do objetivo</span>
+      <span>${formatCurrency(item.targetAmount - item.currentAmount > 0 ? item.targetAmount - item.currentAmount : 0)} restantes</span>
+    </div>
+  `;
+
+  const addRow = document.createElement('div');
+  addRow.className = 'goal-add-row';
+
+  const addInput = document.createElement('input');
+  addInput.type = 'number';
+  addInput.min = '0.01';
+  addInput.step = '0.01';
+  addInput.placeholder = 'Adicionar valor';
+
+  const addButton = document.createElement('button');
+  addButton.type = 'button';
+  addButton.className = 'secondary';
+  addButton.textContent = 'Somar valor';
+  addButton.addEventListener('click', () => updateGoalProgress(item.id, addInput));
+
+  addRow.appendChild(addInput);
+  addRow.appendChild(addButton);
+  article.appendChild(addRow);
+
+  const actions = document.createElement('div');
+  actions.className = 'goal-card-actions';
+
+  const completeButton = document.createElement('button');
+  completeButton.type = 'button';
+  completeButton.className = `goal-status-button success-button${item.status === 'completed' ? ' is-active' : ''}`;
+  completeButton.textContent = '✔ Cumprida';
+  completeButton.addEventListener('click', () => updateGoalStatus(item, 'completed'));
+
+  const failButton = document.createElement('button');
+  failButton.type = 'button';
+  failButton.className = `goal-status-button fail-button${item.status === 'failed' ? ' is-active' : ''}`;
+  failButton.textContent = '✖ Nao cumprida';
+  failButton.addEventListener('click', () => updateGoalStatus(item, 'failed'));
+
+  const progressButton = document.createElement('button');
+  progressButton.type = 'button';
+  progressButton.className = `goal-status-button secondary${item.status === 'in_progress' ? ' is-active' : ''}`;
+  progressButton.textContent = '↺ Em andamento';
+  progressButton.addEventListener('click', () => updateGoalStatus(item, 'in_progress'));
+
+  const editButton = document.createElement('button');
+  editButton.type = 'button';
+  editButton.className = 'secondary';
+  editButton.textContent = 'Editar';
+  editButton.addEventListener('click', () => startGoalEdit(item));
+
+  const deleteButton = document.createElement('button');
+  deleteButton.type = 'button';
+  deleteButton.className = 'danger-button';
+  deleteButton.textContent = 'Excluir';
+  deleteButton.addEventListener('click', () => deleteGoal(item.id));
+
+  actions.appendChild(completeButton);
+  actions.appendChild(failButton);
+  actions.appendChild(progressButton);
+  actions.appendChild(editButton);
+  actions.appendChild(deleteButton);
+  article.appendChild(actions);
+
+  return article;
+}
+
+function renderGoals(data) {
+  goalsTotalCount.textContent = String(data.summary.total);
+  goalsProgressCount.textContent = String(data.summary.inProgress);
+  goalsCompletedCount.textContent = String(data.summary.completed);
+  goalsFailedCount.textContent = String(data.summary.failed);
+
+  goalFilterButtons.forEach((button) => {
+    button.classList.toggle('active', button.dataset.goalFilter === selectedGoalFilter);
+  });
+
+  goalsList.innerHTML = '';
+  if (!data.goals.length) {
+    goalsList.innerHTML = `
+      <article class="goal-card empty">
+        <h4>Nenhuma meta encontrada</h4>
+        <p>Crie uma meta nova ou mude o filtro para ver outros objetivos.</p>
+      </article>
+    `;
+    return;
+  }
+
+  data.goals.forEach((item) => {
+    goalsList.appendChild(buildGoalCard(item));
+  });
+
+  if (goalCelebrationId) {
+    const celebrationGoalId = goalCelebrationId;
+    goalCelebrationId = null;
+    window.requestAnimationFrame(() => triggerGoalCelebration(celebrationGoalId));
+  }
+}
+
+function startGoalEdit(item) {
+  goalNameInput.value = item.name;
+  goalTargetInput.value = item.targetAmount;
+  goalCurrentInput.value = item.currentAmount;
+  goalDueDateInput.value = item.dueDate;
+  goalCategoryInput.value = item.category || '';
+  setGoalEditMode(item);
+  goalForm.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+async function deleteGoal(id) {
+  if (!window.confirm('Deseja excluir esta meta?')) return;
+  try {
+    const data = await apiFetch(`/api/goals/${id}?email=${encodeURIComponent(currentUserEmail)}`, {
+      method: 'DELETE',
+    });
+    if (editingGoalId === id) resetGoalForm();
+    showGoalMessage(data.message, 'success');
+    await loadGoals();
+  } catch (error) {
+    showGoalMessage(error.message, 'error');
+  }
+}
+
+async function updateGoalStatus(item, status) {
+  try {
+    const data = await apiFetch(`/api/goals/${item.id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: currentUserEmail, status }),
+    });
+    if (status === 'completed' && item.status !== 'completed') {
+      goalCelebrationId = item.id;
+    }
+    showGoalMessage(data.message, 'success');
+    await loadGoals();
+  } catch (error) {
+    showGoalMessage(error.message, 'error');
+  }
+}
+
+async function updateGoalProgress(id, input) {
+  const value = Number(input.value || 0);
+  if (!Number.isFinite(value) || value <= 0) {
+    showGoalMessage('Digite um valor valido para somar na meta.', 'error');
+    return;
+  }
+
+  try {
+    const data = await apiFetch(`/api/goals/${id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: currentUserEmail, addAmount: value }),
+    });
+    input.value = '';
+    showGoalMessage(data.message, 'success');
+    await loadGoals();
+  } catch (error) {
+    showGoalMessage(error.message, 'error');
+  }
+}
+
 function startTransactionEdit(item) {
   document.getElementById('transaction-type').value = item.type;
   document.getElementById('transaction-amount').value = item.amount;
@@ -1053,6 +1316,13 @@ async function loadInvestments() {
   renderInvestments(await apiFetch(`/api/investments?email=${encodeURIComponent(currentUserEmail)}`));
 }
 
+async function loadGoals() {
+  const data = await apiFetch(
+    `/api/goals?email=${encodeURIComponent(currentUserEmail)}&status=${encodeURIComponent(selectedGoalFilter)}`
+  );
+  renderGoals(data);
+}
+
 function renderReports(data) {
   const report = data.selectedReport;
   selectedReportMonth = report.month;
@@ -1062,6 +1332,8 @@ function renderReports(data) {
   reportExpense.textContent = formatCurrency(report.summary.expense);
   reportBalance.textContent = formatCurrency(report.summary.balance);
   reportTransactionsCount.textContent = String(report.transactionsCount);
+  reportGoalsCount.textContent = String(report.goalsCount || 0);
+  reportGoalsCompleted.textContent = String(report.goalsSummary?.completed || 0);
 
   reportsHistory.innerHTML = '';
   data.reports.forEach((item) => {
@@ -1103,9 +1375,10 @@ async function loadAllData() {
   if (!currentUserEmail) return;
   try {
     await loadCategories();
-    await Promise.all([loadDashboard(), loadTransactions(), loadInvestments(), loadReports(selectedReportMonth)]);
+    await Promise.all([loadDashboard(), loadTransactions(), loadInvestments(), loadGoals(), loadReports(selectedReportMonth)]);
     showTransactionMessage('');
     showInvestmentMessage('');
+    showGoalMessage('');
     showReportMessage('');
   } catch (error) {
     showTransactionMessage(error.message, 'error');
@@ -1318,6 +1591,29 @@ investmentForm.addEventListener('submit', async (event) => {
   }
 });
 
+goalForm.addEventListener('submit', async (event) => {
+  event.preventDefault();
+  try {
+    const data = await apiFetch(editingGoalId ? `/api/goals/${editingGoalId}` : '/api/goals', {
+      method: editingGoalId ? 'PUT' : 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        email: currentUserEmail,
+        name: goalNameInput.value.trim(),
+        targetAmount: Number(goalTargetInput.value),
+        currentAmount: Number(goalCurrentInput.value || 0),
+        dueDate: goalDueDateInput.value,
+        category: goalCategoryInput.value.trim(),
+      }),
+    });
+    resetGoalForm();
+    showGoalMessage(data.message, 'success');
+    await loadGoals();
+  } catch (error) {
+    showGoalMessage(error.message, 'error');
+  }
+});
+
 cancelTransactionEditButton.addEventListener('click', () => {
   resetTransactionForm();
     showTransactionMessage('Edição cancelada.', 'success');
@@ -1326,6 +1622,11 @@ cancelTransactionEditButton.addEventListener('click', () => {
 cancelInvestmentEditButton.addEventListener('click', () => {
   resetInvestmentForm();
     showInvestmentMessage('Edição cancelada.', 'success');
+});
+
+cancelGoalEditButton.addEventListener('click', () => {
+  resetGoalForm();
+  showGoalMessage('Edicao cancelada.', 'success');
 });
 
 taxForm.addEventListener('submit', (event) => {
@@ -1381,6 +1682,17 @@ investmentYearsButtons.forEach((button) => {
 
 investmentAmountInput.addEventListener('input', updateInvestmentPreview);
 
+goalFilterButtons.forEach((button) => {
+  button.addEventListener('click', async () => {
+    selectedGoalFilter = button.dataset.goalFilter;
+    try {
+      await loadGoals();
+    } catch (error) {
+      showGoalMessage(error.message, 'error');
+    }
+  });
+});
+
 window.addEventListener('resize', () => {
   if (!authScreen.classList.contains('hidden')) {
     authParticlesState = createAuthParticlesState();
@@ -1426,8 +1738,18 @@ exportReportButton.addEventListener('click', () => {
   );
 });
 
+exportReportPdfButton.addEventListener('click', () => {
+  if (!currentUserEmail) return;
+  window.open(
+    `/api/reports/export.pdf?email=${encodeURIComponent(currentUserEmail)}&month=${encodeURIComponent(reportMonthInput.value)}`,
+    '_blank',
+    'noopener'
+  );
+});
+
 resetTransactionForm();
 resetInvestmentForm();
+resetGoalForm();
 resetTaxSimulation();
 hideTaxWarningCheckbox.checked = getTaxWarningHiddenPreference();
 hideTaxTipsModal();

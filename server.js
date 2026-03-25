@@ -51,6 +51,16 @@ function sendHtml(res, status, html) {
   res.end(html);
 }
 
+function sendPdf(res, status, pdfBuffer, filename = 'relatorio.pdf') {
+  res.writeHead(status, {
+    'Content-Type': 'application/pdf',
+    'Content-Disposition': `inline; filename="${filename}"`,
+    'Content-Length': pdfBuffer.length,
+    'Cache-Control': 'no-store',
+  });
+  res.end(pdfBuffer);
+}
+
 function parseBody(req) {
   return new Promise((resolve, reject) => {
     let body = '';
@@ -385,13 +395,59 @@ function normalizeInvestment(userId, investment) {
   };
 }
 
+function normalizeGoalStatus(value) {
+  const normalized = normalizeText(value, 'in_progress').toLowerCase();
+  if (normalized === 'completed' || normalized === 'failed' || normalized === 'in_progress') {
+    return normalized;
+  }
+  return 'in_progress';
+}
+
+function normalizeGoal(userId, goal) {
+  const createdAt = goal.createdAt || new Date().toISOString();
+  const targetAmount = Math.max(0.01, Number(Number(goal.targetAmount || 0).toFixed(2)) || 0.01);
+  const currentAmount = Math.max(0, Number(Number(goal.currentAmount || 0).toFixed(2)) || 0);
+  const progress = Math.min(100, Number(((currentAmount / targetAmount) * 100).toFixed(1)));
+  return {
+    id: goal.id,
+    userId,
+    name: normalizeText(goal.name, 'Meta financeira').slice(0, 80),
+    targetAmount,
+    currentAmount,
+    progress,
+    dueDate: normalizeDate(goal.dueDate || goal.date || createdAt),
+    category: normalizeText(goal.category).slice(0, 40),
+    status: normalizeGoalStatus(goal.status),
+    createdAt,
+    updatedAt: goal.updatedAt || createdAt,
+  };
+}
+
 function hydrateDatabase(db) {
   db.transactions = db.transactions.map((entry) => normalizeTransaction(entry.userId, entry));
   db.investments = db.investments.map((entry) => normalizeInvestment(entry.userId, entry));
+  db.goals = (db.goals || []).map((entry) => normalizeGoal(entry.userId, entry));
 
   db.transactions.forEach((entry) => {
     ensureCategory(db, entry.userId, entry.category);
   });
+}
+
+function buildGoalsPayload(goals, filter = 'all') {
+  const filteredGoals = goals
+    .filter((entry) => (filter && filter !== 'all' ? entry.status === filter : true))
+    .sort((a, b) => new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime());
+
+  return {
+    filter: filter || 'all',
+    summary: {
+      total: goals.length,
+      inProgress: goals.filter((entry) => entry.status === 'in_progress').length,
+      completed: goals.filter((entry) => entry.status === 'completed').length,
+      failed: goals.filter((entry) => entry.status === 'failed').length,
+    },
+    goals: filteredGoals,
+  };
 }
 
 function matchesPeriod(dateValue, period, startDate, endDate) {
@@ -529,7 +585,16 @@ function buildInvestmentEvolution(investments) {
   return points;
 }
 
-function buildInsights(summary, categoryBreakdown, investmentsSummary) {
+function buildGoalsSummary(goals) {
+  return {
+    total: goals.length,
+    completed: goals.filter((entry) => entry.status === 'completed').length,
+    failed: goals.filter((entry) => entry.status === 'failed').length,
+    inProgress: goals.filter((entry) => entry.status === 'in_progress').length,
+  };
+}
+
+function buildInsights(summary, categoryBreakdown, investmentsSummary, goalsSummary = { total: 0, completed: 0, failed: 0, inProgress: 0 }) {
   const insights = [];
   const topCategory = categoryBreakdown[0];
 
@@ -553,6 +618,14 @@ function buildInsights(summary, categoryBreakdown, investmentsSummary) {
     insights.push('Investindo aos poucos, seu dinheiro pode crescer ao longo do tempo.');
   }
 
+  if (goalsSummary.completed > 0) {
+    insights.push(`Voce concluiu ${goalsSummary.completed} meta${goalsSummary.completed > 1 ? 's' : ''} neste periodo.`);
+  }
+
+  if (goalsSummary.inProgress > 0) {
+    insights.push(`Ha ${goalsSummary.inProgress} meta${goalsSummary.inProgress > 1 ? 's' : ''} em andamento para acompanhar.`);
+  }
+
   if (!insights.length) {
     insights.push('Seu fluxo financeiro está equilibrado no período analisado.');
   }
@@ -566,11 +639,15 @@ function buildReportPayload(db, user, month) {
   const investments = db.investments
     .filter((entry) => entry.userId === user.id && getMonthKey(entry.date) === reportMonth)
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+  const goals = db.goals
+    .filter((entry) => entry.userId === user.id && getMonthKey(entry.dueDate) === reportMonth)
+    .sort((a, b) => new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime());
 
   const summary = buildTransactionSummary(transactions);
   const categoryBreakdown = buildCategoryBreakdown(transactions);
   const investmentsSummary = buildInvestmentSummary(investments);
-  const insights = buildInsights(summary, categoryBreakdown, investmentsSummary);
+  const goalsSummary = buildGoalsSummary(goals);
+  const insights = buildInsights(summary, categoryBreakdown, investmentsSummary, goalsSummary);
 
   return {
     month: reportMonth,
@@ -581,6 +658,8 @@ function buildReportPayload(db, user, month) {
     transactionsCount: transactions.length,
     investmentsCount: investments.length,
     investmentsSummary,
+    goalsCount: goals.length,
+    goalsSummary,
     insights,
     generatedAt: new Date().toISOString(),
   };
@@ -620,6 +699,10 @@ function refreshAutomaticReports(db, user) {
     .filter((entry) => entry.userId === user.id)
     .forEach((entry) => months.add(getMonthKey(entry.date)));
 
+  db.goals
+    .filter((entry) => entry.userId === user.id)
+    .forEach((entry) => months.add(getMonthKey(entry.dueDate)));
+
   months.add(new Date().toISOString().slice(0, 7));
 
   Array.from(months).forEach((month) => {
@@ -627,46 +710,455 @@ function refreshAutomaticReports(db, user) {
   });
 }
 
+const REPORT_EXPORT_COLORS = ['#38bdf8', '#34d399', '#f59e0b', '#fb7185', '#a78bfa'];
+
+function escapeHtml(value) {
+  return String(value || '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+function formatReportCurrency(value) {
+  return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(Number(value || 0));
+}
+
+function getReportChartEntries(report) {
+  const entries = report.payload.categoryBreakdown?.length
+    ? report.payload.categoryBreakdown.slice(0, 5)
+    : [{ category: 'Sem despesas', total: 0, percentage: 0 }];
+
+  return entries.map((entry, index) => ({
+    ...entry,
+    color: REPORT_EXPORT_COLORS[index % REPORT_EXPORT_COLORS.length],
+  }));
+}
+
+function buildReportChartSvg(report) {
+  const entries = getReportChartEntries(report);
+  const width = 760;
+  const rowHeight = 56;
+  const height = 72 + entries.length * rowHeight;
+  const labelX = 28;
+  const barX = 250;
+  const barWidth = 430;
+  const maxTotal = Math.max(...entries.map((entry) => entry.total), 1);
+
+  const rows = entries
+    .map((entry, index) => {
+      const y = 22 + index * rowHeight;
+      const currentBarWidth = entry.total > 0 ? Math.max((entry.total / maxTotal) * barWidth, 8) : 8;
+      return `
+        <text x="${labelX}" y="${y + 18}" fill="#dbe7ff" font-size="15" font-family="Arial, sans-serif">${escapeHtml(entry.category)}</text>
+        <text x="${labelX}" y="${y + 38}" fill="#8fa6c7" font-size="12" font-family="Arial, sans-serif">${escapeHtml(formatReportCurrency(entry.total))} (${entry.percentage}%)</text>
+        <rect x="${barX}" y="${y + 6}" rx="10" ry="10" width="${barWidth}" height="18" fill="rgba(255,255,255,0.08)"></rect>
+        <rect x="${barX}" y="${y + 6}" rx="10" ry="10" width="${currentBarWidth}" height="18" fill="${entry.color}"></rect>
+      `;
+    })
+    .join('');
+
+  return `
+    <svg viewBox="0 0 ${width} ${height}" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Distribuicao por categoria">
+      <rect width="${width}" height="${height}" rx="28" fill="#081223"></rect>
+      <text x="28" y="38" fill="#f8fbff" font-size="22" font-family="Arial, sans-serif">Distribuicao por categoria</text>
+      <text x="28" y="58" fill="#8fa6c7" font-size="13" font-family="Arial, sans-serif">Visual rapido das despesas do periodo selecionado</text>
+      ${rows}
+    </svg>
+  `;
+}
+
 function buildReportHtml(user, report) {
   const summary = report.payload.summary;
-  const topCategories = report.payload.topCategories
-    .map((entry) => `<li>${entry.category}: R$ ${entry.total.toFixed(2).replace('.', ',')} (${entry.percentage}%)</li>`)
-    .join('');
-  const insights = report.payload.insights.map((entry) => `<li>${entry}</li>`).join('');
+  const goalsSummary = report.payload.goalsSummary || { total: 0, completed: 0, failed: 0, inProgress: 0 };
+  const chartSvg = buildReportChartSvg(report);
+  const topCategories = report.payload.topCategories.length
+    ? report.payload.topCategories
+        .map(
+          (entry) =>
+            `<li><span>${escapeHtml(entry.category)}</span><strong>${escapeHtml(formatReportCurrency(entry.total))} (${entry.percentage}%)</strong></li>`
+        )
+        .join('')
+    : '<li><span>Sem despesas</span><strong>Sem dados</strong></li>';
+  const insights = report.payload.insights.length
+    ? report.payload.insights.map((entry) => `<li>${escapeHtml(entry)}</li>`).join('')
+    : '<li>Nenhum insight disponivel para este periodo.</li>';
 
   return `<!doctype html>
 <html lang="pt-BR">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Relatorio ${report.payload.label}</title>
+    <title>Relatorio ${escapeHtml(report.payload.label)}</title>
     <style>
-      body { font-family: Arial, sans-serif; background: #f5f7fb; color: #122033; margin: 0; padding: 32px; }
-      .sheet { max-width: 900px; margin: 0 auto; background: #fff; padding: 32px; border-radius: 18px; box-shadow: 0 12px 40px rgba(0,0,0,0.08); }
-      h1, h2 { margin: 0 0 12px; }
-      .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin: 24px 0; }
-      .card { padding: 16px; border-radius: 12px; background: #eff5ff; }
-      ul { padding-left: 18px; }
+      :root {
+        --bg: #eef4fb;
+        --sheet: #ffffff;
+        --ink: #102035;
+        --muted: #62748b;
+        --panel: #081223;
+        --line: rgba(15, 23, 42, 0.08);
+        --accent: #38bdf8;
+        --accent-soft: rgba(56, 189, 248, 0.16);
+        --success: #34d399;
+        --warm: #f59e0b;
+        --rose: #fb7185;
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        padding: 32px;
+        font-family: Arial, sans-serif;
+        background: radial-gradient(circle at top, #f8fbff 0%, var(--bg) 52%, #e6edf7 100%);
+        color: var(--ink);
+      }
+      .sheet {
+        max-width: 980px;
+        margin: 0 auto;
+        background: var(--sheet);
+        border: 1px solid var(--line);
+        border-radius: 28px;
+        overflow: hidden;
+        box-shadow: 0 24px 80px rgba(15, 23, 42, 0.12);
+      }
+      .hero {
+        padding: 36px 40px;
+        background: linear-gradient(135deg, #081223 0%, #10284c 55%, #13345d 100%);
+        color: #f8fbff;
+      }
+      .eyebrow {
+        margin: 0 0 10px;
+        color: #8dd7ff;
+        font-size: 12px;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+      }
+      .hero h1 {
+        margin: 0 0 10px;
+        font-size: 34px;
+      }
+      .hero p {
+        margin: 6px 0;
+        color: #d9e8ff;
+        font-size: 15px;
+      }
+      .content {
+        padding: 32px 40px 40px;
+      }
+      .stats {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 16px;
+        margin-bottom: 24px;
+      }
+      .stat-card {
+        padding: 18px;
+        border-radius: 20px;
+        background: linear-gradient(180deg, #ffffff 0%, #f5f9ff 100%);
+        border: 1px solid var(--line);
+      }
+      .stat-card span {
+        display: block;
+        color: var(--muted);
+        font-size: 13px;
+        margin-bottom: 8px;
+      }
+      .stat-card strong {
+        display: block;
+        font-size: 24px;
+        color: var(--ink);
+      }
+      .section-grid {
+        display: grid;
+        grid-template-columns: 1.3fr 0.9fr;
+        gap: 20px;
+        margin-bottom: 22px;
+      }
+      .panel {
+        border: 1px solid var(--line);
+        border-radius: 24px;
+        padding: 22px;
+        background: #fff;
+      }
+      .panel.dark {
+        background: transparent;
+        border: none;
+        padding: 0;
+      }
+      .panel h2 {
+        margin: 0 0 14px;
+        font-size: 22px;
+      }
+      .panel p.subtitle {
+        margin: -4px 0 18px;
+        color: var(--muted);
+      }
+      .category-list,
+      .insight-list {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+      }
+      .category-list li,
+      .insight-list li {
+        display: flex;
+        justify-content: space-between;
+        gap: 16px;
+        padding: 12px 0;
+        border-bottom: 1px solid var(--line);
+      }
+      .category-list li:last-child,
+      .insight-list li:last-child {
+        border-bottom: none;
+      }
+      .category-list span {
+        color: var(--ink);
+      }
+      .category-list strong,
+      .insight-list li {
+        color: var(--muted);
+      }
+      .footer-note {
+        margin-top: 18px;
+        color: var(--muted);
+        font-size: 12px;
+      }
+      @media print {
+        body { padding: 0; background: #fff; }
+        .sheet { box-shadow: none; border-radius: 0; border: none; }
+      }
+      @media (max-width: 880px) {
+        body { padding: 16px; }
+        .content { padding: 20px; }
+        .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        .section-grid { grid-template-columns: 1fr; }
+      }
     </style>
   </head>
   <body>
     <section class="sheet">
-      <h1>Relatorio mensal</h1>
-      <p><strong>Conta:</strong> ${user.email}</p>
-      <p><strong>Periodo:</strong> ${report.payload.label}</p>
-      <div class="grid">
-        <div class="card"><strong>Entradas</strong><br />R$ ${summary.income.toFixed(2).replace('.', ',')}</div>
-        <div class="card"><strong>Saidas</strong><br />R$ ${summary.expense.toFixed(2).replace('.', ',')}</div>
-        <div class="card"><strong>Saldo final</strong><br />R$ ${summary.balance.toFixed(2).replace('.', ',')}</div>
+      <header class="hero">
+        <p class="eyebrow">GESTAO FINANCEIRA</p>
+        <h1>Relatorio mensal</h1>
+        <p>Conta: ${escapeHtml(user.email)}</p>
+        <p>Periodo analisado: ${escapeHtml(report.payload.label)}</p>
+      </header>
+      <div class="content">
+        <section class="stats">
+          <article class="stat-card">
+            <span>Entradas</span>
+            <strong>${escapeHtml(formatReportCurrency(summary.income))}</strong>
+          </article>
+          <article class="stat-card">
+            <span>Saidas</span>
+            <strong>${escapeHtml(formatReportCurrency(summary.expense))}</strong>
+          </article>
+          <article class="stat-card">
+            <span>Saldo final</span>
+            <strong>${escapeHtml(formatReportCurrency(summary.balance))}</strong>
+          </article>
+          <article class="stat-card">
+            <span>Movimentacoes</span>
+            <strong>${escapeHtml(String(report.payload.transactionsCount))}</strong>
+          </article>
+          <article class="stat-card">
+            <span>Metas do periodo</span>
+            <strong>${escapeHtml(String(report.payload.goalsCount || 0))}</strong>
+          </article>
+          <article class="stat-card">
+            <span>Metas concluidas</span>
+            <strong>${escapeHtml(String(goalsSummary.completed || 0))}</strong>
+          </article>
+        </section>
+
+        <section class="section-grid">
+          <article class="panel dark">
+            ${chartSvg}
+          </article>
+          <article class="panel">
+            <h2>Categorias em destaque</h2>
+            <p class="subtitle">As categorias com maior peso nas despesas do periodo.</p>
+            <ul class="category-list">${topCategories}</ul>
+          </article>
+        </section>
+
+        <section class="panel">
+          <h2>Leitura automatica</h2>
+          <p class="subtitle">Resumo em linguagem simples para ajudar na interpretacao do periodo.</p>
+          <ul class="insight-list">${insights}</ul>
+          <p class="footer-note">Relatorio gerado em ${escapeHtml(
+            new Intl.DateTimeFormat('pt-BR', { dateStyle: 'short', timeStyle: 'short' }).format(new Date(report.payload.generatedAt))
+          )}</p>
+        </section>
       </div>
-      <h2>Categorias principais</h2>
-      <ul>${topCategories || '<li>Nenhuma despesa registrada no período.</li>'}</ul>
-      <h2>Insights automáticos</h2>
-      <ul>${insights}</ul>
-      <p><small>Relatorio gerado em ${new Intl.DateTimeFormat('pt-BR', { dateStyle: 'short', timeStyle: 'short' }).format(new Date(report.payload.generatedAt))}</small></p>
     </section>
   </body>
 </html>`;
+}
+
+function normalizePdfText(value) {
+  return String(value || '')
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^\x20-\x7E]/g, '')
+    .replace(/\\/g, '\\\\')
+    .replace(/\(/g, '\\(')
+    .replace(/\)/g, '\\)');
+}
+
+function formatPdfCurrency(value) {
+  return `R$ ${Number(value || 0).toFixed(2).replace('.', ',')}`;
+}
+
+function hexToPdfRgb(hex) {
+  const clean = String(hex || '#000000').replace('#', '');
+  const full = clean.length === 3 ? clean.split('').map((char) => char + char).join('') : clean;
+  const red = Number.parseInt(full.slice(0, 2), 16) / 255;
+  const green = Number.parseInt(full.slice(2, 4), 16) / 255;
+  const blue = Number.parseInt(full.slice(4, 6), 16) / 255;
+  return `${red.toFixed(3)} ${green.toFixed(3)} ${blue.toFixed(3)}`;
+}
+
+function pdfRect(x, y, width, height, color) {
+  return `${hexToPdfRgb(color)} rg\n${x} ${y} ${width} ${height} re f`;
+}
+
+function pdfText(x, y, text, size = 12, color = '#122033', font = 'F1') {
+  return `${hexToPdfRgb(color)} rg\nBT\n/${font} ${size} Tf\n1 0 0 1 ${x} ${y} Tm\n(${normalizePdfText(text)}) Tj\nET`;
+}
+
+function wrapPdfText(text, maxChars = 70) {
+  const words = String(text || '').split(/\s+/).filter(Boolean);
+  if (!words.length) return [''];
+
+  const lines = [];
+  let currentLine = words[0];
+
+  for (let index = 1; index < words.length; index += 1) {
+    const nextLine = `${currentLine} ${words[index]}`;
+    if (nextLine.length > maxChars) {
+      lines.push(currentLine);
+      currentLine = words[index];
+    } else {
+      currentLine = nextLine;
+    }
+  }
+
+  lines.push(currentLine);
+  return lines;
+}
+
+function buildPdfDocument(pageStreams) {
+  const objects = [];
+  const pageObjectNumbers = [];
+  const regularFontObjectNumber = 3 + pageStreams.length * 2;
+  const boldFontObjectNumber = regularFontObjectNumber + 1;
+
+  objects[1] = '<< /Type /Catalog /Pages 2 0 R >>';
+
+  pageStreams.forEach((stream, index) => {
+    const pageObjectNumber = 3 + index * 2;
+    const contentObjectNumber = pageObjectNumber + 1;
+    pageObjectNumbers.push(pageObjectNumber);
+
+    objects[pageObjectNumber] =
+      `<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 ${regularFontObjectNumber} 0 R /F2 ${boldFontObjectNumber} 0 R >> >> /Contents ${contentObjectNumber} 0 R >>`;
+    objects[contentObjectNumber] =
+      `<< /Length ${Buffer.byteLength(stream, 'latin1')} >>\nstream\n${stream}\nendstream`;
+  });
+
+  objects[2] = `<< /Type /Pages /Kids [${pageObjectNumbers.map((num) => `${num} 0 R`).join(' ')}] /Count ${pageObjectNumbers.length} >>`;
+  objects[regularFontObjectNumber] = '<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>';
+  objects[boldFontObjectNumber] = '<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>';
+
+  let pdf = '%PDF-1.4\n';
+  const offsets = [0];
+
+  for (let i = 1; i < objects.length; i += 1) {
+    if (!objects[i]) continue;
+    offsets[i] = Buffer.byteLength(pdf, 'latin1');
+    pdf += `${i} 0 obj\n${objects[i]}\nendobj\n`;
+  }
+
+  const xrefOffset = Buffer.byteLength(pdf, 'latin1');
+  pdf += `xref\n0 ${objects.length}\n`;
+  pdf += '0000000000 65535 f \n';
+
+  for (let i = 1; i < objects.length; i += 1) {
+    pdf += `${String(offsets[i] || 0).padStart(10, '0')} 00000 n \n`;
+  }
+
+  pdf += `trailer\n<< /Size ${objects.length} /Root 1 0 R >>\nstartxref\n${xrefOffset}\n%%EOF`;
+  return Buffer.from(pdf, 'latin1');
+}
+
+function buildReportPdf(user, report) {
+  const summary = report.payload.summary;
+  const goalsSummary = report.payload.goalsSummary || { total: 0, completed: 0, failed: 0, inProgress: 0 };
+  const chartEntries = getReportChartEntries(report);
+  const generatedAt = new Intl.DateTimeFormat('pt-BR', { dateStyle: 'short', timeStyle: 'short' }).format(
+    new Date(report.payload.generatedAt)
+  );
+  const commands = [];
+
+  commands.push(pdfRect(0, 0, 595, 842, '#eef4fb'));
+  commands.push(pdfRect(28, 700, 539, 108, '#0b1730'));
+  commands.push(pdfText(48, 776, 'RELATORIO MENSAL', 11, '#8dd7ff', 'F2'));
+  commands.push(pdfText(48, 742, 'Resumo financeiro do periodo', 24, '#f8fbff', 'F2'));
+  commands.push(pdfText(48, 720, `Conta: ${user.email}`, 11, '#dbe7ff'));
+  commands.push(pdfText(48, 702, `Periodo: ${report.payload.label}`, 11, '#dbe7ff'));
+
+  const cards = [
+    { label: 'Entradas', value: formatPdfCurrency(summary.income) },
+    { label: 'Saidas', value: formatPdfCurrency(summary.expense) },
+    { label: 'Saldo final', value: formatPdfCurrency(summary.balance) },
+    { label: 'Movimentacoes', value: String(report.payload.transactionsCount) },
+    { label: 'Metas do periodo', value: String(report.payload.goalsCount || 0) },
+    { label: 'Metas concluidas', value: String(goalsSummary.completed || 0) },
+  ];
+
+  cards.forEach((card, index) => {
+    const x = 28 + (index % 3) * 177;
+    const y = index < 3 ? 610 : 526;
+    commands.push(pdfRect(x, y, 165, 70, '#ffffff'));
+    commands.push(pdfText(x + 14, y + 45, card.label, 10, '#62748b'));
+    commands.push(pdfText(x + 14, y + 18, card.value, 17, '#102035', 'F2'));
+  });
+
+  commands.push(pdfRect(28, 236, 539, 270, '#ffffff'));
+  commands.push(pdfText(46, 565, 'Distribuicao por categoria', 18, '#102035', 'F2'));
+  commands.push(pdfText(46, 547, 'Grafico resumido das despesas do periodo', 10, '#62748b'));
+
+  const maxTotal = Math.max(...chartEntries.map((entry) => entry.total), 1);
+  chartEntries.forEach((entry, index) => {
+    const rowY = 421 - index * 46;
+    const barWidth = entry.total > 0 ? Math.max((entry.total / maxTotal) * 245, 10) : 10;
+    commands.push(pdfText(46, rowY + 12, entry.category, 10, '#102035', 'F2'));
+    commands.push(pdfText(46, rowY - 4, `${formatPdfCurrency(entry.total)} (${entry.percentage}%)`, 9, '#62748b'));
+    commands.push(pdfRect(262, rowY + 2, 250, 14, '#dbe7ff'));
+    commands.push(pdfRect(262, rowY + 2, barWidth, 14, entry.color));
+  });
+
+  commands.push(pdfRect(28, 24, 539, 188, '#ffffff'));
+  commands.push(pdfText(46, 187, 'Leitura automatica', 18, '#102035', 'F2'));
+  commands.push(pdfText(46, 169, 'Mensagens simples para ajudar na interpretacao', 10, '#62748b'));
+
+  let currentY = 140;
+  const insightItems = report.payload.insights.length ? report.payload.insights : ['Nenhum insight disponivel para este periodo.'];
+
+  insightItems.slice(0, 4).forEach((entry) => {
+    const wrappedLines = wrapPdfText(`- ${entry}`, 78);
+    wrappedLines.forEach((line) => {
+      commands.push(pdfText(46, currentY, line, 11, '#334155'));
+      currentY -= 16;
+    });
+    currentY -= 10;
+  });
+
+  commands.push(pdfText(46, 44, `Relatorio gerado em ${generatedAt}`, 9, '#62748b'));
+
+  return buildPdfDocument([commands.join('\n')]);
 }
 
 function getDashboardPayload(db, userId) {
@@ -688,6 +1180,7 @@ async function handleApi(req, res) {
   const route = parsedUrl.pathname;
   const transactionMatch = route.match(/^\/api\/transactions\/(\d+)$/);
   const investmentMatch = route.match(/^\/api\/investments\/(\d+)$/);
+  const goalMatch = route.match(/^\/api\/goals\/(\d+)$/);
   const db = readDatabase();
   hydrateDatabase(db);
 
@@ -1076,6 +1569,133 @@ async function handleApi(req, res) {
     return;
   }
 
+  if (req.method === 'POST' && route === '/api/goals') {
+    const { email, name, targetAmount, currentAmount, dueDate, category } = await parseBody(req);
+    const user = getUserByEmail(db, email);
+    const numericTargetAmount = Number(targetAmount);
+    const numericCurrentAmount = Number(currentAmount || 0);
+
+    if (!user) {
+      sendJson(res, 404, { message: 'UsuÃ¡rio nÃ£o encontrado.' });
+      return;
+    }
+
+    if (!normalizeText(name)) {
+      sendJson(res, 400, { message: 'Informe o nome da meta.' });
+      return;
+    }
+
+    if (!Number.isFinite(numericTargetAmount) || numericTargetAmount <= 0) {
+      sendJson(res, 400, { message: 'Informe um valor alvo vÃ¡lido.' });
+      return;
+    }
+
+    if (!Number.isFinite(numericCurrentAmount) || numericCurrentAmount < 0) {
+      sendJson(res, 400, { message: 'Informe um valor atual vÃ¡lido.' });
+      return;
+    }
+
+    db.goals.push({
+      id: db.counters.goalId++,
+      userId: user.id,
+      name: normalizeText(name).slice(0, 80),
+      targetAmount: Number(numericTargetAmount.toFixed(2)),
+      currentAmount: Number(numericCurrentAmount.toFixed(2)),
+      dueDate: normalizeDate(dueDate),
+      category: normalizeText(category).slice(0, 40),
+      status: 'in_progress',
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    });
+
+    hydrateDatabase(db);
+    writeDatabase(db);
+    sendJson(res, 201, { message: 'Meta criada com sucesso.' });
+    return;
+  }
+
+  if (req.method === 'GET' && route === '/api/goals') {
+    const user = getUserByEmail(db, parsedUrl.searchParams.get('email'));
+    if (!user) {
+      sendJson(res, 404, { message: 'UsuÃ¡rio nÃ£o encontrado.' });
+      return;
+    }
+
+    const filter = normalizeText(parsedUrl.searchParams.get('status'), 'all');
+    const goals = db.goals.filter((entry) => entry.userId === user.id);
+    writeDatabase(db);
+    sendJson(res, 200, buildGoalsPayload(goals, filter));
+    return;
+  }
+
+  if ((req.method === 'PUT' || req.method === 'DELETE') && goalMatch) {
+    const goalId = Number(goalMatch[1]);
+    const data = req.method === 'DELETE' ? { email: parsedUrl.searchParams.get('email') } : await parseBody(req);
+    const user = getUserByEmail(db, data.email);
+
+    if (!user) {
+      sendJson(res, 404, { message: 'UsuÃ¡rio nÃ£o encontrado.' });
+      return;
+    }
+
+    const index = db.goals.findIndex((entry) => entry.id === goalId && entry.userId === user.id);
+    if (index === -1) {
+      sendJson(res, 404, { message: 'Meta nÃ£o encontrada.' });
+      return;
+    }
+
+    if (req.method === 'DELETE') {
+      db.goals.splice(index, 1);
+      writeDatabase(db);
+      sendJson(res, 200, { message: 'Meta excluÃ­da com sucesso.' });
+      return;
+    }
+
+    const existing = db.goals[index];
+    const hasAddAmount = data.addAmount !== undefined && data.addAmount !== null && data.addAmount !== '';
+    const addAmount = Number(data.addAmount || 0);
+    const hasCurrentAmount = data.currentAmount !== undefined && data.currentAmount !== null && data.currentAmount !== '';
+    const nextCurrentAmount = hasCurrentAmount
+      ? Number(data.currentAmount)
+      : hasAddAmount
+        ? Number(existing.currentAmount) + addAmount
+        : Number(existing.currentAmount);
+    const nextTargetAmount = data.targetAmount !== undefined ? Number(data.targetAmount) : Number(existing.targetAmount);
+
+    if (!Number.isFinite(nextTargetAmount) || nextTargetAmount <= 0) {
+      sendJson(res, 400, { message: 'Informe um valor alvo vÃ¡lido.' });
+      return;
+    }
+
+    if (!Number.isFinite(nextCurrentAmount) || nextCurrentAmount < 0) {
+      sendJson(res, 400, { message: 'Informe um valor atual vÃ¡lido.' });
+      return;
+    }
+
+    if (hasAddAmount && (!Number.isFinite(addAmount) || addAmount <= 0)) {
+      sendJson(res, 400, { message: 'Informe um valor para adicionar que seja vÃ¡lido.' });
+      return;
+    }
+
+    db.goals[index] = normalizeGoal(user.id, {
+      ...existing,
+      name: data.name !== undefined ? normalizeText(data.name, existing.name).slice(0, 80) : existing.name,
+      targetAmount: Number(nextTargetAmount.toFixed(2)),
+      currentAmount: Number(nextCurrentAmount.toFixed(2)),
+      dueDate: data.dueDate !== undefined ? normalizeDate(data.dueDate) : existing.dueDate,
+      category: data.category !== undefined ? normalizeText(data.category).slice(0, 40) : existing.category,
+      status: data.status !== undefined ? normalizeGoalStatus(data.status) : existing.status,
+      updatedAt: new Date().toISOString(),
+    });
+
+    writeDatabase(db);
+    sendJson(res, 200, {
+      message: hasAddAmount ? 'Progresso da meta atualizado com sucesso.' : 'Meta atualizada com sucesso.',
+      goal: db.goals[index],
+    });
+    return;
+  }
+
   if (req.method === 'POST' && route === '/api/reports/generate') {
     const { email, month } = await parseBody(req);
     const user = getUserByEmail(db, email);
@@ -1129,6 +1749,20 @@ async function handleApi(req, res) {
     const report = ensureStoredReport(db, user, month);
     writeDatabase(db);
     sendHtml(res, 200, buildReportHtml(user, report));
+    return;
+  }
+
+  if (req.method === 'GET' && route === '/api/reports/export.pdf') {
+    const user = getUserByEmail(db, parsedUrl.searchParams.get('email'));
+    if (!user) {
+      sendJson(res, 404, { message: 'Usuário não encontrado.' });
+      return;
+    }
+
+    const month = parsedUrl.searchParams.get('month') || new Date().toISOString().slice(0, 7);
+    const report = ensureStoredReport(db, user, month);
+    writeDatabase(db);
+    sendPdf(res, 200, buildReportPdf(user, report), `relatorio-${month}.pdf`);
     return;
   }
 

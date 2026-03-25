@@ -9,6 +9,7 @@ function createInitialData() {
     otps: [],
     transactions: [],
     investments: [],
+    goals: [],
     customCategories: [],
     reports: [],
     counters: {
@@ -16,6 +17,7 @@ function createInitialData() {
       otpId: 1,
       transactionId: 1,
       investmentId: 1,
+      goalId: 1,
       reportId: 1,
       categoryId: 1,
     },
@@ -49,6 +51,7 @@ function readDatabase() {
   normalizeCollection(data, 'otps');
   normalizeCollection(data, 'transactions');
   normalizeCollection(data, 'investments');
+  normalizeCollection(data, 'goals');
   normalizeCollection(data, 'customCategories');
   normalizeCollection(data, 'reports');
 
@@ -60,6 +63,7 @@ function readDatabase() {
   ensureCounter(data, 'otpId');
   ensureCounter(data, 'transactionId');
   ensureCounter(data, 'investmentId');
+  ensureCounter(data, 'goalId');
   ensureCounter(data, 'reportId');
   ensureCounter(data, 'categoryId');
 

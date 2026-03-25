@@ -103,6 +103,7 @@
             <button class="nav-button active" data-section="dashboard-section">Dashboard</button>
             <button class="nav-button" data-section="transactions-section">Movimentações</button>
             <button class="nav-button" data-section="investments-section">Investimentos</button>
+            <button class="nav-button" data-section="goals-section">Metas</button>
             <button class="nav-button" data-section="taxes-section">Impostos</button>
             <button class="nav-button" data-section="reports-section">Relatórios</button>
           </nav>
@@ -378,6 +379,91 @@
             </div>
           </section>
 
+          <section id="goals-section" class="app-section hidden">
+            <div class="stats-grid investments-grid">
+              <article class="stat-card">
+                <p>Total de metas</p>
+                <h3 id="goals-total-count">0</h3>
+                <span>Objetivos cadastrados</span>
+              </article>
+              <article class="stat-card">
+                <p>Em andamento</p>
+                <h3 id="goals-progress-count">0</h3>
+                <span>Metas ativas no momento</span>
+              </article>
+              <article class="stat-card">
+                <p>Concluidas</p>
+                <h3 id="goals-completed-count">0</h3>
+                <span>Metas marcadas como cumpridas</span>
+              </article>
+              <article class="stat-card">
+                <p>Nao concluidas</p>
+                <h3 id="goals-failed-count">0</h3>
+                <span>Metas marcadas como nao cumpridas</span>
+              </article>
+            </div>
+
+            <div class="panel-grid two-up">
+              <article class="panel">
+                <div class="panel-header">
+                  <div>
+                    <p class="eyebrow">NOVA META</p>
+                    <h3>Planeje um objetivo financeiro</h3>
+                  </div>
+                </div>
+                <form id="goal-form" class="form-grid">
+                  <label for="goal-name">Nome da meta</label>
+                  <input id="goal-name" type="text" maxlength="80" placeholder="Ex: Viagem, notebook, reserva" required />
+                  <label for="goal-target">Valor alvo (R$)</label>
+                  <input id="goal-target" type="number" min="0.01" step="0.01" placeholder="Ex: 5000" required />
+                  <label for="goal-current">Valor atual (R$)</label>
+                  <input id="goal-current" type="number" min="0" step="0.01" placeholder="Ex: 350" />
+                  <label for="goal-due-date">Prazo</label>
+                  <input id="goal-due-date" type="date" required />
+                  <label for="goal-category">Categoria (opcional)</label>
+                  <input id="goal-category" type="text" maxlength="40" placeholder="Ex: Viagem, tecnologia, casa" />
+                  <div class="button-row">
+                    <button id="goal-submit-button" type="submit">Salvar meta</button>
+                    <button id="cancel-goal-edit" type="button" class="secondary hidden">Cancelar edicao</button>
+                  </div>
+                </form>
+                <p id="goal-message" class="message"></p>
+              </article>
+
+              <article class="panel">
+                <div class="panel-header">
+                  <div>
+                    <p class="eyebrow">ACOMPANHAMENTO</p>
+                    <h3>Veja o que ja foi conquistado</h3>
+                  </div>
+                </div>
+                <p class="subtitle">Filtre suas metas e acompanhe o progresso de cada objetivo de forma simples.</p>
+                <div id="goal-filters" class="choice-grid two-up goals-filter-grid">
+                  <button type="button" class="choice-button active" data-goal-filter="all">Todas</button>
+                  <button type="button" class="choice-button" data-goal-filter="in_progress">Em andamento</button>
+                  <button type="button" class="choice-button" data-goal-filter="completed">Concluidas</button>
+                  <button type="button" class="choice-button" data-goal-filter="failed">Nao concluidas</button>
+                </div>
+                <div class="simulation-callout goal-callout">
+                  <p class="simulation-headline">Pequenos passos tambem contam.</p>
+                  <p class="simulation-subheadline">Atualize uma meta aos poucos e acompanhe o quanto voce ja avancou rumo ao objetivo.</p>
+                </div>
+              </article>
+            </div>
+
+            <div class="panel-grid">
+              <article class="panel">
+                <div class="panel-header">
+                  <div>
+                    <p class="eyebrow">SUAS METAS</p>
+                    <h3>Cards com progresso e status</h3>
+                  </div>
+                </div>
+                <div id="goals-list" class="goals-grid"></div>
+              </article>
+            </div>
+          </section>
+
           <section id="taxes-section" class="app-section hidden">
             <div class="panel-grid">
               <article class="panel hero-panel">
@@ -475,6 +561,7 @@
                   <div class="button-row">
                     <button type="submit">Gerar manualmente</button>
                     <button type="button" id="export-report" class="secondary">Exportar HTML</button>
+                    <button type="button" id="export-report-pdf" class="secondary">Exportar PDF</button>
                   </div>
                 </form>
                 <p class="subtitle">Os relatórios também são atualizados automaticamente conforme os dados do mês.</p>
@@ -503,6 +590,8 @@
                   <div class="summary-item"><span>Saídas</span><strong id="report-expense">R$ 0,00</strong></div>
                   <div class="summary-item"><span>Saldo final</span><strong id="report-balance">R$ 0,00</strong></div>
                   <div class="summary-item"><span>Movimentações</span><strong id="report-transactions-count">0</strong></div>
+                  <div class="summary-item"><span>Metas do período</span><strong id="report-goals-count">0</strong></div>
+                  <div class="summary-item"><span>Metas concluídas</span><strong id="report-goals-completed">0</strong></div>
                 </div>
               </article>
               <article class="panel">
