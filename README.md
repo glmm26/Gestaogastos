@@ -1,85 +1,85 @@
-# Gestão de Gastos
+# Gestao de Gastos
 
-Protótipo inicial com:
-- Splash screen na tela principal.
-- Tela de autenticação com cadastro simples (email e senha).
-- Login em duas etapas com OTP.
-- Banco de dados SQLite local para usuários e códigos OTP.
-- Envio de OTP por email (API ou SMTP).
+Aplicacao web de painel financeiro com:
 
-## Execução (prioridade: Python)
+- Splash screen e autenticacao com OTP de cadastro
+- Dashboard com saldo, entradas, saidas e graficos
+- Pagina de movimentacoes com categorias, filtros e cadastro
+- Pagina de investimentos com lucro/prejuizo e evolucao
+- Pagina de relatorios mensais com insights e exportacao HTML
 
-Como sua máquina bloqueia scripts PowerShell para `npm`, rode com Python.
+## Estrutura
 
-## Configuração simples de OTP por API (recomendado)
+- `server.js`: servidor HTTP e API
+- `db.js`: persistencia local em `database.json`
+- `public/index.html`: SPA com secoes Dashboard, Movimentacoes, Investimentos e Relatorios
+- `public/app.js`: logica do front-end
+- `public/styles.css`: interface da aplicacao
 
-Use API de e-mail (ex.: Brevo) para evitar configuração SMTP manual.
+## Como executar
 
-1. Copie o arquivo de exemplo:
+1. Opcional: copie o exemplo de ambiente
 
 ```powershell
 copy .env.example .env
 ```
 
-2. No `.env`, mantenha:
-
-```env
-EMAIL_PROVIDER=api
-EMAIL_API_URL=https://api.brevo.com/v3/smtp/email
-EMAIL_API_KEY=sua_chave_api
-EMAIL_API_SENDER_EMAIL=seu_email@seudominio.com
-EMAIL_API_SENDER_NAME=Gestão de Gastos
-PORT=3000
-```
-
-> Você só precisa da chave da API e do remetente autorizado no provedor.
-
-## Alternativa: SMTP
-
-Se preferir SMTP, no `.env` use:
-
-```env
-EMAIL_PROVIDER=smtp
-SMTP_HOST=smtp.gmail.com
-SMTP_PORT=587
-SMTP_USER=seu_email@gmail.com
-SMTP_PASSWORD=sua_senha_de_app
-SMTP_SENDER=seu_email@gmail.com
-SMTP_USE_TLS=true
-SMTP_REQUIRE_AUTH=true
-PORT=3000
-```
-
-## Rodar aplicação
+2. Inicie o servidor
 
 ```powershell
-python app.py
+node server.js
 ```
 
-ou
+3. Abra no navegador
 
-```powershell
-py app.py
+```text
+http://localhost:3000
 ```
 
-Aplicação disponível em `http://localhost:3000`.
+## Fluxo de uso
 
-## Como testar (fluxo OTP obrigatório)
+1. Crie uma conta com email e senha
+2. Confirme o cadastro com o OTP enviado por email
+3. Faca login com o mesmo email e senha
+4. Navegue entre:
+   - `Dashboard`
+   - `Movimentacoes`
+   - `Investimentos`
+   - `Relatorios`
 
-1. Abra `http://localhost:3000`.
-2. Faça o cadastro de email/senha.
-3. Faça login com o mesmo email/senha.
-4. O sistema envia OTP para o email informado.
-5. Digite o OTP recebido para concluir login.
+## Funcionalidades principais
 
-## Erro de envio OTP
+### Dashboard
 
-Se aparecer erro no login, confira:
-- `EMAIL_PROVIDER=api`: precisa `EMAIL_API_KEY` e `EMAIL_API_SENDER_EMAIL`.
-- `EMAIL_PROVIDER=smtp`: precisa `SMTP_HOST`, `SMTP_SENDER` e credenciais quando `SMTP_REQUIRE_AUTH=true`.
+- Resumo financeiro do mes
+- Grafico de pizza por categoria
+- Grafico de barras de entradas vs saidas
+- Ultimas movimentacoes
 
-## Endpoints
+### Movimentacoes
 
-- `POST /api/register` — cadastro de usuário.
-- `POST /api/login` — valida credenciais, gera OTP e envia por email.
-- `POST /api/verify-otp` — valida OTP e conclui login.
+- Cadastro com tipo, valor, data, categoria e observacoes
+- Categorias padrao: `Salario`, `Alimentacao`, `Transporte`, `Lazer`, `Moradia`, `Outros`
+- Categorias personalizadas
+- Filtros por tipo, categoria e periodo
+
+### Investimentos
+
+- Cadastro com tipo, valor, data e rentabilidade
+- Total investido
+- Lucro/prejuizo estimado
+- Grafico de evolucao
+
+### Relatorios
+
+- Geracao manual por mes
+- Atualizacao automatica com base nos dados salvos
+- Totais do mes, categorias principais e insights
+- Exportacao em HTML
+
+## Observacoes
+
+- Os dados ficam salvos localmente em `database.json`
+- O front usa `Chart.js` via CDN
+- A API manteve compatibilidade com `/api/verify-email` e `/api/verify-otp`
+- O backend ativo do projeto e `server.js`

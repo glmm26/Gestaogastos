@@ -10,15 +10,6 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 
-# Python
-__pycache__/
-*.py[cod]
-*.pyo
-*.pyd
-.venv/
-venv/
-env/
-
 # Databases and local data
 *.sqlite
 *.sqlite3
