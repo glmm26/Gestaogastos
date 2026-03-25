@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Gestao de Gastos</title>
+    <title>Gestão de Gastos</title>
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
@@ -24,16 +24,16 @@
       </div>
       <div class="logo-wrap">
         <p class="eyebrow">FINANCAS PESSOAIS</p>
-        <h1>Gestao de Gastos</h1>
-        <p>Controle seus gastos, acompanhe investimentos e tome decisoes financeiras com dados reais.</p>
+        <h1>Gestão de Gastos</h1>
+        <p>Controle seus gastos, acompanhe investimentos e tome decisões financeiras com dados reais.</p>
         <ul class="splash-benefits">
-          <li><span class="benefit-dot"></span>Controle automatico de gastos</li>
-          <li><span class="benefit-dot"></span>Relatorios inteligentes</li>
-          <li><span class="benefit-dot"></span>Simulacao de imposto de renda</li>
+          <li><span class="benefit-dot"></span>Controle automático de gastos</li>
+          <li><span class="benefit-dot"></span>Relatórios inteligentes</li>
+          <li><span class="benefit-dot"></span>Simulação de imposto de renda</li>
           <li><span class="benefit-dot"></span>Acompanhamento de investimentos</li>
         </ul>
         <button id="enter-app">Entrar no painel</button>
-        <p class="splash-trust">Seus dados sao seguros e protegidos</p>
+        <p class="splash-trust">Seus dados são seguros e protegidos</p>
       </div>
       <div class="splash-progress" aria-hidden="true">
         <div id="splash-progress-bar" class="splash-progress-bar"></div>
@@ -45,7 +45,7 @@
       <div class="auth-backdrop" aria-hidden="true"></div>
       <div class="auth-card">
         <h2>Bem-vindo</h2>
-        <p class="subtitle">Crie sua conta ou faca login para acessar seu painel completo.</p>
+        <p class="subtitle">Crie sua conta ou faça login para acessar seu painel completo.</p>
         <div class="tabs">
           <button id="tab-register" class="tab active">Cadastro</button>
           <button id="tab-login" class="tab">Login</button>
@@ -70,12 +70,12 @@
 
     <main id="verify-screen" class="verify-screen hidden">
       <section class="verify-card">
-        <h2>Confirmacao de cadastro</h2>
-        <p class="subtitle">Digite o codigo de 6 digitos enviado para seu email para ativar a sua conta.</p>
+        <h2>Confirmação de cadastro</h2>
+        <p class="subtitle">Digite o código de 6 dígitos enviado para seu email para ativar a sua conta.</p>
         <form id="verify-email-form" class="verify-form">
           <label for="verify-email">Email</label>
           <input id="verify-email" type="email" required />
-          <label>Codigo</label>
+          <label>Código</label>
           <div id="otp-inputs" class="otp-inputs">
             <input class="otp-digit" type="text" inputmode="numeric" maxlength="1" required />
             <input class="otp-digit" type="text" inputmode="numeric" maxlength="1" required />
@@ -96,15 +96,15 @@
         <aside class="sidebar">
           <div class="brand-block">
             <p class="eyebrow">PAINEL FINANCEIRO</p>
-            <h2>Gestao de Gastos</h2>
+            <h2>Gestão de Gastos</h2>
             <p id="home-user-email" class="topbar-email"></p>
           </div>
           <nav class="nav-list">
             <button class="nav-button active" data-section="dashboard-section">Dashboard</button>
-            <button class="nav-button" data-section="transactions-section">Movimentacoes</button>
+            <button class="nav-button" data-section="transactions-section">Movimentações</button>
             <button class="nav-button" data-section="investments-section">Investimentos</button>
             <button class="nav-button" data-section="taxes-section">Impostos</button>
-            <button class="nav-button" data-section="reports-section">Relatorios</button>
+            <button class="nav-button" data-section="reports-section">Relatórios</button>
           </nav>
           <button id="logout-button" class="secondary full-width">Sair</button>
         </aside>
@@ -121,19 +121,19 @@
           <section id="dashboard-section" class="app-section active">
             <div class="stats-grid">
               <article class="stat-card income">
-                <p>Entradas do mes</p>
+                <p>Entradas do mês</p>
                 <h3 id="income-total">R$ 0,00</h3>
                 <span>Receitas cadastradas</span>
               </article>
               <article class="stat-card expense">
-                <p>Saidas do mes</p>
+                <p>Saídas do mês</p>
                 <h3 id="expense-total">R$ 0,00</h3>
                 <span>Despesas cadastradas</span>
               </article>
               <article class="stat-card balance">
                 <p>Saldo atual</p>
                 <h3 id="balance-total">R$ 0,00</h3>
-                <span>Entradas menos saidas</span>
+                <span>Entradas menos saídas</span>
               </article>
             </div>
             <div class="panel-grid two-up">
@@ -150,7 +150,7 @@
                 <div class="panel-header">
                   <div>
                     <p class="eyebrow">FLUXO</p>
-                    <h3>Entradas vs saidas</h3>
+                    <h3>Entradas vs saídas</h3>
                   </div>
                 </div>
                 <div class="chart-wrap"><canvas id="monthly-chart"></canvas></div>
@@ -161,7 +161,7 @@
                 <div class="panel-header">
                   <div>
                     <p class="eyebrow">MOVIMENTACOES</p>
-                    <h3>Ultimos registros</h3>
+                    <h3>Últimos registros</h3>
                   </div>
                 </div>
                 <ul id="latest-transaction-list" class="transaction-list"></ul>
@@ -174,7 +174,7 @@
               <article class="panel">
                 <div class="panel-header">
                   <div>
-                    <p class="eyebrow">NOVA MOVIMENTACAO</p>
+                    <p class="eyebrow">NOVA MOVIMENTAÇÃO</p>
                     <h3>Adicionar registro</h3>
                   </div>
                 </div>
@@ -192,13 +192,13 @@
                   <select id="transaction-category" required></select>
                   <div id="custom-category-row" class="hidden">
                     <label for="custom-category-input">Categoria personalizada</label>
-                    <input id="custom-category-input" type="text" maxlength="40" placeholder="Ex: Educacao" />
+                    <input id="custom-category-input" type="text" maxlength="40" placeholder="Ex: Educação" />
                   </div>
-                  <label for="transaction-notes">Observacoes</label>
+                  <label for="transaction-notes">Observações</label>
                   <input id="transaction-notes" type="text" maxlength="160" placeholder="Detalhes opcionais" />
                   <div class="button-row">
-                    <button id="transaction-submit-button" type="submit">Salvar movimentacao</button>
-                    <button id="cancel-transaction-edit" type="button" class="secondary hidden">Cancelar edicao</button>
+                    <button id="transaction-submit-button" type="submit">Salvar movimentação</button>
+                    <button id="cancel-transaction-edit" type="button" class="secondary hidden">Cancelar edição</button>
                   </div>
                 </form>
                 <div class="inline-form">
@@ -224,13 +224,13 @@
                   </select>
                   <label for="filter-category">Categoria</label>
                   <select id="filter-category"><option value="all">Todas</option></select>
-                  <label for="filter-period">Periodo</label>
+                  <label for="filter-period">Período</label>
                   <select id="filter-period">
                     <option value="all">Tudo</option>
-                    <option value="7d">Ultimos 7 dias</option>
-                    <option value="30d">Ultimos 30 dias</option>
-                    <option value="90d">Ultimos 90 dias</option>
-                    <option value="month">Mes atual</option>
+                    <option value="7d">Últimos 7 dias</option>
+                    <option value="30d">Últimos 30 dias</option>
+                    <option value="90d">Últimos 90 dias</option>
+                    <option value="month">Mês atual</option>
                   </select>
                   <label for="filter-start-date">Data inicial</label>
                   <input id="filter-start-date" type="date" />
@@ -262,7 +262,7 @@
                 </div>
                 <div class="summary-stack">
                   <div class="summary-item"><span>Entradas</span><strong id="filtered-income">R$ 0,00</strong></div>
-                  <div class="summary-item"><span>Saidas</span><strong id="filtered-expense">R$ 0,00</strong></div>
+                  <div class="summary-item"><span>Saídas</span><strong id="filtered-expense">R$ 0,00</strong></div>
                   <div class="summary-item"><span>Saldo</span><strong id="filtered-balance">R$ 0,00</strong></div>
                   <div class="summary-item"><span>Registros</span><strong id="filtered-count">0</strong></div>
                 </div>
@@ -273,7 +273,7 @@
                 <div class="panel-header">
                   <div>
                     <p class="eyebrow">LISTAGEM COMPLETA</p>
-                    <h3>Movimentacoes</h3>
+                    <h3>Movimentações</h3>
                   </div>
                 </div>
                 <ul id="transaction-list" class="transaction-list detailed"></ul>
@@ -284,7 +284,7 @@
           <section id="investments-section" class="app-section hidden">
             <div class="stats-grid investments-grid">
               <article class="stat-card">
-                <p>Total que voce pode guardar</p>
+                <p>Total que você pode guardar</p>
                 <h3 id="invested-total">R$ 0,00</h3>
                 <span>Soma dos aportes mensais ao longo do tempo</span>
               </article>
@@ -308,14 +308,14 @@
                   </div>
                 </div>
                 <form id="investment-form" class="form-grid">
-                  <p class="subtitle">Escolha quanto voce consegue investir por mes e deixe o simulador fazer o resto.</p>
-                  <label for="investment-amount">Quanto voce quer investir por mes?</label>
+                  <p class="subtitle">Escolha quanto você consegue investir por mês e deixe o simulador fazer o resto.</p>
+                  <label for="investment-amount">Quanto você quer investir por mês?</label>
                   <input id="investment-amount" type="number" min="1" step="0.01" placeholder="Ex: 200" required />
                   <div>
                     <label>Perfil de risco</label>
                     <div id="risk-profile-buttons" class="choice-grid three-up">
                       <button type="button" class="choice-button active" data-risk-profile="low">Baixo risco</button>
-                      <button type="button" class="choice-button" data-risk-profile="medium">Medio risco</button>
+                      <button type="button" class="choice-button" data-risk-profile="medium">Médio risco</button>
                       <button type="button" class="choice-button" data-risk-profile="high">Alto risco</button>
                     </div>
                     <p id="risk-profile-help" class="helper-text">Baixo risco: pensado para quem prefere mais estabilidade. Estimativa de 8% ao ano.</p>
@@ -332,11 +332,11 @@
                   </div>
                   <div class="simulation-callout">
                     <p id="investment-headline" class="simulation-headline">Seu dinheiro pode crescer para R$ 0,00 em 3 anos.</p>
-                    <p id="investment-subheadline" class="simulation-subheadline">Investindo pouco por mes voce ja comeca a construir resultado.</p>
+                    <p id="investment-subheadline" class="simulation-subheadline">Investindo pouco por mês você já começa a construir resultado.</p>
                   </div>
                   <div class="button-row">
-                    <button id="investment-submit-button" type="submit">Salvar simulacao</button>
-                    <button id="cancel-investment-edit" type="button" class="secondary hidden">Cancelar edicao</button>
+                    <button id="investment-submit-button" type="submit">Salvar simulação</button>
+                    <button id="cancel-investment-edit" type="button" class="secondary hidden">Cancelar edição</button>
                   </div>
                 </form>
                 <p id="investment-message" class="message"></p>
@@ -355,7 +355,7 @@
               <article id="investment-detail-panel" class="panel hidden">
                 <div class="panel-header">
                   <div>
-                    <p class="eyebrow">SIMULACAO EM FOCO</p>
+                    <p class="eyebrow">SIMULAÇÃO EM FOCO</p>
                     <h3>Detalhes do investimento selecionado</h3>
                   </div>
                 </div>
@@ -370,7 +370,7 @@
                 <div class="panel-header">
                   <div>
                     <p class="eyebrow">SIMULACOES SALVAS</p>
-                    <h3>Planos que voce montou</h3>
+                    <h3>Planos que você montou</h3>
                   </div>
                 </div>
                 <ul id="investment-list" class="transaction-list detailed"></ul>
@@ -382,7 +382,7 @@
             <div class="panel-grid">
               <article class="panel hero-panel">
                 <p class="eyebrow">SEM COMPLICACAO</p>
-                <h2 class="hero-title">Descubra quanto voce pode pagar de imposto em poucos segundos</h2>
+                <h2 class="hero-title">Descubra quanto você pode pagar de imposto em poucos segundos</h2>
                 <p class="subtitle">Preencha os dados abaixo e veja uma estimativa clara, visual e pensada para iniciantes.</p>
               </article>
             </div>
@@ -395,16 +395,16 @@
                   </div>
                 </div>
                 <form id="tax-form" class="form-grid">
-                  <p class="subtitle">Preencha seus valores e veja uma estimativa simples. Nao substitui o calculo oficial.</p>
+                  <p class="subtitle">Preencha seus valores e veja uma estimativa simples. Não substitui o cálculo oficial.</p>
                   <label for="tax-income-monthly">Renda mensal</label>
                   <input id="tax-income-monthly" type="number" min="0" step="0.01" placeholder="Ex: 3000" required />
                   <label for="tax-other-income">Outras rendas (opcional)</label>
                   <input id="tax-other-income" type="number" min="0" step="0.01" placeholder="Ex: 500 (freelance, renda extra)" />
-                  <label for="tax-dependents">Numero de dependentes</label>
+                  <label for="tax-dependents">Número de dependentes</label>
                   <input id="tax-dependents" type="number" min="0" step="1" value="0" placeholder="Ex: 0, 1, 2" required />
-                  <label for="tax-health">Despesas com saude</label>
+                  <label for="tax-health">Despesas com saúde</label>
                   <input id="tax-health" type="number" min="0" step="0.01" placeholder="Ex: 300" />
-                  <label for="tax-education">Despesas com educacao</label>
+                  <label for="tax-education">Despesas com educação</label>
                   <input id="tax-education" type="number" min="0" step="0.01" placeholder="Ex: 200" />
                   <div class="button-row">
                     <button type="submit">Calcular meu imposto</button>
@@ -433,15 +433,15 @@
                   </div>
                 </div>
                 <div class="tax-highlight">
-                  <span>Voce pagaria aproximadamente</span>
+                  <span>Você pagaria aproximadamente</span>
                   <strong id="tax-highlight-value">R$ 0,00</strong>
                 </div>
                 <div class="summary-stack">
                   <div class="summary-item"><span>Renda anual</span><strong id="tax-annual-income">R$ 0,00</strong></div>
-                  <div class="summary-item"><span>Base de calculo</span><strong id="tax-base-income">R$ 0,00</strong></div>
+                  <div class="summary-item"><span>Base de cálculo</span><strong id="tax-base-income">R$ 0,00</strong></div>
                   <div class="summary-item"><span>Faixa</span><strong id="tax-bracket">Isento</strong></div>
                   <div class="summary-item"><span>Imposto estimado</span><strong id="tax-estimated">R$ 0,00</strong></div>
-                  <div class="summary-item"><span>Renda liquida</span><strong id="tax-net-income">R$ 0,00</strong></div>
+                  <div class="summary-item"><span>Renda líquida</span><strong id="tax-net-income">R$ 0,00</strong></div>
                 </div>
               </article>
               <article id="tax-insights-panel" class="panel hidden">
@@ -452,7 +452,7 @@
                   </div>
                 </div>
                 <div class="insight-card">
-                  <p id="tax-feedback-primary" class="simulation-headline">Voce esta isento.</p>
+                  <p id="tax-feedback-primary" class="simulation-headline">Você está isento.</p>
                   <p id="tax-feedback-secondary" class="simulation-subheadline">Preencha os campos para ver sua estimativa.</p>
                 </div>
                 <ul id="tax-suggestions" class="insight-list tax-suggestions hidden"></ul>
@@ -466,25 +466,25 @@
                 <div class="panel-header">
                   <div>
                     <p class="eyebrow">GERACAO</p>
-                    <h3>Relatorio mensal</h3>
+                    <h3>Relatório mensal</h3>
                   </div>
                 </div>
                 <form id="report-form" class="form-grid">
-                  <label for="report-month">Mes de referencia</label>
+                  <label for="report-month">Mês de referência</label>
                   <input id="report-month" type="month" required />
                   <div class="button-row">
                     <button type="submit">Gerar manualmente</button>
                     <button type="button" id="export-report" class="secondary">Exportar HTML</button>
                   </div>
                 </form>
-                <p class="subtitle">Os relatorios tambem sao atualizados automaticamente conforme os dados do mes.</p>
+                <p class="subtitle">Os relatórios também são atualizados automaticamente conforme os dados do mês.</p>
                 <p id="report-message" class="message"></p>
               </article>
               <article class="panel">
                 <div class="panel-header">
                   <div>
                     <p class="eyebrow">HISTORICO</p>
-                    <h3>Meses disponiveis</h3>
+                    <h3>Meses disponíveis</h3>
                   </div>
                 </div>
                 <div id="reports-history" class="history-list"></div>
@@ -495,14 +495,14 @@
                 <div class="panel-header">
                   <div>
                     <p class="eyebrow">RESUMO</p>
-                    <h3 id="report-title">Relatorio selecionado</h3>
+                    <h3 id="report-title">Relatório selecionado</h3>
                   </div>
                 </div>
                 <div class="summary-stack">
                   <div class="summary-item"><span>Entradas</span><strong id="report-income">R$ 0,00</strong></div>
-                  <div class="summary-item"><span>Saidas</span><strong id="report-expense">R$ 0,00</strong></div>
+                  <div class="summary-item"><span>Saídas</span><strong id="report-expense">R$ 0,00</strong></div>
                   <div class="summary-item"><span>Saldo final</span><strong id="report-balance">R$ 0,00</strong></div>
-                  <div class="summary-item"><span>Movimentacoes</span><strong id="report-transactions-count">0</strong></div>
+                  <div class="summary-item"><span>Movimentações</span><strong id="report-transactions-count">0</strong></div>
                 </div>
               </article>
               <article class="panel">
@@ -520,7 +520,7 @@
                 <div class="panel-header">
                   <div>
                     <p class="eyebrow">VISUAL</p>
-                    <h3>Distribuicao por categoria</h3>
+                    <h3>Distribuição por categoria</h3>
                   </div>
                 </div>
                 <div class="chart-wrap compact"><canvas id="report-category-chart"></canvas></div>
@@ -531,7 +531,7 @@
                 <div class="panel-header">
                   <div>
                     <p class="eyebrow">INSIGHTS</p>
-                    <h3>Leituras automaticas</h3>
+                    <h3>Leituras automáticas</h3>
                   </div>
                 </div>
                 <ul id="report-insights" class="insight-list"></ul>
@@ -545,10 +545,10 @@
     <div id="tax-warning-modal" class="modal-overlay hidden">
       <section class="modal-card">
         <h2>Aviso importante</h2>
-        <p>Este simulador de imposto de renda e apenas uma estimativa e nao substitui o calculo oficial da Receita Federal.</p>
+        <p>Este simulador de imposto de renda é apenas uma estimativa e não substitui o cálculo oficial da Receita Federal.</p>
         <label class="checkbox-row" for="hide-tax-warning">
           <input id="hide-tax-warning" type="checkbox" />
-          <span>Nao mostrar novamente</span>
+          <span>Não mostrar novamente</span>
         </label>
         <div class="button-row">
           <button id="continue-tax-warning" type="button">Continuar</button>
@@ -560,12 +560,12 @@
     <div id="tax-tips-modal" class="modal-overlay hidden">
       <section class="modal-card">
         <h2>Como reduzir meu imposto?</h2>
-        <p>Algumas atitudes simples podem ajudar voce a pagar menos dentro das regras.</p>
+        <p>Algumas atitudes simples podem ajudar você a pagar menos dentro das regras.</p>
         <ul class="insight-list">
-          <li>Declarar despesas medicas quando tiver comprovantes validos.</li>
-          <li>Incluir dependentes quando isso fizer sentido na declaracao.</li>
-          <li>Informar gastos com educacao dentro do que pode ser declarado.</li>
-          <li>Organizar comprovantes ao longo do ano para nao esquecer nada.</li>
+          <li>Declarar despesas médicas quando tiver comprovantes válidos.</li>
+          <li>Incluir dependentes quando isso fizer sentido na declaração.</li>
+          <li>Informar gastos com educação dentro do que pode ser declarado.</li>
+          <li>Organizar comprovantes ao longo do ano para não esquecer nada.</li>
         </ul>
         <div class="button-row">
           <button id="close-tax-tips" type="button">Entendi</button>

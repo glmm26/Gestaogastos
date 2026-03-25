@@ -133,20 +133,20 @@ const RISK_PROFILES = {
   low: {
     label: 'Baixo risco',
     annualRate: 8,
-    help: 'Baixo risco: pensado para quem prefere mais estabilidade. Exemplos: Tesouro Selic, CDB com liquidez diaria e contas remuneradas. Estimativa de 8% ao ano.',
-    examples: 'Tesouro Selic, CDB com liquidez diaria e contas remuneradas',
+    help: 'Baixo risco: pensado para quem prefere mais estabilidade. Exemplos: Tesouro Selic, CDB com liquidez diária e contas remuneradas. Estimativa de 8% ao ano.',
+    examples: 'Tesouro Selic, CDB com liquidez diária e contas remuneradas',
   },
   medium: {
-    label: 'Medio risco',
+    label: 'Médio risco',
     annualRate: 12,
-    help: 'Medio risco: equilibrio entre seguranca e crescimento. Exemplos: fundos multimercado, ETFs amplos e carteira mista. Estimativa de 12% ao ano.',
+    help: 'Médio risco: equilíbrio entre segurança e crescimento. Exemplos: fundos multimercado, ETFs amplos e carteira mista. Estimativa de 12% ao ano.',
     examples: 'fundos multimercado, ETFs amplos e carteira mista',
   },
   high: {
     label: 'Alto risco',
     annualRate: 18,
-    help: 'Alto risco: mais oscilacao em troca de maior potencial. Exemplos: acoes, fundos de acoes e criptos para quem aceita variacao maior. Estimativa de 18% ao ano.',
-    examples: 'acoes, fundos de acoes e criptos',
+    help: 'Alto risco: mais oscilação em troca de maior potencial. Exemplos: ações, fundos de ações e criptos para quem aceita variação maior. Estimativa de 18% ao ano.',
+    examples: 'ações, fundos de ações e criptos',
   },
 };
 
@@ -370,7 +370,7 @@ function showVerifyEmail(email) {
   pendingVerificationEmail = email;
   verifyEmailInput.value = email;
   clearOtpInputs();
-  showVerifyMessage('Digite o codigo de 6 digitos para confirmar o cadastro.', 'success');
+  showVerifyMessage('Digite o código de 6 dígitos para confirmar o cadastro.', 'success');
   showScreen(verifyScreen);
   otpDigits[0].focus();
 }
@@ -477,13 +477,13 @@ function renderList(container, items, emptyText, renderer) {
 
 function setTransactionEditMode(item = null) {
   editingTransactionId = item ? item.id : null;
-  transactionSubmitButton.textContent = item ? 'Salvar alteracoes' : 'Salvar movimentacao';
+  transactionSubmitButton.textContent = item ? 'Salvar alterações' : 'Salvar movimentação';
   cancelTransactionEditButton.classList.toggle('hidden', !item);
 }
 
 function setInvestmentEditMode(item = null) {
   editingInvestmentId = item ? item.id : null;
-  investmentSubmitButton.textContent = item ? 'Salvar alteracoes' : 'Salvar simulacao';
+  investmentSubmitButton.textContent = item ? 'Salvar alterações' : 'Salvar simulação';
   cancelInvestmentEditButton.classList.toggle('hidden', !item);
 }
 
@@ -540,8 +540,8 @@ function updateInvestmentPreview() {
 
   investmentHeadline.textContent = `Seu dinheiro pode crescer para ${formatCurrency(projection.projectedValue)} em ${selectedInvestmentYears} ano${selectedInvestmentYears > 1 ? 's' : ''}.`;
   investmentSubheadline.textContent = monthlyAmount > 0
-    ? `Investindo ${formatCurrency(monthlyAmount)} por mes, voce pode juntar ${formatCurrency(projection.invested)} e buscar um crescimento estimado de ${formatCurrency(projection.gain)}. Para esse perfil, exemplos comuns seriam ${profile.examples}.`
-    : `Investindo pouco por mes voce ja comeca a construir resultado. Para esse perfil, exemplos comuns seriam ${profile.examples}.`;
+    ? `Investindo ${formatCurrency(monthlyAmount)} por mês, você pode juntar ${formatCurrency(projection.invested)} e buscar um crescimento estimado de ${formatCurrency(projection.gain)}. Para esse perfil, exemplos comuns seriam ${profile.examples}.`
+    : `Investindo pouco por mês você já começa a construir resultado. Para esse perfil, exemplos comuns seriam ${profile.examples}.`;
 }
 
 function readMoneyInput(id) {
@@ -597,23 +597,23 @@ function buildTaxSuggestions(result, input) {
   const suggestions = [];
 
   if (input.healthExpenses <= 0) {
-    suggestions.push('Voce pode reduzir seu imposto declarando despesas medicas, se tiver comprovantes.');
+    suggestions.push('Você pode reduzir seu imposto declarando despesas médicas, se tiver comprovantes.');
   }
 
   if (input.dependents <= 0) {
-    suggestions.push('Adicionar dependentes pode diminuir o imposto quando isso fizer sentido na sua declaracao.');
+    suggestions.push('Adicionar dependentes pode diminuir o imposto quando isso fizer sentido na sua declaração.');
   }
 
   if (input.healthExpenses + input.educationExpenses < result.annualIncome * 0.05) {
-    suggestions.push('Seus gastos dedutiveis estao baixos. Vale revisar saude e educacao para nao esquecer nada.');
+    suggestions.push('Seus gastos dedutíveis estão baixos. Vale revisar saúde e educação para não esquecer nada.');
   }
 
   if (result.rate >= 15) {
-    suggestions.push('Voce esta pagando imposto elevado em relacao a sua renda. Organizar deducoes pode ajudar.');
+    suggestions.push('Você está pagando imposto elevado em relação à sua renda. Organizar deduções pode ajudar.');
   }
 
   if (!suggestions.length) {
-    suggestions.push('Sua simulacao esta equilibrada. Continue organizando comprovantes para declarar tudo corretamente.');
+    suggestions.push('Sua simulação está equilibrada. Continue organizando comprovantes para declarar tudo corretamente.');
   }
 
   return suggestions.slice(0, 4);
@@ -637,17 +637,17 @@ function renderTaxSimulation(result) {
   taxHighlightValue.textContent = formatCurrency(result.estimatedTax);
 
   if (result.rate === 0) {
-    taxFeedbackPrimary.textContent = 'Voce esta isento de imposto.';
-    taxFeedbackSecondary.textContent = 'Pela estimativa simplificada, hoje voce nao teria imposto a pagar.';
+    taxFeedbackPrimary.textContent = 'Você está isento de imposto.';
+    taxFeedbackSecondary.textContent = 'Pela estimativa simplificada, hoje você não teria imposto a pagar.';
   } else if (result.rate >= 27.5) {
-    taxFeedbackPrimary.textContent = 'Voce esta na faixa mais alta de imposto (27,5%).';
-    taxFeedbackSecondary.textContent = 'Voce ja paga um valor consideravel de imposto.';
+    taxFeedbackPrimary.textContent = 'Você está na faixa mais alta de imposto (27,5%).';
+    taxFeedbackSecondary.textContent = 'Você já paga um valor considerável de imposto.';
   } else if (result.rate >= 15) {
-    taxFeedbackPrimary.textContent = 'Voce esta em uma faixa intermediaria de imposto.';
-    taxFeedbackSecondary.textContent = 'Sua aliquota ja merece atencao para nao perder deducoes importantes.';
+    taxFeedbackPrimary.textContent = 'Você está em uma faixa intermediária de imposto.';
+    taxFeedbackSecondary.textContent = 'Sua alíquota já merece atenção para não perder deduções importantes.';
   } else {
-    taxFeedbackPrimary.textContent = `Sua aliquota e ${result.rate.toFixed(1)}%.`;
-    taxFeedbackSecondary.textContent = 'Voce esta em uma faixa menor, mas ainda pode melhorar sua declaracao com deducoes.';
+    taxFeedbackPrimary.textContent = `Sua alíquota é ${result.rate.toFixed(1)}%.`;
+    taxFeedbackSecondary.textContent = 'Você está em uma faixa menor, mas ainda pode melhorar sua declaração com deduções.';
   }
 
   taxSuggestions.innerHTML = '';
@@ -696,7 +696,7 @@ function resetTaxSimulation() {
   taxEstimated.textContent = formatCurrency(0);
   taxNetIncome.textContent = formatCurrency(0);
   taxHighlightValue.textContent = formatCurrency(0);
-  taxFeedbackPrimary.textContent = 'Voce esta isento.';
+  taxFeedbackPrimary.textContent = 'Você está isento.';
   taxFeedbackSecondary.textContent = 'Preencha os campos para ver sua estimativa.';
   taxSuggestions.innerHTML = '';
   taxSuggestions.classList.add('hidden');
@@ -806,7 +806,7 @@ function buildInvestmentSimulationItem(item) {
   li.innerHTML = `
     <div>
       <strong>${item.riskLabel}</strong>
-      <span>${formatCurrency(item.monthlyAmount)} por mes â€¢ ${item.years} ano${item.years > 1 ? 's' : ''}</span>
+      <span>${formatCurrency(item.monthlyAmount)} por mês • ${item.years} ano${item.years > 1 ? 's' : ''}</span>
       <small>Estimativa simples de ${item.annualRate}% ao ano</small>
     </div>
     <div>
@@ -859,7 +859,7 @@ function startInvestmentEdit(item) {
 }
 
 async function deleteTransaction(id) {
-  if (!window.confirm('Deseja excluir esta movimentacao?')) return;
+  if (!window.confirm('Deseja excluir esta movimentação?')) return;
   try {
     const data = await apiFetch(`/api/transactions/${id}?email=${encodeURIComponent(currentUserEmail)}`, {
       method: 'DELETE',
@@ -873,7 +873,7 @@ async function deleteTransaction(id) {
 }
 
 async function deleteInvestment(id) {
-  if (!window.confirm('Deseja excluir esta simulacao?')) return;
+  if (!window.confirm('Deseja excluir esta simulação?')) return;
   try {
     const data = await apiFetch(`/api/investments/${id}?email=${encodeURIComponent(currentUserEmail)}`, {
       method: 'DELETE',
@@ -936,7 +936,7 @@ function renderDashboard(data) {
   incomeTotal.textContent = formatCurrency(data.summary.income);
   expenseTotal.textContent = formatCurrency(data.summary.expense);
   balanceTotal.textContent = formatCurrency(data.summary.balance);
-  renderList(latestTransactionList, data.latestTransactions, 'Nenhuma movimentacao cadastrada ainda.', buildTransactionItem);
+  renderList(latestTransactionList, data.latestTransactions, 'Nenhuma movimentação cadastrada ainda.', buildTransactionItem);
 
   renderChart('dashboardCategory', 'category-chart', {
     type: 'doughnut',
@@ -983,7 +983,7 @@ function renderFilteredTransactions(data) {
   filteredExpense.textContent = formatCurrency(data.summary.expense);
   filteredBalance.textContent = formatCurrency(data.summary.balance);
   filteredCount.textContent = String(data.totalCount);
-  renderList(transactionList, data.transactions, 'Nenhuma movimentacao para os filtros escolhidos.', buildTransactionItem);
+  renderList(transactionList, data.transactions, 'Nenhuma movimentação para os filtros escolhidos.', buildTransactionItem);
 
   renderChart('filteredCategory', 'filtered-category-chart', {
     type: 'pie',
@@ -1012,7 +1012,7 @@ function renderInvestments(data) {
     selectedInvestmentViewId = data.investments[0].id;
   }
 
-  renderList(investmentList, data.investments, 'Nenhuma simulacao salva ainda.', buildInvestmentSimulationItem);
+  renderList(investmentList, data.investments, 'Nenhuma simulação salva ainda.', buildInvestmentSimulationItem);
 
   const selectedInvestment = data.investments.find((item) => item.id === selectedInvestmentViewId) || data.investments[0];
 
@@ -1208,7 +1208,7 @@ verifyEmailForm.addEventListener('submit', async (event) => {
   const email = verifyEmailInput.value.trim();
   const otp = getOtpCode();
   if (otp.length !== 6) {
-    showVerifyMessage('Digite os 6 digitos do codigo.', 'error');
+    showVerifyMessage('Digite os 6 dígitos do código.', 'error');
     return;
   }
 
@@ -1222,7 +1222,7 @@ verifyEmailForm.addEventListener('submit', async (event) => {
     showScreen(authScreen);
     showLogin();
     document.getElementById('login-email').value = email;
-    showAuthMessage('Cadastro confirmado. Agora voce pode fazer login.', 'success');
+    showAuthMessage('Cadastro confirmado. Agora você pode fazer login.', 'success');
   } catch (error) {
     showVerifyMessage(error.message, 'error');
   }
@@ -1320,12 +1320,12 @@ investmentForm.addEventListener('submit', async (event) => {
 
 cancelTransactionEditButton.addEventListener('click', () => {
   resetTransactionForm();
-  showTransactionMessage('Edicao cancelada.', 'success');
+    showTransactionMessage('Edição cancelada.', 'success');
 });
 
 cancelInvestmentEditButton.addEventListener('click', () => {
   resetInvestmentForm();
-  showInvestmentMessage('Edicao cancelada.', 'success');
+    showInvestmentMessage('Edição cancelada.', 'success');
 });
 
 taxForm.addEventListener('submit', (event) => {

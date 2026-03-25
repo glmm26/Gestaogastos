@@ -19,7 +19,7 @@ const EMAIL_PROVIDER = String(process.env.EMAIL_PROVIDER || 'api').trim().toLowe
 const EMAIL_API_URL = String(process.env.EMAIL_API_URL || 'https://api.brevo.com/v3/smtp/email').trim();
 const EMAIL_API_KEY = String(process.env.EMAIL_API_KEY || '').trim();
 const EMAIL_API_SENDER_EMAIL = String(process.env.EMAIL_API_SENDER_EMAIL || '').trim();
-const EMAIL_API_SENDER_NAME = String(process.env.EMAIL_API_SENDER_NAME || 'Gestao de Gastos').trim();
+const EMAIL_API_SENDER_NAME = String(process.env.EMAIL_API_SENDER_NAME || 'Gestão de Gastos').trim();
 
 function loadDotenv(filePath) {
   if (!fs.existsSync(filePath)) return;
@@ -96,7 +96,7 @@ function isEmailApiConfigured() {
 
 async function sendOtpEmail(targetEmail, otp) {
   if (!isEmailApiConfigured()) {
-    throw new Error('Servico de email nao configurado.');
+    throw new Error('Serviço de email não configurado.');
   }
 
   const payload = {
@@ -105,14 +105,14 @@ async function sendOtpEmail(targetEmail, otp) {
       email: EMAIL_API_SENDER_EMAIL,
     },
     to: [{ email: targetEmail }],
-    subject: 'Codigo de confirmacao de cadastro - Gestao de Gastos',
+    subject: 'Código de confirmação de cadastro - Gestão de Gastos',
     htmlContent: `
       <html>
         <body style="font-family: Arial, sans-serif;">
-          <h2>Codigo de confirmacao</h2>
-          <p>Use o codigo abaixo para concluir seu cadastro:</p>
+          <h2>Código de confirmação</h2>
+          <p>Use o código abaixo para concluir seu cadastro:</p>
           <h1 style="letter-spacing: 4px;">${otp}</h1>
-          <p>Esse codigo expira em ${OTP_EXPIRATION_MINUTES} minutos.</p>
+          <p>Esse código expira em ${OTP_EXPIRATION_MINUTES} minutos.</p>
         </body>
       </html>
     `,
@@ -168,8 +168,8 @@ async function issueRegistrationOtp(db, user) {
 
   return {
     message: emailSent
-      ? `Codigo de cadastro enviado para ${user.email}. Validade de ${OTP_EXPIRATION_MINUTES} minutos.`
-      : 'Codigo de cadastro gerado. Como o envio por email nao esta disponivel, use o codigo de desenvolvimento.',
+      ? `Código de cadastro enviado para ${user.email}. Validade de ${OTP_EXPIRATION_MINUTES} minutos.`
+      : 'Código de cadastro gerado. Como o envio por email não está disponível, use o código de desenvolvimento.',
     devOtp: emailSent ? undefined : otp,
     deliveryWarning: emailSent ? undefined : deliveryWarning,
   };
@@ -534,7 +534,7 @@ function buildInsights(summary, categoryBreakdown, investmentsSummary) {
   const topCategory = categoryBreakdown[0];
 
   if (summary.expense > summary.income) {
-    insights.push('Suas saidas estao maiores que as entradas no periodo selecionado.');
+    insights.push('Suas saídas estão maiores que as entradas no período selecionado.');
   }
 
   if (topCategory && topCategory.category === 'Alimentacao' && topCategory.percentage >= 30) {
@@ -554,7 +554,7 @@ function buildInsights(summary, categoryBreakdown, investmentsSummary) {
   }
 
   if (!insights.length) {
-    insights.push('Seu fluxo financeiro esta equilibrado no periodo analisado.');
+    insights.push('Seu fluxo financeiro está equilibrado no período analisado.');
   }
 
   return insights.slice(0, 4);
@@ -660,8 +660,8 @@ function buildReportHtml(user, report) {
         <div class="card"><strong>Saldo final</strong><br />R$ ${summary.balance.toFixed(2).replace('.', ',')}</div>
       </div>
       <h2>Categorias principais</h2>
-      <ul>${topCategories || '<li>Nenhuma despesa registrada no periodo.</li>'}</ul>
-      <h2>Insights automaticos</h2>
+      <ul>${topCategories || '<li>Nenhuma despesa registrada no período.</li>'}</ul>
+      <h2>Insights automáticos</h2>
       <ul>${insights}</ul>
       <p><small>Relatorio gerado em ${new Intl.DateTimeFormat('pt-BR', { dateStyle: 'short', timeStyle: 'short' }).format(new Date(report.payload.generatedAt))}</small></p>
     </section>
@@ -694,7 +694,7 @@ async function handleApi(req, res) {
   if (req.method === 'POST' && route === '/api/register') {
     const { email, password } = await parseBody(req);
     if (!email || !password) {
-      sendJson(res, 400, { message: 'Email e senha sao obrigatorios.' });
+      sendJson(res, 400, { message: 'Email e senha são obrigatórios.' });
       return;
     }
 
@@ -702,7 +702,7 @@ async function handleApi(req, res) {
     const exists = getUserByEmail(db, normalizedEmail);
     if (exists) {
       if (isUserVerified(exists)) {
-        sendJson(res, 409, { message: 'Email ja cadastrado.' });
+        sendJson(res, 409, { message: 'Email já cadastrado.' });
         return;
       }
 
@@ -730,18 +730,18 @@ async function handleApi(req, res) {
   if (req.method === 'POST' && route === '/api/login') {
     const { email, password } = await parseBody(req);
     if (!email || !password) {
-      sendJson(res, 400, { message: 'Email e senha sao obrigatorios.' });
+      sendJson(res, 400, { message: 'Email e senha são obrigatórios.' });
       return;
     }
 
     const user = getUserByEmail(db, email);
     if (!user || !verifyPassword(String(password), user.passwordHash)) {
-      sendJson(res, 401, { message: 'Credenciais invalidas.' });
+      sendJson(res, 401, { message: 'Credenciais inválidas.' });
       return;
     }
 
     if (!isUserVerified(user)) {
-      sendJson(res, 403, { message: 'Voce precisa confirmar o cadastro com o OTP enviado por email antes de fazer login.' });
+      sendJson(res, 403, { message: 'Você precisa confirmar o cadastro com o OTP enviado por email antes de fazer login.' });
       return;
     }
 
@@ -758,13 +758,13 @@ async function handleApi(req, res) {
   ) {
     const { email, otp } = await parseBody(req);
     if (!email || !otp) {
-      sendJson(res, 400, { message: 'Email e OTP sao obrigatorios.' });
+      sendJson(res, 400, { message: 'Email e OTP são obrigatórios.' });
       return;
     }
 
     const user = getUserByEmail(db, email);
     if (!user) {
-      sendJson(res, 404, { message: 'Usuario nao encontrado.' });
+      sendJson(res, 404, { message: 'Usuário não encontrado.' });
       return;
     }
 
@@ -774,7 +774,7 @@ async function handleApi(req, res) {
 
     const currentOtp = userOtps[0];
     if (!currentOtp || currentOtp.used) {
-      sendJson(res, 401, { message: 'OTP invalido ou ja utilizado.' });
+      sendJson(res, 401, { message: 'OTP inválido ou já utilizado.' });
       return;
     }
 
@@ -792,7 +792,7 @@ async function handleApi(req, res) {
     user.isVerified = true;
     writeDatabase(db);
     sendJson(res, 200, {
-      message: 'Cadastro confirmado com sucesso. Agora voce pode fazer login.',
+      message: 'Cadastro confirmado com sucesso. Agora você pode fazer login.',
     });
     return;
   }
@@ -800,7 +800,7 @@ async function handleApi(req, res) {
   if (req.method === 'GET' && route === '/api/categories') {
     const user = getUserByEmail(db, parsedUrl.searchParams.get('email'));
     if (!user) {
-      sendJson(res, 404, { message: 'Usuario nao encontrado.' });
+      sendJson(res, 404, { message: 'Usuário não encontrado.' });
       return;
     }
 
@@ -813,13 +813,13 @@ async function handleApi(req, res) {
     const { email, name } = await parseBody(req);
     const user = getUserByEmail(db, email);
     if (!user) {
-      sendJson(res, 404, { message: 'Usuario nao encontrado.' });
+      sendJson(res, 404, { message: 'Usuário não encontrado.' });
       return;
     }
 
     const category = ensureCategory(db, user.id, name);
     if (!category) {
-      sendJson(res, 400, { message: 'Informe uma categoria valida.' });
+      sendJson(res, 400, { message: 'Informe uma categoria válida.' });
       return;
     }
 
@@ -838,12 +838,12 @@ async function handleApi(req, res) {
     const numericAmount = Number(amount);
 
     if (!user || !['income', 'expense'].includes(normalizedType)) {
-      sendJson(res, 400, { message: 'Email e tipo sao obrigatorios.' });
+      sendJson(res, 400, { message: 'Email e tipo são obrigatórios.' });
       return;
     }
 
     if (!Number.isFinite(numericAmount) || numericAmount <= 0) {
-      sendJson(res, 400, { message: 'Valor invalido.' });
+      sendJson(res, 400, { message: 'Valor inválido.' });
       return;
     }
 
@@ -862,14 +862,14 @@ async function handleApi(req, res) {
 
     refreshAutomaticReports(db, user);
     writeDatabase(db);
-    sendJson(res, 201, { message: 'Movimentacao adicionada com sucesso.' });
+    sendJson(res, 201, { message: 'Movimentação adicionada com sucesso.' });
     return;
   }
 
   if (req.method === 'GET' && route === '/api/transactions') {
     const user = getUserByEmail(db, parsedUrl.searchParams.get('email'));
     if (!user) {
-      sendJson(res, 404, { message: 'Usuario nao encontrado.' });
+      sendJson(res, 404, { message: 'Usuário não encontrado.' });
       return;
     }
 
@@ -902,13 +902,13 @@ async function handleApi(req, res) {
     const user = getUserByEmail(db, data.email);
 
     if (!user) {
-      sendJson(res, 404, { message: 'Usuario nao encontrado.' });
+      sendJson(res, 404, { message: 'Usuário não encontrado.' });
       return;
     }
 
     const index = db.transactions.findIndex((entry) => entry.id === transactionId && entry.userId === user.id);
     if (index === -1) {
-      sendJson(res, 404, { message: 'Movimentacao nao encontrada.' });
+      sendJson(res, 404, { message: 'Movimentação não encontrada.' });
       return;
     }
 
@@ -916,7 +916,7 @@ async function handleApi(req, res) {
       db.transactions.splice(index, 1);
       refreshAutomaticReports(db, user);
       writeDatabase(db);
-      sendJson(res, 200, { message: 'Movimentacao excluida com sucesso.' });
+      sendJson(res, 200, { message: 'Movimentação excluída com sucesso.' });
       return;
     }
 
@@ -925,12 +925,12 @@ async function handleApi(req, res) {
     const numericAmount = Number(amount);
 
     if (!['income', 'expense'].includes(normalizedType)) {
-      sendJson(res, 400, { message: 'Tipo invalido.' });
+      sendJson(res, 400, { message: 'Tipo inválido.' });
       return;
     }
 
     if (!Number.isFinite(numericAmount) || numericAmount <= 0) {
-      sendJson(res, 400, { message: 'Valor invalido.' });
+      sendJson(res, 400, { message: 'Valor inválido.' });
       return;
     }
 
@@ -946,14 +946,14 @@ async function handleApi(req, res) {
 
     refreshAutomaticReports(db, user);
     writeDatabase(db);
-    sendJson(res, 200, { message: 'Movimentacao atualizada com sucesso.' });
+    sendJson(res, 200, { message: 'Movimentação atualizada com sucesso.' });
     return;
   }
 
   if (req.method === 'GET' && route === '/api/dashboard') {
     const user = getUserByEmail(db, parsedUrl.searchParams.get('email'));
     if (!user) {
-      sendJson(res, 404, { message: 'Usuario nao encontrado.' });
+      sendJson(res, 404, { message: 'Usuário não encontrado.' });
       return;
     }
 
@@ -971,17 +971,17 @@ async function handleApi(req, res) {
     const normalizedRiskProfile = normalizeRiskProfile(riskProfile);
 
     if (!user) {
-      sendJson(res, 400, { message: 'Email e obrigatorio.' });
+      sendJson(res, 400, { message: 'Email é obrigatório.' });
       return;
     }
 
     if (!Number.isFinite(numericAmount) || numericAmount <= 0) {
-      sendJson(res, 400, { message: 'Informe um valor mensal valido.' });
+      sendJson(res, 400, { message: 'Informe um valor mensal válido.' });
       return;
     }
 
     if (!Number.isFinite(numericYears) || numericYears <= 0) {
-      sendJson(res, 400, { message: 'Escolha um tempo de investimento valido.' });
+      sendJson(res, 400, { message: 'Escolha um tempo de investimento válido.' });
       return;
     }
 
@@ -999,7 +999,7 @@ async function handleApi(req, res) {
     writeDatabase(db);
     const profile = getRiskProfileConfig(normalizedRiskProfile);
     sendJson(res, 201, {
-      message: `Simulacao salva com sucesso. Perfil ${profile.label.toLowerCase()} com ${profile.annualRate}% ao ano.`,
+      message: `Simulação salva com sucesso. Perfil ${profile.label.toLowerCase()} com ${profile.annualRate}% ao ano.`,
     });
     return;
   }
@@ -1007,7 +1007,7 @@ async function handleApi(req, res) {
   if (req.method === 'GET' && route === '/api/investments') {
     const user = getUserByEmail(db, parsedUrl.searchParams.get('email'));
     if (!user) {
-      sendJson(res, 404, { message: 'Usuario nao encontrado.' });
+      sendJson(res, 404, { message: 'Usuário não encontrado.' });
       return;
     }
 
@@ -1031,13 +1031,13 @@ async function handleApi(req, res) {
     const user = getUserByEmail(db, data.email);
 
     if (!user) {
-      sendJson(res, 404, { message: 'Usuario nao encontrado.' });
+      sendJson(res, 404, { message: 'Usuário não encontrado.' });
       return;
     }
 
     const index = db.investments.findIndex((entry) => entry.id === investmentId && entry.userId === user.id);
     if (index === -1) {
-      sendJson(res, 404, { message: 'Investimento nao encontrado.' });
+      sendJson(res, 404, { message: 'Investimento não encontrado.' });
       return;
     }
 
@@ -1045,7 +1045,7 @@ async function handleApi(req, res) {
       db.investments.splice(index, 1);
       refreshAutomaticReports(db, user);
       writeDatabase(db);
-      sendJson(res, 200, { message: 'Investimento excluido com sucesso.' });
+      sendJson(res, 200, { message: 'Investimento excluído com sucesso.' });
       return;
     }
 
@@ -1054,12 +1054,12 @@ async function handleApi(req, res) {
     const normalizedRiskProfile = normalizeRiskProfile(data.riskProfile);
 
     if (!Number.isFinite(numericAmount) || numericAmount <= 0) {
-      sendJson(res, 400, { message: 'Informe um valor mensal valido.' });
+      sendJson(res, 400, { message: 'Informe um valor mensal válido.' });
       return;
     }
 
     if (!Number.isFinite(numericYears) || numericYears <= 0) {
-      sendJson(res, 400, { message: 'Escolha um tempo de investimento valido.' });
+      sendJson(res, 400, { message: 'Escolha um tempo de investimento válido.' });
       return;
     }
 
@@ -1072,7 +1072,7 @@ async function handleApi(req, res) {
 
     refreshAutomaticReports(db, user);
     writeDatabase(db);
-    sendJson(res, 200, { message: 'Simulacao atualizada com sucesso.' });
+    sendJson(res, 200, { message: 'Simulação atualizada com sucesso.' });
     return;
   }
 
@@ -1080,14 +1080,14 @@ async function handleApi(req, res) {
     const { email, month } = await parseBody(req);
     const user = getUserByEmail(db, email);
     if (!user) {
-      sendJson(res, 404, { message: 'Usuario nao encontrado.' });
+      sendJson(res, 404, { message: 'Usuário não encontrado.' });
       return;
     }
 
     const report = ensureStoredReport(db, user, month);
     writeDatabase(db);
     sendJson(res, 201, {
-      message: 'Relatorio gerado com sucesso.',
+      message: 'Relatório gerado com sucesso.',
       report: report.payload,
     });
     return;
@@ -1096,7 +1096,7 @@ async function handleApi(req, res) {
   if (req.method === 'GET' && route === '/api/reports') {
     const user = getUserByEmail(db, parsedUrl.searchParams.get('email'));
     if (!user) {
-      sendJson(res, 404, { message: 'Usuario nao encontrado.' });
+      sendJson(res, 404, { message: 'Usuário não encontrado.' });
       return;
     }
 
@@ -1121,7 +1121,7 @@ async function handleApi(req, res) {
   if (req.method === 'GET' && route === '/api/reports/export') {
     const user = getUserByEmail(db, parsedUrl.searchParams.get('email'));
     if (!user) {
-      sendJson(res, 404, { message: 'Usuario nao encontrado.' });
+      sendJson(res, 404, { message: 'Usuário não encontrado.' });
       return;
     }
 
@@ -1132,7 +1132,7 @@ async function handleApi(req, res) {
     return;
   }
 
-  sendJson(res, 404, { message: 'Endpoint nao encontrado.' });
+  sendJson(res, 404, { message: 'Endpoint não encontrado.' });
 }
 
 ensureDatabase();

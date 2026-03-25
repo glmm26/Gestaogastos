@@ -41,10 +41,10 @@ copy .env.example .env
 npm install
 ```
 
-3. Inicie o servidor:
+3. Inicie o servidor com o comando abaixo:
 
 ```powershell
-npm start
+node server.js
 ```
 
 4. Abra no navegador:
@@ -119,10 +119,10 @@ O projeto usa confirmacao por OTP no cadastro. O envio tenta usar as variaveis d
 - Os dados ficam salvos localmente em `database.json`
 - Os graficos usam `Chart.js` carregado no front-end
 
-## Scripts
+## Observacao sobre execucao
 
-```json
-{
-  "start": "node server.js"
-}
+Mesmo que exista `package.json`, a forma recomendada para rodar o projeto atualmente e:
+
+```powershell
+node server.js
 ```
