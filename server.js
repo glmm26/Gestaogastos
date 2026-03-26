@@ -1172,7 +1172,7 @@ async function handleApi(req, res) {
 
   if (
     req.method === 'POST' &&
-    (route === '/api/verify-otp' || route === '/api/verify-email')
+    (route === '/api/verify-otp' || route === '/api/verify-email' || route === '/api/email-verificacao')
   ) {
     const { email, otp } = await parseBody(req);
     if (!email || !otp) {
