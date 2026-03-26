@@ -92,7 +92,7 @@
   margin: 0 0 0.4rem;
 }
 
-.avatar-copy .subtitle {
+.avatar-copy .subtitulo {
   margin-bottom: 0;
 }
 
@@ -131,6 +131,14 @@
 
 .summary-panel {
   background: linear-gradient(160deg, rgba(56, 189, 248, 0.08), rgba(255, 255, 255, 0.04));
+}
+
+.summary-panel .pilha-resumo {
+  margin-top: 0.25rem;
+}
+
+.summary-panel .item-resumo strong {
+  font-size: 1.15rem;
 }
 
 button:disabled {

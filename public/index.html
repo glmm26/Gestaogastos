@@ -7,642 +7,642 @@
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <section id="splash" class="splash active">
-      <div class="splash-market" aria-hidden="true">
-        <span class="market-bar"></span>
-        <span class="market-bar"></span>
-        <span class="market-bar"></span>
-        <span class="market-bar"></span>
-        <span class="market-bar"></span>
-        <span class="market-bar"></span>
-        <span class="market-bar"></span>
-        <span class="market-bar"></span>
-        <span class="market-bar"></span>
-        <span class="market-bar"></span>
-        <span class="market-bar"></span>
-        <span class="market-bar"></span>
+    <section id="tela-splash" class="tela-splash ativo">
+      <div class="mercado-splash" aria-hidden="true">
+        <span class="barra-mercado"></span>
+        <span class="barra-mercado"></span>
+        <span class="barra-mercado"></span>
+        <span class="barra-mercado"></span>
+        <span class="barra-mercado"></span>
+        <span class="barra-mercado"></span>
+        <span class="barra-mercado"></span>
+        <span class="barra-mercado"></span>
+        <span class="barra-mercado"></span>
+        <span class="barra-mercado"></span>
+        <span class="barra-mercado"></span>
+        <span class="barra-mercado"></span>
       </div>
-      <div class="logo-wrap">
+      <div class="bloco-logo">
         <p class="eyebrow">FINANCAS PESSOAIS</p>
         <h1>Gestão de Gastos</h1>
         <p>Controle seus gastos, acompanhe investimentos e tome decisões financeiras com dados reais.</p>
-        <ul class="splash-benefits">
-          <li><span class="benefit-dot"></span>Controle automático de gastos</li>
-          <li><span class="benefit-dot"></span>Relatórios inteligentes</li>
-          <li><span class="benefit-dot"></span>Simulação de imposto de renda</li>
-          <li><span class="benefit-dot"></span>Acompanhamento de investimentos</li>
+        <ul class="beneficios-splash">
+          <li><span class="ponto-beneficio"></span>Controle automático de gastos</li>
+          <li><span class="ponto-beneficio"></span>Relatórios inteligentes</li>
+          <li><span class="ponto-beneficio"></span>Simulação de imposto de renda</li>
+          <li><span class="ponto-beneficio"></span>Acompanhamento de investimentos</li>
         </ul>
-        <button id="enter-app">Entrar no painel</button>
-        <p class="splash-trust">Seus dados são seguros e protegidos</p>
+        <button id="botao-entrar-app">Entrar no painel</button>
+        <p class="confianca-splash">Seus dados são seguros e protegidos</p>
       </div>
-      <div class="splash-progress" aria-hidden="true">
-        <div id="splash-progress-bar" class="splash-progress-bar"></div>
+      <div class="progresso-splash" aria-hidden="true">
+        <div id="barra-progresso-splash" class="barra-progresso-splash"></div>
       </div>
     </section>
 
-    <main id="auth-screen" class="auth-screen hidden">
-      <canvas id="auth-particles" class="auth-particles" aria-hidden="true"></canvas>
-      <div class="auth-backdrop" aria-hidden="true"></div>
-      <div class="auth-card">
+    <main id="tela-autenticacao" class="tela-autenticacao oculto">
+      <canvas id="particulas-autenticacao" class="particulas-autenticacao" aria-hidden="true"></canvas>
+      <div class="fundo-autenticacao" aria-hidden="true"></div>
+      <div class="cartao-autenticacao">
         <h2>Bem-vindo</h2>
-        <p class="subtitle">Crie sua conta ou faça login para acessar seu painel completo.</p>
-        <div class="tabs">
-          <button id="tab-register" class="tab active">Cadastro</button>
-          <button id="tab-login" class="tab">Login</button>
+        <p class="subtitulo">Crie sua conta ou faça login para acessar seu painel completo.</p>
+        <div class="abas">
+          <button id="aba-cadastro" class="aba ativo">Cadastro</button>
+          <button id="aba-login" class="aba">Login</button>
         </div>
-        <form id="register-form" class="form active">
-          <label for="register-name">Nome completo</label>
-          <input id="register-name" type="text" maxlength="80" required />
-          <label for="register-email">Email</label>
-          <input id="register-email" type="email" required />
-          <label for="register-password">Senha</label>
-          <input id="register-password" type="password" minlength="6" required />
-          <label for="register-confirm-password">Confirmar senha</label>
-          <input id="register-confirm-password" type="password" minlength="6" required />
-          <button id="register-submit" type="submit">Criar conta</button>
+        <form id="formulario-cadastro" class="formulario-aba ativo">
+          <label for="nome-cadastro">Nome completo</label>
+          <input id="nome-cadastro" type="text" maxlength="80" required />
+          <label for="email-cadastro">Email</label>
+          <input id="email-cadastro" type="email" required />
+          <label for="senha-cadastro">Senha</label>
+          <input id="senha-cadastro" type="password" minlength="6" required />
+          <label for="confirmar-senha-cadastro">Confirmar senha</label>
+          <input id="confirmar-senha-cadastro" type="password" minlength="6" required />
+          <button id="botao-cadastro" type="submit">Criar conta</button>
         </form>
-        <form id="login-form" class="form">
-          <label for="login-email">Email</label>
-          <input id="login-email" type="email" required />
-          <label for="login-password">Senha</label>
-          <input id="login-password" type="password" required />
-          <button id="login-submit" type="submit">Entrar</button>
+        <form id="formulario-login" class="formulario-aba">
+          <label for="email-login">Email</label>
+          <input id="email-login" type="email" required />
+          <label for="senha-login">Senha</label>
+          <input id="senha-login" type="password" required />
+          <button id="botao-login" type="submit">Entrar</button>
         </form>
-        <p id="auth-message" class="message"></p>
+        <p id="mensagem-autenticacao" class="mensagem-status"></p>
       </div>
     </main>
 
-    <main id="verify-screen" class="verify-screen hidden">
-      <section class="verify-card">
+    <main id="tela-verificacao" class="tela-verificacao oculto">
+      <section class="cartao-verificacao">
         <h2>Confirmação de cadastro</h2>
-        <p class="subtitle">Digite o código de 6 dígitos enviado para seu email para ativar a sua conta.</p>
-        <form id="verify-email-form" class="verify-form">
-          <label for="verify-email">Email</label>
-          <input id="verify-email" type="email" required />
+        <p class="subtitulo">Digite o código de 6 dígitos enviado para seu email para ativar a sua conta.</p>
+        <form id="formulario-verificacao-email" class="formulario-verificacao">
+          <label for="email-verificacao">Email</label>
+          <input id="email-verificacao" type="email" required />
           <label>Código</label>
-          <div id="otp-inputs" class="otp-inputs">
-            <input class="otp-digit" type="text" inputmode="numeric" maxlength="1" required />
-            <input class="otp-digit" type="text" inputmode="numeric" maxlength="1" required />
-            <input class="otp-digit" type="text" inputmode="numeric" maxlength="1" required />
-            <input class="otp-digit" type="text" inputmode="numeric" maxlength="1" required />
-            <input class="otp-digit" type="text" inputmode="numeric" maxlength="1" required />
-            <input class="otp-digit" type="text" inputmode="numeric" maxlength="1" required />
+          <div id="entradas-otp" class="entradas-otp">
+            <input class="digito-otp" type="text" inputmode="numeric" maxlength="1" required />
+            <input class="digito-otp" type="text" inputmode="numeric" maxlength="1" required />
+            <input class="digito-otp" type="text" inputmode="numeric" maxlength="1" required />
+            <input class="digito-otp" type="text" inputmode="numeric" maxlength="1" required />
+            <input class="digito-otp" type="text" inputmode="numeric" maxlength="1" required />
+            <input class="digito-otp" type="text" inputmode="numeric" maxlength="1" required />
           </div>
           <button type="submit">Confirmar cadastro</button>
-          <button type="button" id="back-to-login" class="secondary">Voltar para login</button>
+          <button type="button" id="voltar-login" class="botao-secundario">Voltar para login</button>
         </form>
-        <p id="verify-message" class="message"></p>
+        <p id="mensagem-verificacao" class="mensagem-status"></p>
       </section>
     </main>
 
-    <main id="home-screen" class="home-screen hidden">
-      <div class="app-shell">
-        <aside class="sidebar">
-          <div class="brand-block">
+    <main id="tela-home" class="tela-home oculto">
+      <div class="estrutura-aplicacao">
+        <aside class="barra-lateral">
+          <div class="bloco-marca">
             <p class="eyebrow">PAINEL FINANCEIRO</p>
             <h2>Gestão de Gastos</h2>
-            <div id="sidebar-user-profile" class="user-profile" role="button" tabindex="0" aria-label="Abrir perfil do usuário">
-              <img id="sidebar-user-photo" src="/avatar-default.svg" alt="Foto de perfil do usuário" />
-              <h3 id="sidebar-user-name">Usuário</h3>
+            <div id="perfil-usuario-barra-lateral" class="perfil-usuario" role="button" tabindex="0" aria-label="Abrir perfil do usuário">
+              <img id="foto-usuario-barra-lateral" src="/avatar-default.svg" alt="Foto de perfil do usuário" />
+              <h3 id="nome-usuario-barra-lateral">Usuário</h3>
             </div>
           </div>
-          <nav class="nav-list">
-            <button class="nav-button active" data-section="dashboard-section">Dashboard</button>
-            <button class="nav-button" data-section="transactions-section">Movimentações</button>
-            <button class="nav-button" data-section="goals-section">Metas</button>
-            <button class="nav-button" data-section="investments-section">Investimentos</button>
-            <button class="nav-button" data-section="taxes-section">Impostos</button>
-            <button class="nav-button" data-section="reports-section">Relatórios</button>
+          <nav class="lista-navegacao">
+            <button class="botao-navegacao ativo" data-section="secao-dashboard">Dashboard</button>
+            <button class="botao-navegacao" data-section="secao-movimentacoes">Movimentações</button>
+            <button class="botao-navegacao" data-section="secao-metas">Metas</button>
+            <button class="botao-navegacao" data-section="secao-investimentos">Investimentos</button>
+            <button class="botao-navegacao" data-section="secao-impostos">Impostos</button>
+            <button class="botao-navegacao" data-section="secao-relatorios">Relatórios</button>
           </nav>
-          <button id="open-profile-page" class="secondary full-width">Perfil</button>
-          <button id="logout-button" class="secondary full-width">Sair</button>
+          <button id="abrir-pagina-perfil" class="botao-secundario largura-total">Perfil</button>
+          <button id="botao-sair" class="botao-secundario largura-total">Sair</button>
         </aside>
 
-        <section class="content-shell">
-          <header class="content-topbar">
+        <section class="estrutura-conteudo">
+          <header class="topo-conteudo">
             <div>
               <p class="eyebrow">VISAO GERAL</p>
-              <h1 id="section-title">Dashboard</h1>
+              <h1 id="titulo-secao">Dashboard</h1>
             </div>
-            <button id="refresh-data" class="secondary">Atualizar dados</button>
+            <button id="atualizar-dados" class="botao-secundario">Atualizar dados</button>
           </header>
 
-          <section id="dashboard-section" class="app-section active">
-            <div class="panel">
-              <div class="panel-header">
+          <section id="secao-dashboard" class="secao-aplicacao ativo">
+            <div class="painel">
+              <div class="cabecalho-painel">
                 <div>
                   <p class="eyebrow">REFERÊNCIA</p>
                   <h3>Escolha o mês do dashboard</h3>
                 </div>
-                <div class="compact-control">
-                  <label for="dashboard-month">Mês</label>
-                  <input id="dashboard-month" type="month" />
+                <div class="controle-compacto">
+                  <label for="mes-dashboard">Mês</label>
+                  <input id="mes-dashboard" type="month" />
                 </div>
               </div>
             </div>
-            <div class="stats-grid">
-              <article class="stat-card income">
+            <div class="grade-estatisticas">
+              <article class="cartao-estatistica entradas">
                 <p>Entradas do mês</p>
-                <h3 id="income-total">R$ 0,00</h3>
+                <h3 id="total-entradas">R$ 0,00</h3>
                 <span>Receitas cadastradas</span>
               </article>
-              <article class="stat-card expense">
+              <article class="cartao-estatistica saidas">
                 <p>Saídas do mês</p>
-                <h3 id="expense-total">R$ 0,00</h3>
+                <h3 id="total-saidas">R$ 0,00</h3>
                 <span>Despesas cadastradas</span>
               </article>
-              <article class="stat-card balance">
+              <article class="cartao-estatistica saldo">
                 <p>Saldo atual</p>
-                <h3 id="balance-total">R$ 0,00</h3>
+                <h3 id="total-saldo">R$ 0,00</h3>
                 <span>Entradas menos saídas</span>
               </article>
             </div>
-            <div class="panel-grid two-up">
-              <article class="panel">
-                <div class="panel-header">
+            <div class="grade-paineis duas-colunas">
+              <article class="painel">
+                <div class="cabecalho-painel">
                   <div>
                     <p class="eyebrow">DISTRIBUICAO</p>
                     <h3>Gastos por categoria</h3>
                   </div>
                 </div>
-                <div class="chart-wrap"><canvas id="category-chart"></canvas></div>
+                <div class="area-grafico"><canvas id="grafico-categoria"></canvas></div>
               </article>
-              <article class="panel">
-                <div class="panel-header">
+              <article class="painel">
+                <div class="cabecalho-painel">
                   <div>
                     <p class="eyebrow">FLUXO</p>
                     <h3>Entradas vs saídas</h3>
                   </div>
                 </div>
-                <div class="chart-wrap"><canvas id="monthly-chart"></canvas></div>
+                <div class="area-grafico"><canvas id="grafico-mensal"></canvas></div>
               </article>
             </div>
-            <div class="panel-grid">
-              <article class="panel">
-                <div class="panel-header">
+            <div class="grade-paineis">
+              <article class="painel">
+                <div class="cabecalho-painel">
                   <div>
                     <p class="eyebrow">MOVIMENTACOES</p>
                     <h3>Últimos registros</h3>
                   </div>
                 </div>
-                <ul id="latest-transaction-list" class="transaction-list"></ul>
+                <ul id="lista-ultimas-movimentacoes" class="lista-movimentacoes"></ul>
               </article>
             </div>
           </section>
 
-          <section id="transactions-section" class="app-section hidden">
-            <div class="panel-grid two-up">
-              <article class="panel">
-                <div class="panel-header">
+          <section id="secao-movimentacoes" class="secao-aplicacao oculto">
+            <div class="grade-paineis duas-colunas">
+              <article class="painel">
+                <div class="cabecalho-painel">
                   <div>
                     <p class="eyebrow">NOVA MOVIMENTAÇÃO</p>
                     <h3>Adicionar registro</h3>
                   </div>
                 </div>
-                <form id="transaction-form" class="form-grid">
-                  <label for="transaction-type">Tipo</label>
-                  <select id="transaction-type" required>
+                <form id="formulario-movimentacao" class="grade-formulario">
+                  <label for="tipo-movimentacao">Tipo</label>
+                  <select id="tipo-movimentacao" required>
                     <option value="income">Entrada</option>
                     <option value="expense">Saida</option>
                   </select>
-                  <label for="transaction-amount">Valor (R$)</label>
-                  <input id="transaction-amount" type="number" min="0.01" step="0.01" required />
-                  <label for="transaction-date">Data</label>
-                  <input id="transaction-date" type="date" required />
-                  <label for="transaction-category">Categoria</label>
-                  <select id="transaction-category" required></select>
-                  <div id="custom-category-row" class="hidden">
-                    <label for="custom-category-input">Categoria personalizada</label>
-                    <input id="custom-category-input" type="text" maxlength="40" placeholder="Ex: Educação" />
+                  <label for="valor-movimentacao">Valor (R$)</label>
+                  <input id="valor-movimentacao" type="number" min="0.01" step="0.01" required />
+                  <label for="data-movimentacao">Data</label>
+                  <input id="data-movimentacao" type="date" required />
+                  <label for="categoria-movimentacao">Categoria</label>
+                  <select id="categoria-movimentacao" required></select>
+                  <div id="linha-categoria-personalizada" class="oculto">
+                    <label for="campo-categoria-personalizada">Categoria personalizada</label>
+                    <input id="campo-categoria-personalizada" type="text" maxlength="40" placeholder="Ex: Educação" />
                   </div>
-                  <label for="transaction-notes">Observações</label>
-                  <input id="transaction-notes" type="text" maxlength="160" placeholder="Detalhes opcionais" />
-                  <div class="button-row">
-                    <button id="transaction-submit-button" type="submit">Salvar movimentação</button>
-                    <button id="cancel-transaction-edit" type="button" class="secondary hidden">Cancelar edição</button>
+                  <label for="observacoes-movimentacao">Observações</label>
+                  <input id="observacoes-movimentacao" type="text" maxlength="160" placeholder="Detalhes opcionais" />
+                  <div class="linha-botoes">
+                    <button id="botao-salvar-movimentacao" type="submit">Salvar movimentação</button>
+                    <button id="botao-cancelar-edicao-movimentacao" type="button" class="botao-secundario oculto">Cancelar edição</button>
                   </div>
                 </form>
-                <div class="inline-form">
-                  <input id="new-category-name" type="text" maxlength="40" placeholder="Nova categoria personalizada" />
-                  <button id="add-category-button" type="button" class="secondary">Adicionar categoria</button>
+                <div class="formulario-inline">
+                  <input id="nome-nova-categoria" type="text" maxlength="40" placeholder="Nova categoria personalizada" />
+                  <button id="botao-adicionar-categoria" type="button" class="botao-secundario">Adicionar categoria</button>
                 </div>
-                <p id="transaction-message" class="message"></p>
+                <p id="mensagem-movimentacao" class="mensagem-status"></p>
               </article>
 
-              <article class="panel">
-                <div class="panel-header">
+              <article class="painel">
+                <div class="cabecalho-painel">
                   <div>
                     <p class="eyebrow">FILTROS</p>
                     <h3>Refinar consulta</h3>
                   </div>
                 </div>
-                <form id="filters-form" class="form-grid">
-                  <label for="filter-type">Tipo</label>
-                  <select id="filter-type">
+                <form id="formulario-filtros" class="grade-formulario">
+                  <label for="filtro-tipo">Tipo</label>
+                  <select id="filtro-tipo">
                     <option value="all">Todos</option>
                     <option value="income">Entradas</option>
                     <option value="expense">Saidas</option>
                   </select>
-                  <label for="filter-category">Categoria</label>
-                  <select id="filter-category"><option value="all">Todas</option></select>
-                  <label for="filter-month">Mês</label>
-                  <input id="filter-month" type="month" />
-                  <label for="filter-period">Período</label>
-                  <select id="filter-period">
+                  <label for="filtro-categoria">Categoria</label>
+                  <select id="filtro-categoria"><option value="all">Todas</option></select>
+                  <label for="filtro-mes">Mês</label>
+                  <input id="filtro-mes" type="month" />
+                  <label for="filtro-periodo">Período</label>
+                  <select id="filtro-periodo">
                     <option value="all">Tudo</option>
                     <option value="7d">Últimos 7 dias</option>
                     <option value="30d">Últimos 30 dias</option>
                     <option value="90d">Últimos 90 dias</option>
                     <option value="month">Mês atual</option>
                   </select>
-                  <label for="filter-start-date">Data inicial</label>
-                  <input id="filter-start-date" type="date" />
-                  <label for="filter-end-date">Data final</label>
-                  <input id="filter-end-date" type="date" />
-                  <div class="button-row">
+                  <label for="filtro-data-inicial">Data inicial</label>
+                  <input id="filtro-data-inicial" type="date" />
+                  <label for="filtro-data-final">Data final</label>
+                  <input id="filtro-data-final" type="date" />
+                  <div class="linha-botoes">
                     <button type="submit">Aplicar filtros</button>
-                    <button type="button" id="clear-filters" class="secondary">Limpar</button>
+                    <button type="button" id="botao-limpar-filtros" class="botao-secundario">Limpar</button>
                   </div>
                 </form>
               </article>
             </div>
-            <div class="panel-grid two-up">
-              <article class="panel">
-                <div class="panel-header">
+            <div class="grade-paineis duas-colunas">
+              <article class="painel">
+                <div class="cabecalho-painel">
                   <div>
                     <p class="eyebrow">GRAFICO</p>
                     <h3>Despesas filtradas por categoria</h3>
                   </div>
                 </div>
-                <div class="chart-wrap compact"><canvas id="filtered-category-chart"></canvas></div>
+                <div class="area-grafico compacto"><canvas id="grafico-categoria-filtrado"></canvas></div>
               </article>
-              <article class="panel">
-                <div class="panel-header">
+              <article class="painel">
+                <div class="cabecalho-painel">
                   <div>
                     <p class="eyebrow">RESUMO</p>
                     <h3>Totais filtrados</h3>
                   </div>
                 </div>
-                <div class="summary-stack">
-                  <div class="summary-item"><span>Entradas</span><strong id="filtered-income">R$ 0,00</strong></div>
-                  <div class="summary-item"><span>Saídas</span><strong id="filtered-expense">R$ 0,00</strong></div>
-                  <div class="summary-item"><span>Saldo</span><strong id="filtered-balance">R$ 0,00</strong></div>
-                  <div class="summary-item"><span>Registros</span><strong id="filtered-count">0</strong></div>
+                <div class="pilha-resumo">
+                  <div class="item-resumo"><span>Entradas</span><strong id="entradas-filtradas">R$ 0,00</strong></div>
+                  <div class="item-resumo"><span>Saídas</span><strong id="saidas-filtradas">R$ 0,00</strong></div>
+                  <div class="item-resumo"><span>Saldo</span><strong id="saldo-filtrado">R$ 0,00</strong></div>
+                  <div class="item-resumo"><span>Registros</span><strong id="quantidade-filtrada">0</strong></div>
                 </div>
               </article>
             </div>
-            <div class="panel-grid">
-              <article class="panel">
-                <div class="panel-header">
+            <div class="grade-paineis">
+              <article class="painel">
+                <div class="cabecalho-painel">
                   <div>
                     <p class="eyebrow">LISTAGEM COMPLETA</p>
                     <h3>Movimentações</h3>
                   </div>
                 </div>
-                <ul id="transaction-list" class="transaction-list detailed"></ul>
+                <ul id="lista-movimentacoes" class="lista-movimentacoes detalhada"></ul>
               </article>
             </div>
           </section>
 
-          <section id="investments-section" class="app-section hidden">
-            <div class="stats-grid investments-grid">
-              <article class="stat-card">
+          <section id="secao-investimentos" class="secao-aplicacao oculto">
+            <div class="grade-estatisticas grade-investimentos">
+              <article class="cartao-estatistica">
                 <p>Total que você pode guardar</p>
-                <h3 id="invested-total">R$ 0,00</h3>
+                <h3 id="total-investido">R$ 0,00</h3>
                 <span>Soma dos aportes mensais ao longo do tempo</span>
               </article>
-              <article class="stat-card">
+              <article class="cartao-estatistica">
                 <p>Crescimento estimado</p>
-                <h3 id="profit-loss-total">R$ 0,00</h3>
+                <h3 id="total-lucro-prejuizo">R$ 0,00</h3>
                 <span>Quanto o seu dinheiro pode render</span>
               </article>
-              <article class="stat-card">
+              <article class="cartao-estatistica">
                 <p>Valor futuro estimado</p>
-                <h3 id="current-value-total">R$ 0,00</h3>
+                <h3 id="total-valor-atual">R$ 0,00</h3>
                 <span>Seu resultado final projetado</span>
               </article>
             </div>
-            <div class="panel-grid two-up">
-              <article class="panel">
-                <div class="panel-header">
+            <div class="grade-paineis duas-colunas">
+              <article class="painel">
+                <div class="cabecalho-painel">
                   <div>
                     <p class="eyebrow">SIMULADOR GUIADO</p>
                     <h3>Comece de um jeito simples</h3>
                   </div>
                 </div>
-                <form id="investment-form" class="form-grid">
-                  <p class="subtitle">Escolha quanto você consegue investir por mês e deixe o simulador fazer o resto.</p>
-                  <label for="investment-amount">Quanto você quer investir por mês?</label>
-                  <input id="investment-amount" type="number" min="1" step="0.01" placeholder="Ex: 200" required />
+                <form id="formulario-investimento" class="grade-formulario">
+                  <p class="subtitulo">Escolha quanto você consegue investir por mês e deixe o simulador fazer o resto.</p>
+                  <label for="valor-investimento">Quanto você quer investir por mês?</label>
+                  <input id="valor-investimento" type="number" min="1" step="0.01" placeholder="Ex: 200" required />
                   <div>
                     <label>Perfil de risco</label>
-                    <div id="risk-profile-buttons" class="choice-grid three-up">
-                      <button type="button" class="choice-button active" data-risk-profile="low">Baixo risco</button>
-                      <button type="button" class="choice-button" data-risk-profile="medium">Médio risco</button>
-                      <button type="button" class="choice-button" data-risk-profile="high">Alto risco</button>
+                    <div id="botoes-perfil-risco" class="grade-escolhas three-up">
+                      <button type="button" class="botao-escolha ativo" data-perfil-risco="low">Baixo risco</button>
+                      <button type="button" class="botao-escolha" data-perfil-risco="medium">Médio risco</button>
+                      <button type="button" class="botao-escolha" data-perfil-risco="high">Alto risco</button>
                     </div>
-                    <p id="risk-profile-help" class="helper-text">Baixo risco: pensado para quem prefere mais estabilidade. Estimativa de 8% ao ano.</p>
+                    <p id="ajuda-perfil-risco" class="texto-ajuda">Baixo risco: pensado para quem prefere mais estabilidade. Estimativa de 8% ao ano.</p>
                   </div>
                   <div>
                     <label>Por quanto tempo?</label>
-                    <div id="investment-years-buttons" class="choice-grid">
-                      <button type="button" class="choice-button" data-investment-years="1">1 ano</button>
-                      <button type="button" class="choice-button active" data-investment-years="3">3 anos</button>
-                      <button type="button" class="choice-button" data-investment-years="5">5 anos</button>
-                      <button type="button" class="choice-button" data-investment-years="10">10 anos</button>
-                      <button type="button" class="choice-button" data-investment-years="20">20 anos</button>
+                    <div id="botoes-anos-investimento" class="grade-escolhas">
+                      <button type="button" class="botao-escolha" data-anos-investimento="1">1 ano</button>
+                      <button type="button" class="botao-escolha ativo" data-anos-investimento="3">3 anos</button>
+                      <button type="button" class="botao-escolha" data-anos-investimento="5">5 anos</button>
+                      <button type="button" class="botao-escolha" data-anos-investimento="10">10 anos</button>
+                      <button type="button" class="botao-escolha" data-anos-investimento="20">20 anos</button>
                     </div>
                   </div>
-                  <div class="simulation-callout">
-                    <p id="investment-headline" class="simulation-headline">Seu dinheiro pode crescer para R$ 0,00 em 3 anos.</p>
-                    <p id="investment-subheadline" class="simulation-subheadline">Investindo pouco por mês você já começa a construir resultado.</p>
+                  <div class="chamada-simulacao">
+                    <p id="titulo-investimento" class="titulo-simulacao">Seu dinheiro pode crescer para R$ 0,00 em 3 anos.</p>
+                    <p id="subtitulo-investimento" class="subtitulo-simulacao">Investindo pouco por mês você já começa a construir resultado.</p>
                   </div>
-                  <div class="button-row">
-                    <button id="investment-submit-button" type="submit">Salvar simulação</button>
-                    <button id="cancel-investment-edit" type="button" class="secondary hidden">Cancelar edição</button>
+                  <div class="linha-botoes">
+                    <button id="botao-salvar-investimento" type="submit">Salvar simulação</button>
+                    <button id="botao-cancelar-edicao-investimento" type="button" class="botao-secundario oculto">Cancelar edição</button>
                   </div>
                 </form>
-                <p id="investment-message" class="message"></p>
+                <p id="mensagem-investimento" class="mensagem-status"></p>
               </article>
-              <article class="panel">
-                <div class="panel-header">
+              <article class="painel">
+                <div class="cabecalho-painel">
                   <div>
                     <p class="eyebrow">CRESCIMENTO</p>
                     <h3>Como o seu dinheiro pode evoluir</h3>
                   </div>
                 </div>
-                <div class="chart-wrap"><canvas id="investment-chart"></canvas></div>
+                <div class="area-grafico"><canvas id="grafico-investimento"></canvas></div>
               </article>
             </div>
-            <div class="panel-grid two-up">
-              <article id="investment-detail-panel" class="panel hidden">
-                <div class="panel-header">
+            <div class="grade-paineis duas-colunas">
+              <article id="painel-detalhes-investimento" class="painel oculto">
+                <div class="cabecalho-painel">
                   <div>
                     <p class="eyebrow">SIMULAÇÃO EM FOCO</p>
                     <h3>Detalhes do investimento selecionado</h3>
                   </div>
                 </div>
-                <div class="summary-stack">
-                  <div class="summary-item"><span>Perfil escolhido</span><strong id="selected-investment-profile">--</strong></div>
-                  <div class="summary-item"><span>Investimento mensal</span><strong id="selected-investment-amount">R$ 0,00</strong></div>
-                  <div class="summary-item"><span>Prazo</span><strong id="selected-investment-years">0 anos</strong></div>
-                  <div class="summary-item"><span>Resultado projetado</span><strong id="selected-investment-projected">R$ 0,00</strong></div>
+                <div class="pilha-resumo">
+                  <div class="item-resumo"><span>Perfil escolhido</span><strong id="perfil-investimento-selecionado">--</strong></div>
+                  <div class="item-resumo"><span>Investimento mensal</span><strong id="valor-investimento-selecionado">R$ 0,00</strong></div>
+                  <div class="item-resumo"><span>Prazo</span><strong id="anos-investimento-selecionado">0 anos</strong></div>
+                  <div class="item-resumo"><span>Resultado projetado</span><strong id="projecao-investimento-selecionado">R$ 0,00</strong></div>
                 </div>
               </article>
-              <article class="panel">
-                <div class="panel-header">
+              <article class="painel">
+                <div class="cabecalho-painel">
                   <div>
                     <p class="eyebrow">SIMULACOES SALVAS</p>
                     <h3>Planos que você montou</h3>
                   </div>
                 </div>
-                <ul id="investment-list" class="transaction-list detailed"></ul>
+                <ul id="lista-investimentos" class="lista-movimentacoes detalhada"></ul>
               </article>
             </div>
           </section>
 
-          <section id="goals-section" class="app-section hidden">
-            <div class="stats-grid">
-              <article class="stat-card">
+          <section id="secao-metas" class="secao-aplicacao oculto">
+            <div class="grade-estatisticas">
+              <article class="cartao-estatistica">
                 <p>Metas cadastradas</p>
-                <h3 id="goals-total-count">0</h3>
+                <h3 id="quantidade-total-metas">0</h3>
                 <span>Todos os objetivos salvos</span>
               </article>
-              <article class="stat-card income">
+              <article class="cartao-estatistica entradas">
                 <p>Concluídas</p>
-                <h3 id="goals-completed-count">0</h3>
+                <h3 id="quantidade-metas-concluidas">0</h3>
                 <span>Metas já marcadas como cumpridas</span>
               </article>
-              <article class="stat-card expense">
+              <article class="cartao-estatistica saidas">
                 <p>Não concluídas</p>
-                <h3 id="goals-failed-count">0</h3>
+                <h3 id="quantidade-metas-nao-concluidas">0</h3>
                 <span>Metas marcadas como não cumpridas</span>
               </article>
             </div>
-            <div class="panel-grid two-up">
-              <article class="panel">
-                <div class="panel-header">
+            <div class="grade-paineis duas-colunas">
+              <article class="painel">
+                <div class="cabecalho-painel">
                   <div>
                     <p class="eyebrow">NOVA META</p>
                     <h3>Planeje seu próximo objetivo</h3>
                   </div>
                 </div>
-                <form id="goal-form" class="form-grid">
-                  <label for="goal-name">Nome da meta</label>
-                  <input id="goal-name" type="text" maxlength="80" placeholder="Ex: Viagem" required />
-                  <label for="goal-target-amount">Valor alvo (R$)</label>
-                  <input id="goal-target-amount" type="number" min="0.01" step="0.01" required />
-                  <label for="goal-current-amount">Valor atual (R$)</label>
-                  <input id="goal-current-amount" type="number" min="0" step="0.01" value="0" />
-                  <label for="goal-deadline">Prazo</label>
-                  <input id="goal-deadline" type="date" required />
-                  <label for="goal-category">Categoria</label>
-                  <input id="goal-category" type="text" maxlength="40" placeholder="Opcional" />
-                  <div class="button-row">
-                    <button id="goal-submit-button" type="submit">Salvar meta</button>
-                    <button id="cancel-goal-edit" type="button" class="secondary hidden">Cancelar edição</button>
+                <form id="formulario-meta" class="grade-formulario">
+                  <label for="nome-meta">Nome da meta</label>
+                  <input id="nome-meta" type="text" maxlength="80" placeholder="Ex: Viagem" required />
+                  <label for="valor-alvo-meta">Valor alvo (R$)</label>
+                  <input id="valor-alvo-meta" type="number" min="0.01" step="0.01" required />
+                  <label for="valor-atual-meta">Valor atual (R$)</label>
+                  <input id="valor-atual-meta" type="number" min="0" step="0.01" value="0" />
+                  <label for="prazo-meta">Prazo</label>
+                  <input id="prazo-meta" type="date" required />
+                  <label for="categoria-meta">Categoria</label>
+                  <input id="categoria-meta" type="text" maxlength="40" placeholder="Opcional" />
+                  <div class="linha-botoes">
+                    <button id="botao-salvar-meta" type="submit">Salvar meta</button>
+                    <button id="botao-cancelar-edicao-meta" type="button" class="botao-secundario oculto">Cancelar edição</button>
                   </div>
                 </form>
-                <p id="goal-message" class="message"></p>
+                <p id="mensagem-meta" class="mensagem-status"></p>
               </article>
 
-              <article class="panel">
-                <div class="panel-header">
+              <article class="painel">
+                <div class="cabecalho-painel">
                   <div>
                     <p class="eyebrow">FILTROS</p>
                     <h3>Acompanhe do seu jeito</h3>
                   </div>
                 </div>
-                <form id="goal-filters-form" class="form-grid">
-                  <label for="goal-status-filter">Status</label>
-                  <select id="goal-status-filter">
+                <form id="formulario-filtros-meta" class="grade-formulario">
+                  <label for="filtro-status-meta">Status</label>
+                  <select id="filtro-status-meta">
                     <option value="all">Todas</option>
                     <option value="active">Em andamento</option>
                     <option value="completed">Concluídas</option>
                     <option value="failed">Não concluídas</option>
                   </select>
-                  <div class="button-row">
+                  <div class="linha-botoes">
                     <button type="submit">Aplicar filtro</button>
-                    <button type="button" id="clear-goal-filters" class="secondary">Limpar</button>
+                    <button type="button" id="botao-limpar-filtros-meta" class="botao-secundario">Limpar</button>
                   </div>
                 </form>
-                <div class="simulation-callout">
-                  <p class="simulation-headline" id="goals-headline">Toda meta começa com um plano claro.</p>
-                  <p class="simulation-subheadline" id="goals-subheadline">Registre seu objetivo e acompanhe o progresso passo a passo.</p>
+                <div class="chamada-simulacao">
+                  <p class="titulo-simulacao" id="titulo-metas">Toda meta começa com um plano claro.</p>
+                  <p class="subtitulo-simulacao" id="subtitulo-metas">Registre seu objetivo e acompanhe o progresso passo a passo.</p>
                 </div>
               </article>
             </div>
-            <div class="panel-grid">
-              <article class="panel">
-                <div class="panel-header">
+            <div class="grade-paineis">
+              <article class="painel">
+                <div class="cabecalho-painel">
                   <div>
                     <p class="eyebrow">SUAS METAS</p>
                     <h3>Objetivos financeiros</h3>
                   </div>
                 </div>
-                <div id="goal-list" class="goal-list"></div>
+                <div id="lista-metas" class="lista-metas"></div>
               </article>
             </div>
           </section>
 
-          <section id="taxes-section" class="app-section hidden">
-            <div class="panel-grid">
-              <article class="panel hero-panel">
+          <section id="secao-impostos" class="secao-aplicacao oculto">
+            <div class="grade-paineis">
+              <article class="painel painel-destaque">
                 <p class="eyebrow">SEM COMPLICACAO</p>
-                <h2 class="hero-title">Descubra quanto você pode pagar de imposto em poucos segundos</h2>
-                <p class="subtitle">Preencha os dados abaixo e veja uma estimativa clara, visual e pensada para iniciantes.</p>
+                <h2 class="titulo-destaque">Descubra quanto você pode pagar de imposto em poucos segundos</h2>
+                <p class="subtitulo">Preencha os dados abaixo e veja uma estimativa clara, visual e pensada para iniciantes.</p>
               </article>
             </div>
-            <div class="panel-grid two-up">
-              <article class="panel">
-                <div class="panel-header">
+            <div class="grade-paineis duas-colunas">
+              <article class="painel">
+                <div class="cabecalho-painel">
                   <div>
                     <p class="eyebrow">SIMULADOR</p>
                     <h3>Imposto de renda simplificado</h3>
                   </div>
                 </div>
-                <form id="tax-form" class="form-grid">
-                  <p class="subtitle">Preencha seus valores e veja uma estimativa simples. Não substitui o cálculo oficial.</p>
-                  <label for="tax-income-monthly">Renda mensal</label>
-                  <input id="tax-income-monthly" type="number" min="0" step="0.01" placeholder="Ex: 3000" required />
-                  <label for="tax-other-income">Outras rendas (opcional)</label>
-                  <input id="tax-other-income" type="number" min="0" step="0.01" placeholder="Ex: 500 (freelance, renda extra)" />
-                  <label for="tax-dependents">Número de dependentes</label>
-                  <input id="tax-dependents" type="number" min="0" step="1" value="0" placeholder="Ex: 0, 1, 2" required />
-                  <label for="tax-health">Despesas com saúde</label>
-                  <input id="tax-health" type="number" min="0" step="0.01" placeholder="Ex: 300" />
-                  <label for="tax-education">Despesas com educação</label>
-                  <input id="tax-education" type="number" min="0" step="0.01" placeholder="Ex: 200" />
-                  <div class="button-row">
+                <form id="formulario-imposto" class="grade-formulario">
+                  <p class="subtitulo">Preencha seus valores e veja uma estimativa simples. Não substitui o cálculo oficial.</p>
+                  <label for="renda-mensal-imposto">Renda mensal</label>
+                  <input id="renda-mensal-imposto" type="number" min="0" step="0.01" placeholder="Ex: 3000" required />
+                  <label for="outras-rendas-imposto">Outras rendas (opcional)</label>
+                  <input id="outras-rendas-imposto" type="number" min="0" step="0.01" placeholder="Ex: 500 (freelance, renda extra)" />
+                  <label for="dependentes-imposto">Número de dependentes</label>
+                  <input id="dependentes-imposto" type="number" min="0" step="1" value="0" placeholder="Ex: 0, 1, 2" required />
+                  <label for="saude-imposto">Despesas com saúde</label>
+                  <input id="saude-imposto" type="number" min="0" step="0.01" placeholder="Ex: 300" />
+                  <label for="educacao-imposto">Despesas com educação</label>
+                  <input id="educacao-imposto" type="number" min="0" step="0.01" placeholder="Ex: 200" />
+                  <div class="linha-botoes">
                     <button type="submit">Calcular meu imposto</button>
-                    <button id="clear-tax-form" type="button" class="secondary">Limpar</button>
+                    <button id="botao-limpar-formulario-imposto" type="button" class="botao-secundario">Limpar</button>
                   </div>
-                  <button id="open-tax-tips" type="button" class="secondary full-width">Como reduzir meu imposto?</button>
+                  <button id="botao-abrir-dicas-imposto" type="button" class="botao-secundario largura-total">Como reduzir meu imposto?</button>
                 </form>
-                <p id="tax-message" class="message"></p>
+                <p id="mensagem-imposto" class="mensagem-status"></p>
               </article>
-              <article id="tax-chart-panel" class="panel">
-                <div class="panel-header">
+              <article id="painel-grafico-imposto" class="painel">
+                <div class="cabecalho-painel">
                   <div>
                     <p class="eyebrow">VISUAL</p>
                     <h3>Resumo da estimativa</h3>
                   </div>
                 </div>
-                <div class="chart-wrap"><canvas id="tax-chart"></canvas></div>
+                <div class="area-grafico"><canvas id="grafico-imposto"></canvas></div>
               </article>
             </div>
-            <div class="panel-grid two-up">
-              <article id="tax-results-panel" class="panel hidden">
-                <div class="panel-header">
+            <div class="grade-paineis duas-colunas">
+              <article id="painel-resultados-imposto" class="painel oculto">
+                <div class="cabecalho-painel">
                   <div>
                     <p class="eyebrow">RESULTADO</p>
                     <h3>Valores principais</h3>
                   </div>
                 </div>
-                <div class="tax-highlight">
+                <div class="destaque-imposto">
                   <span>Você pagaria aproximadamente</span>
-                  <strong id="tax-highlight-value">R$ 0,00</strong>
+                  <strong id="valor-destaque-imposto">R$ 0,00</strong>
                 </div>
-                <div class="summary-stack">
-                  <div class="summary-item"><span>Renda anual</span><strong id="tax-annual-income">R$ 0,00</strong></div>
-                  <div class="summary-item"><span>Base de cálculo</span><strong id="tax-base-income">R$ 0,00</strong></div>
-                  <div class="summary-item"><span>Faixa</span><strong id="tax-bracket">Isento</strong></div>
-                  <div class="summary-item"><span>Imposto estimado</span><strong id="tax-estimated">R$ 0,00</strong></div>
-                  <div class="summary-item"><span>Renda líquida</span><strong id="tax-net-income">R$ 0,00</strong></div>
+                <div class="pilha-resumo">
+                  <div class="item-resumo"><span>Renda anual</span><strong id="renda-anual-imposto">R$ 0,00</strong></div>
+                  <div class="item-resumo"><span>Base de cálculo</span><strong id="renda-base-imposto">R$ 0,00</strong></div>
+                  <div class="item-resumo"><span>Faixa</span><strong id="faixa-imposto">Isento</strong></div>
+                  <div class="item-resumo"><span>Imposto estimado</span><strong id="imposto-estimado">R$ 0,00</strong></div>
+                  <div class="item-resumo"><span>Renda líquida</span><strong id="renda-liquida-imposto">R$ 0,00</strong></div>
                 </div>
               </article>
-              <article id="tax-insights-panel" class="panel hidden">
-                <div class="panel-header">
+              <article id="painel-insights-imposto" class="painel oculto">
+                <div class="cabecalho-painel">
                   <div>
                     <p class="eyebrow">ORIENTACAO</p>
                     <h3>Leitura simples</h3>
                   </div>
                 </div>
-                <div class="insight-card">
-                  <p id="tax-feedback-primary" class="simulation-headline">Você está isento.</p>
-                  <p id="tax-feedback-secondary" class="simulation-subheadline">Preencha os campos para ver sua estimativa.</p>
+                <div class="cartao-insight">
+                  <p id="feedback-primario-imposto" class="titulo-simulacao">Você está isento.</p>
+                  <p id="feedback-secundario-imposto" class="subtitulo-simulacao">Preencha os campo para ver sua estimativa.</p>
                 </div>
-                <ul id="tax-suggestions" class="insight-list tax-suggestions hidden"></ul>
+                <ul id="sugestoes-imposto" class="lista-insights sugestoes-imposto oculto"></ul>
               </article>
             </div>
           </section>
 
-          <section id="reports-section" class="app-section hidden">
-            <div class="panel-grid two-up">
-              <article class="panel">
-                <div class="panel-header">
+          <section id="secao-relatorios" class="secao-aplicacao oculto">
+            <div class="grade-paineis duas-colunas">
+              <article class="painel">
+                <div class="cabecalho-painel">
                   <div>
                     <p class="eyebrow">GERACAO</p>
                     <h3>Relatório mensal</h3>
                   </div>
                 </div>
-                <form id="report-form" class="form-grid">
-                  <label for="report-month">Mês de referência</label>
-                  <input id="report-month" type="month" required />
-                  <div class="button-row">
+                <form id="formulario-relatorio" class="grade-formulario">
+                  <label for="mes-relatorio">Mês de referência</label>
+                  <input id="mes-relatorio" type="month" required />
+                  <div class="linha-botoes">
                     <button type="submit">Gerar manualmente</button>
-                    <button type="button" id="export-report" class="secondary">Exportar HTML</button>
-                    <button type="button" id="export-report-pdf" class="secondary">Exportar PDF</button>
+                    <button type="button" id="botao-exportar-relatorio" class="botao-secundario">Exportar HTML</button>
+                    <button type="button" id="botao-exportar-relatorio-pdf" class="botao-secundario">Exportar PDF</button>
                   </div>
                 </form>
-                <p class="subtitle">Os relatórios também são atualizados automaticamente conforme os dados do mês.</p>
-                <p id="report-message" class="message"></p>
+                <p class="subtitulo">Os relatórios também são atualizados automaticamente conforme os dados do mês.</p>
+                <p id="mensagem-relatorio" class="mensagem-status"></p>
               </article>
-              <article class="panel">
-                <div class="panel-header">
+              <article class="painel">
+                <div class="cabecalho-painel">
                   <div>
                     <p class="eyebrow">HISTORICO</p>
                     <h3>Meses disponíveis</h3>
                   </div>
                 </div>
-                <div id="reports-history" class="history-list"></div>
+                <div id="historico-relatorios" class="lista-historico"></div>
               </article>
             </div>
-            <div class="panel-grid two-up">
-              <article class="panel">
-                <div class="panel-header">
+            <div class="grade-paineis duas-colunas">
+              <article class="painel">
+                <div class="cabecalho-painel">
                   <div>
                     <p class="eyebrow">RESUMO</p>
-                    <h3 id="report-title">Relatório selecionado</h3>
+                    <h3 id="titulo-relatorio">Relatório selecionado</h3>
                   </div>
                 </div>
-                <div class="summary-stack">
-                  <div class="summary-item"><span>Entradas</span><strong id="report-income">R$ 0,00</strong></div>
-                  <div class="summary-item"><span>Saídas</span><strong id="report-expense">R$ 0,00</strong></div>
-                  <div class="summary-item"><span>Saldo final</span><strong id="report-balance">R$ 0,00</strong></div>
-                  <div class="summary-item"><span>Movimentações</span><strong id="report-transactions-count">0</strong></div>
+                <div class="pilha-resumo">
+                  <div class="item-resumo"><span>Entradas</span><strong id="entrada-relatorio">R$ 0,00</strong></div>
+                  <div class="item-resumo"><span>Saídas</span><strong id="saida-relatorio">R$ 0,00</strong></div>
+                  <div class="item-resumo"><span>Saldo final</span><strong id="saldo-relatorio">R$ 0,00</strong></div>
+                  <div class="item-resumo"><span>Movimentações</span><strong id="quantidade-movimentacoes-relatorio">0</strong></div>
                 </div>
               </article>
-              <article class="panel">
-                <div class="panel-header">
+              <article class="painel">
+                <div class="cabecalho-painel">
                   <div>
                     <p class="eyebrow">CATEGORIAS</p>
                     <h3>Principais despesas</h3>
                   </div>
                 </div>
-                <ul id="report-top-categories" class="insight-list"></ul>
+                <ul id="categorias-principais-relatorio" class="lista-insights"></ul>
               </article>
             </div>
-            <div class="panel-grid">
-              <article class="panel">
-                <div class="panel-header">
+            <div class="grade-paineis">
+              <article class="painel">
+                <div class="cabecalho-painel">
                   <div>
                     <p class="eyebrow">VISUAL</p>
                     <h3>Distribuição por categoria</h3>
                   </div>
                 </div>
-                <div class="chart-wrap compact"><canvas id="report-category-chart"></canvas></div>
+                <div class="area-grafico compacto"><canvas id="grafico-categoria-relatorio"></canvas></div>
               </article>
             </div>
-            <div class="panel-grid">
-              <article class="panel">
-                <div class="panel-header">
+            <div class="grade-paineis">
+              <article class="painel">
+                <div class="cabecalho-painel">
                   <div>
                     <p class="eyebrow">INSIGHTS</p>
                     <h3>Leituras automáticas</h3>
                   </div>
                 </div>
-                <ul id="report-insights" class="insight-list"></ul>
+                <ul id="insights-relatorio" class="lista-insights"></ul>
               </article>
             </div>
           </section>
@@ -650,84 +650,84 @@
       </div>
     </main>
 
-    <div id="tax-warning-modal" class="modal-overlay hidden">
-      <section class="modal-card">
+    <div id="modal-aviso-imposto" class="overlay-modal oculto">
+      <section class="cartao-modal">
         <h2>Aviso importante</h2>
         <p>Este simulador de imposto de renda é apenas uma estimativa e não substitui o cálculo oficial da Receita Federal.</p>
-        <label class="checkbox-row" for="hide-tax-warning">
-          <input id="hide-tax-warning" type="checkbox" />
+        <label class="linha-checkbox" for="ocultar-aviso-imposto">
+          <input id="ocultar-aviso-imposto" type="checkbox" />
           <span>Não mostrar novamente</span>
         </label>
-        <div class="button-row">
-          <button id="continue-tax-warning" type="button">Continuar</button>
-          <button id="back-tax-warning" type="button" class="secondary">Voltar</button>
+        <div class="linha-botoes">
+          <button id="botao-continuar-aviso-imposto" type="button">Continuar</button>
+          <button id="botao-voltar-aviso-imposto" type="button" class="botao-secundario">Voltar</button>
         </div>
       </section>
     </div>
 
-    <div id="tax-tips-modal" class="modal-overlay hidden">
-      <section class="modal-card">
+    <div id="modal-dicas-imposto" class="overlay-modal oculto">
+      <section class="cartao-modal">
         <h2>Como reduzir meu imposto?</h2>
         <p>Algumas atitudes simples podem ajudar você a pagar menos dentro das regras.</p>
-        <ul class="insight-list">
+        <ul class="lista-insights">
           <li>Declarar despesas médicas quando tiver comprovantes válidos.</li>
           <li>Incluir dependentes quando isso fizer sentido na declaração.</li>
           <li>Informar gastos com educação dentro do que pode ser declarado.</li>
           <li>Organizar comprovantes ao longo do ano para não esquecer nada.</li>
         </ul>
-        <div class="button-row">
-          <button id="close-tax-tips" type="button">Entendi</button>
+        <div class="linha-botoes">
+          <button id="botao-fechar-dicas-imposto" type="button">Entendi</button>
         </div>
       </section>
     </div>
 
-    <div id="goal-progress-modal" class="modal-overlay hidden">
-      <section class="modal-card goal-progress-modal-card">
+    <div id="modal-progresso-meta" class="overlay-modal oculto">
+      <section class="cartao-modal modal-progresso-meta-card">
         <p class="eyebrow">ATUALIZAR META</p>
-        <h2 id="goal-progress-modal-title">Adicionar valor</h2>
-        <p id="goal-progress-modal-text" class="subtitle">Informe quanto deseja adicionar ao progresso da meta.</p>
-        <form id="goal-progress-form" class="form-grid">
-          <label for="goal-progress-amount">Valor a adicionar (R$)</label>
-          <input id="goal-progress-amount" type="number" min="0.01" step="0.01" placeholder="Ex: 250" required />
-          <div class="goal-progress-preview">
+        <h2 id="titulo-modal-progresso-meta">Adicionar valor</h2>
+        <p id="texto-modal-progresso-meta" class="subtitulo">Informe quanto deseja adicionar ao progresso da meta.</p>
+        <form id="formulario-progresso-meta" class="grade-formulario">
+          <label for="valor-progresso-meta">Valor a adicionar (R$)</label>
+          <input id="valor-progresso-meta" type="number" min="0.01" step="0.01" placeholder="Ex: 250" required />
+          <div class="progresso-meta-preview">
             <span>Saldo projetado</span>
-            <strong id="goal-progress-preview-value">R$ 0,00</strong>
+            <strong id="valor-previa-progresso-meta">R$ 0,00</strong>
           </div>
-          <div class="button-row">
-            <button id="goal-progress-submit" type="submit">Adicionar valor</button>
-            <button id="goal-progress-cancel" type="button" class="secondary">Cancelar</button>
+          <div class="linha-botoes">
+            <button id="botao-salvar-progresso-meta" type="submit">Adicionar valor</button>
+            <button id="botao-cancelar-progresso-meta" type="button" class="botao-secundario">Cancelar</button>
           </div>
         </form>
       </section>
     </div>
 
-    <div id="confirm-action-modal" class="modal-overlay hidden">
-      <section class="modal-card confirm-action-modal-card">
-        <p id="confirm-action-eyebrow" class="eyebrow">CONFIRMAR AÇÃO</p>
-        <h2 id="confirm-action-title">Tem certeza?</h2>
-        <p id="confirm-action-text" class="subtitle">Revise a ação antes de continuar.</p>
-        <div class="button-row">
-          <button id="confirm-action-submit" type="button" class="danger-button">Excluir</button>
-          <button id="confirm-action-cancel" type="button" class="secondary">Cancelar</button>
+    <div id="modal-confirmacao-acao" class="overlay-modal oculto">
+      <section class="cartao-modal modal-confirmacao-acao-card">
+        <p id="sobretitulo-confirmacao-acao" class="eyebrow">CONFIRMAR AÇÃO</p>
+        <h2 id="titulo-confirmacao-acao">Tem certeza?</h2>
+        <p id="texto-confirmacao-acao" class="subtitulo">Revise a ação antes de continuar.</p>
+        <div class="linha-botoes">
+          <button id="botao-confirmar-acao" type="button" class="botao-perigo">Excluir</button>
+          <button id="botao-cancelar-confirmacao" type="button" class="botao-secundario">Cancelar</button>
         </div>
       </section>
     </div>
 
-    <div id="welcome-overlay" class="modal-overlay welcome-overlay hidden">
-      <section class="modal-card welcome-card">
+    <div id="overlay-boas-vindas" class="overlay-modal overlay-boas-vindas oculto">
+      <section class="cartao-modal cartao-boas-vindas">
         <p class="eyebrow">BEM-VINDO DE VOLTA</p>
-        <h2 id="welcome-title">Bem-vindo</h2>
-        <p id="welcome-subtitle" class="subtitle">Seu resumo rápido já está pronto.</p>
-        <div class="summary-stack">
-          <div class="summary-item"><span>Saldo atual</span><strong id="welcome-balance">R$ 0,00</strong></div>
-          <div class="summary-item"><span>Gastos do mês</span><strong id="welcome-expense">R$ 0,00</strong></div>
+        <h2 id="titulo-boas-vindas">Bem-vindo</h2>
+        <p id="subtitulo-boas-vindas" class="subtitulo">Seu resumo rápido já está pronto.</p>
+        <div class="pilha-resumo">
+          <div class="item-resumo"><span>Saldo atual</span><strong id="saldo-boas-vindas">R$ 0,00</strong></div>
+          <div class="item-resumo"><span>Gastos do mês</span><strong id="gasto-boas-vindas">R$ 0,00</strong></div>
         </div>
-        <div class="simulation-callout">
-          <p class="simulation-headline">Insight rápido</p>
-          <p id="welcome-insight" class="simulation-subheadline">Seu painel já está atualizado.</p>
+        <div class="chamada-simulacao">
+          <p class="titulo-simulacao">Insight rápido</p>
+          <p id="insight-boas-vindas" class="subtitulo-simulacao">Seu painel já está atualizado.</p>
         </div>
-        <div class="button-row">
-          <button id="close-welcome-overlay" type="button" class="secondary">Fechar agora</button>
+        <div class="linha-botoes">
+          <button id="fechar-overlay-boas-vindas" type="button" class="botao-secundario">Fechar agora</button>
         </div>
       </section>
     </div>
@@ -736,3 +736,8 @@
     <script src="app.js"></script>
   </body>
 </html>
+
+
+
+
+

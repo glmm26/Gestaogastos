@@ -3,33 +3,33 @@ const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
 const puppeteer = require('puppeteer');
-const { ensureDatabase, readDatabase, writeDatabase } = require('./db');
+const { garantirBancoDados, lerBancoDados, escreverBancoDados } = require('./db');
 
 loadDotenv(path.join(__dirname, '.env'));
 
-const PORT = process.env.PORT || 3000;
-const OTP_EXPIRATION_MINUTES = 5;
-const PUBLIC_DIR = path.join(__dirname, 'public');
-const UPLOADS_DIR = path.join(__dirname, 'uploads');
-const TEMPLATES_DIR = path.join(__dirname, 'templates');
-const REPORT_PDF_TEMPLATE_PATH = path.join(TEMPLATES_DIR, 'relatorio-pdf.html');
-const DEFAULT_CATEGORIES = ['Salario', 'Alimentacao', 'Transporte', 'Lazer', 'Moradia', 'Outros'];
-const MAX_PROFILE_PHOTO_SIZE = 2 * 1024 * 1024;
-const ALLOWED_PROFILE_PHOTO_TYPES = {
+const PORTA = process.env.PORT || 3000;
+const MINUTOS_EXPIRACAO_OTP = 5;
+const DIRETORIO_PUBLICO = path.join(__dirname, 'public');
+const DIRETORIO_UPLOADS = path.join(__dirname, 'uploads');
+const DIRETORIO_TEMPLATES = path.join(__dirname, 'templates');
+const CAMINHO_TEMPLATE_RELATORIO_PDF = path.join(DIRETORIO_TEMPLATES, 'relatorio-pdf.html');
+const CATEGORIAS_PADRAO = ['Salario', 'Alimentacao', 'Transporte', 'Lazer', 'Moradia', 'Outros'];
+const TAMANHO_MAXIMO_FOTO_PERFIL = 2 * 1024 * 1024;
+const TIPOS_PERMITIDOS_FOTO_PERFIL = {
   'image/jpeg': '.jpg',
   'image/jpg': '.jpg',
   'image/png': '.png',
 };
-const INVESTMENT_RISK_PROFILES = {
+const PERFIS_RISCO_INVESTIMENTO = {
   low: { label: 'Baixo risco', annualRate: 8 },
   medium: { label: 'Medio risco', annualRate: 12 },
   high: { label: 'Alto risco', annualRate: 18 },
 };
-const EMAIL_PROVIDER = String(process.env.EMAIL_PROVIDER || 'api').trim().toLowerCase();
-const EMAIL_API_URL = String(process.env.EMAIL_API_URL || 'https://api.brevo.com/v3/smtp/email').trim();
-const EMAIL_API_KEY = String(process.env.EMAIL_API_KEY || '').trim();
-const EMAIL_API_SENDER_EMAIL = String(process.env.EMAIL_API_SENDER_EMAIL || '').trim();
-const EMAIL_API_SENDER_NAME = String(process.env.EMAIL_API_SENDER_NAME || 'Gestão de Gastos').trim();
+const PROVEDOR_EMAIL = String(process.env.EMAIL_PROVIDER || 'api').trim().toLowerCase();
+const URL_API_EMAIL = String(process.env.EMAIL_API_URL || 'https://api.brevo.com/v3/smtp/email').trim();
+const CHAVE_API_EMAIL = String(process.env.EMAIL_API_KEY || '').trim();
+const EMAIL_REMETENTE_API = String(process.env.EMAIL_API_SENDER_EMAIL || '').trim();
+const NOME_REMETENTE_API = String(process.env.EMAIL_API_SENDER_NAME || 'Gestão de Gastos').trim();
 
 function loadDotenv(filePath) {
   if (!fs.existsSync(filePath)) return;
@@ -72,8 +72,8 @@ function sendPdf(res, pdfBuffer, fileName) {
 }
 
 function ensureUploadsDir() {
-  if (!fs.existsSync(UPLOADS_DIR)) {
-    fs.mkdirSync(UPLOADS_DIR, { recursive: true });
+  if (!fs.existsSync(DIRETORIO_UPLOADS)) {
+    fs.mkdirSync(DIRETORIO_UPLOADS, { recursive: true });
   }
 }
 
@@ -94,7 +94,7 @@ function parseBody(req) {
   });
 }
 
-function parseMultipartFormData(req, maxSize = MAX_PROFILE_PHOTO_SIZE + 1024 * 200) {
+function parseMultipartFormData(req, maxSize = TAMANHO_MAXIMO_FOTO_PERFIL + 1024 * 200) {
   return new Promise((resolve, reject) => {
     const contentType = String(req.headers['content-type'] || '');
     const boundaryMatch = contentType.match(/boundary=(?:"([^"]+)"|([^;]+))/i);
@@ -181,11 +181,11 @@ function generateOtp() {
 
 function isEmailApiConfigured() {
   return (
-    EMAIL_PROVIDER === 'api' &&
-    EMAIL_API_URL &&
-    EMAIL_API_KEY &&
-    EMAIL_API_SENDER_EMAIL &&
-    !EMAIL_API_KEY.includes('COLOQUE_SUA_CHAVE_BREVO_AQUI')
+    PROVEDOR_EMAIL === 'api' &&
+    URL_API_EMAIL &&
+    CHAVE_API_EMAIL &&
+    EMAIL_REMETENTE_API &&
+    !CHAVE_API_EMAIL.includes('COLOQUE_SUA_CHAVE_BREVO_AQUI')
   );
 }
 
@@ -196,8 +196,8 @@ async function sendOtpEmail(targetEmail, otp) {
 
   const payload = {
     sender: {
-      name: EMAIL_API_SENDER_NAME,
-      email: EMAIL_API_SENDER_EMAIL,
+      name: NOME_REMETENTE_API,
+      email: EMAIL_REMETENTE_API,
     },
     to: [{ email: targetEmail }],
     subject: 'Código de confirmação de cadastro - Gestão de Gastos',
@@ -207,18 +207,18 @@ async function sendOtpEmail(targetEmail, otp) {
           <h2>Código de confirmação</h2>
           <p>Use o código abaixo para concluir seu cadastro:</p>
           <h1 style="letter-spacing: 4px;">${otp}</h1>
-          <p>Esse código expira em ${OTP_EXPIRATION_MINUTES} minutos.</p>
+          <p>Esse código expira em ${MINUTOS_EXPIRACAO_OTP} minutos.</p>
         </body>
       </html>
     `,
   };
 
-  const response = await fetch(EMAIL_API_URL, {
+  const response = await fetch(URL_API_EMAIL, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
-      'api-key': EMAIL_API_KEY,
+      'api-key': CHAVE_API_EMAIL,
     },
     body: JSON.stringify(payload),
   });
@@ -276,8 +276,8 @@ function buildPhotoUrl(photoPath, updatedAt) {
 
 function removeStoredPhoto(photoPath) {
   if (!photoPath || !photoPath.startsWith('/uploads/')) return;
-  const targetPath = path.join(UPLOADS_DIR, path.basename(photoPath));
-  if (targetPath.startsWith(UPLOADS_DIR) && fs.existsSync(targetPath)) {
+  const targetPath = path.join(DIRETORIO_UPLOADS, path.basename(photoPath));
+  if (targetPath.startsWith(DIRETORIO_UPLOADS) && fs.existsSync(targetPath)) {
     fs.unlinkSync(targetPath);
   }
 }
@@ -294,7 +294,7 @@ async function issueRegistrationOtp(db, user) {
     pendingUserId: user.pendingUserId || null,
     email: normalizeEmail(user.email),
     code: otp,
-    expiresAt: new Date(Date.now() + OTP_EXPIRATION_MINUTES * 60 * 1000).toISOString(),
+    expiresAt: new Date(Date.now() + MINUTOS_EXPIRACAO_OTP * 60 * 1000).toISOString(),
     used: false,
     createdAt: new Date().toISOString(),
   });
@@ -314,7 +314,7 @@ async function issueRegistrationOtp(db, user) {
 
   return {
     message: emailSent
-      ? `Código de cadastro enviado para ${user.email}. Validade de ${OTP_EXPIRATION_MINUTES} minutos.`
+      ? `Código de cadastro enviado para ${user.email}. Validade de ${MINUTOS_EXPIRACAO_OTP} minutos.`
       : 'Código de cadastro gerado. Como o envio por email não está disponível, use o código de desenvolvimento.',
     devOtp: emailSent ? undefined : otp,
     deliveryWarning: emailSent ? undefined : deliveryWarning,
@@ -325,7 +325,7 @@ function serveStatic(req, res) {
   const requestedPath = req.url === '/' ? '/index.html' : req.url;
   const pathname = new URL(requestedPath, 'http://localhost').pathname;
   const safePath = path.normalize(pathname).replace(/\\/g, '/').replace(/^\.\.(\/|\\|$)/, '');
-  const baseDir = safePath.startsWith('/uploads/') ? UPLOADS_DIR : PUBLIC_DIR;
+  const baseDir = safePath.startsWith('/uploads/') ? DIRETORIO_UPLOADS : DIRETORIO_PUBLICO;
   const relativePath = safePath.startsWith('/uploads/') ? safePath.replace(/^\/uploads/, '') : safePath;
   const filePath = path.join(baseDir, relativePath);
 
@@ -346,11 +346,11 @@ function serveStatic(req, res) {
   };
 
   if (!fs.existsSync(filePath) || fs.statSync(filePath).isDirectory()) {
-    if (baseDir === UPLOADS_DIR) {
+    if (baseDir === DIRETORIO_UPLOADS) {
       sendJson(res, 404, { message: 'Arquivo não encontrado.' });
       return;
     }
-    const fallback = path.join(PUBLIC_DIR, 'index.html');
+    const fallback = path.join(DIRETORIO_PUBLICO, 'index.html');
     const content = fs.readFileSync(fallback);
     res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
     res.end(content);
@@ -397,7 +397,7 @@ function normalizeRiskProfile(value) {
 }
 
 function getRiskProfileConfig(profile) {
-  return INVESTMENT_RISK_PROFILES[normalizeRiskProfile(profile)] || INVESTMENT_RISK_PROFILES.medium;
+  return PERFIS_RISCO_INVESTIMENTO[normalizeRiskProfile(profile)] || PERFIS_RISCO_INVESTIMENTO.medium;
 }
 
 function getRiskProfileLabel(profile) {
@@ -519,12 +519,12 @@ function getUserCategories(db, userId) {
     .map((entry) => entry.name)
     .filter(Boolean);
 
-  return Array.from(new Set([...DEFAULT_CATEGORIES, ...custom]));
+  return Array.from(new Set([...CATEGORIAS_PADRAO, ...custom]));
 }
 
 function ensureCategory(db, userId, category) {
   const normalized = normalizeCategoryName(category);
-  if (!normalized || DEFAULT_CATEGORIES.includes(normalized)) {
+  if (!normalized || CATEGORIAS_PADRAO.includes(normalized)) {
     return normalized || 'Outros';
   }
 
@@ -554,7 +554,7 @@ function migrateTransactionCategory(transaction) {
     return 'Outros';
   }
 
-  const match = DEFAULT_CATEGORIES.find((category) => category.toLowerCase() === description.toLowerCase());
+  const match = CATEGORIAS_PADRAO.find((category) => category.toLowerCase() === description.toLowerCase());
   return match || normalizeCategoryName(description) || 'Outros';
 }
 
@@ -951,7 +951,7 @@ function renderTemplate(template, replacements) {
 }
 
 function buildPdfHtml(user, report, transactions, charts = {}) {
-  const template = fs.readFileSync(REPORT_PDF_TEMPLATE_PATH, 'utf-8');
+  const template = fs.readFileSync(CAMINHO_TEMPLATE_RELATORIO_PDF, 'utf-8');
   const summary = report.payload.summary;
   const categoryChart = sanitizeBase64Image(charts.category);
   const cashFlowChart = sanitizeBase64Image(charts.cashFlow);
@@ -1067,7 +1067,7 @@ async function handleApi(req, res) {
   const transactionMatch = route.match(/^\/api\/transactions\/(\d+)$/);
   const investmentMatch = route.match(/^\/api\/investments\/(\d+)$/);
   const goalMatch = route.match(/^\/api\/goals\/(\d+)$/);
-  const db = readDatabase();
+  const db = lerBancoDados();
   hydrateDatabase(db);
 
   if (req.method === 'POST' && route === '/api/register') {
@@ -1111,7 +1111,7 @@ async function handleApi(req, res) {
         userId: existingUser.id,
         email: existingUser.email,
       });
-      writeDatabase(db);
+      escreverBancoDados(db);
       sendJson(res, 200, payload);
       return;
     }
@@ -1136,7 +1136,7 @@ async function handleApi(req, res) {
       pendingUserId: registration.id,
       email: registration.email,
     });
-    writeDatabase(db);
+    escreverBancoDados(db);
     sendJson(res, 201, payload);
     return;
   }
@@ -1219,7 +1219,7 @@ async function handleApi(req, res) {
       return;
     }
 
-    writeDatabase(db);
+    escreverBancoDados(db);
     sendJson(res, 200, {
       message: 'Cadastro confirmado com sucesso. Agora você pode fazer login.',
     });
@@ -1264,7 +1264,7 @@ async function handleApi(req, res) {
     }
 
     user.name = normalizedName;
-    writeDatabase(db);
+    escreverBancoDados(db);
     sendJson(res, 200, {
       message: 'Nome atualizado com sucesso.',
       user: {
@@ -1297,25 +1297,25 @@ async function handleApi(req, res) {
       return;
     }
 
-    if (!ALLOWED_PROFILE_PHOTO_TYPES[photoFile.mimeType]) {
+    if (!TIPOS_PERMITIDOS_FOTO_PERFIL[photoFile.mimeType]) {
       sendJson(res, 400, { message: 'Envie apenas imagens JPG, JPEG ou PNG.' });
       return;
     }
 
-    if (!photoFile.buffer.length || photoFile.buffer.length > MAX_PROFILE_PHOTO_SIZE) {
+    if (!photoFile.buffer.length || photoFile.buffer.length > TAMANHO_MAXIMO_FOTO_PERFIL) {
       sendJson(res, 400, { message: 'A imagem deve ter no máximo 2MB.' });
       return;
     }
 
     ensureUploadsDir();
-    const extension = ALLOWED_PROFILE_PHOTO_TYPES[photoFile.mimeType];
+    const extension = TIPOS_PERMITIDOS_FOTO_PERFIL[photoFile.mimeType];
     const fileName = `perfil-${user.id}-${Date.now()}-${crypto.randomUUID()}${extension}`;
     const publicPath = `/uploads/${fileName}`;
-    fs.writeFileSync(path.join(UPLOADS_DIR, fileName), photoFile.buffer);
+    fs.writeFileSync(path.join(DIRETORIO_UPLOADS, fileName), photoFile.buffer);
     removeStoredPhoto(user.photo);
     user.photo = publicPath;
     user.photoUpdatedAt = new Date().toISOString();
-    writeDatabase(db);
+    escreverBancoDados(db);
 
     sendJson(res, 200, {
       message: 'Foto atualizada com sucesso.',
@@ -1335,7 +1335,7 @@ async function handleApi(req, res) {
     removeStoredPhoto(user.photo);
     user.photo = '';
     user.photoUpdatedAt = new Date().toISOString();
-    writeDatabase(db);
+    escreverBancoDados(db);
 
     sendJson(res, 200, {
       message: 'Foto removida com sucesso.',
@@ -1373,7 +1373,7 @@ async function handleApi(req, res) {
     }
 
     user.passwordHash = hashPassword(String(newPassword));
-    writeDatabase(db);
+    escreverBancoDados(db);
     sendJson(res, 200, { message: 'Senha atualizada com sucesso.' });
     return;
   }
@@ -1385,7 +1385,7 @@ async function handleApi(req, res) {
       return;
     }
 
-    writeDatabase(db);
+    escreverBancoDados(db);
     sendJson(res, 200, { categories: getUserCategories(db, user.id) });
     return;
   }
@@ -1404,7 +1404,7 @@ async function handleApi(req, res) {
       return;
     }
 
-    writeDatabase(db);
+    escreverBancoDados(db);
     sendJson(res, 201, {
       message: 'Categoria cadastrada com sucesso.',
       categories: getUserCategories(db, user.id),
@@ -1442,7 +1442,7 @@ async function handleApi(req, res) {
     });
 
     refreshAutomaticReports(db, user);
-    writeDatabase(db);
+    escreverBancoDados(db);
     sendJson(res, 201, { message: 'Movimentação adicionada com sucesso.' });
     return;
   }
@@ -1466,7 +1466,7 @@ async function handleApi(req, res) {
     const filteredTransactions = getFilteredTransactions(db, user.id, filters);
     const allTransactions = getFilteredTransactions(db, user.id, {});
 
-    writeDatabase(db);
+    escreverBancoDados(db);
     sendJson(res, 200, {
       summary: buildTransactionSummary(filteredTransactions),
       totalCount: filteredTransactions.length,
@@ -1496,7 +1496,7 @@ async function handleApi(req, res) {
     if (req.method === 'DELETE') {
       db.transactions.splice(index, 1);
       refreshAutomaticReports(db, user);
-      writeDatabase(db);
+      escreverBancoDados(db);
       sendJson(res, 200, { message: 'Movimentação excluída com sucesso.' });
       return;
     }
@@ -1526,7 +1526,7 @@ async function handleApi(req, res) {
     };
 
     refreshAutomaticReports(db, user);
-    writeDatabase(db);
+    escreverBancoDados(db);
     sendJson(res, 200, { message: 'Movimentação atualizada com sucesso.' });
     return;
   }
@@ -1539,7 +1539,7 @@ async function handleApi(req, res) {
     }
 
     refreshAutomaticReports(db, user);
-    writeDatabase(db);
+    escreverBancoDados(db);
     sendJson(res, 200, getDashboardPayload(db, user.id, parsedUrl.searchParams.get('month')));
     return;
   }
@@ -1577,7 +1577,7 @@ async function handleApi(req, res) {
     });
 
     refreshAutomaticReports(db, user);
-    writeDatabase(db);
+    escreverBancoDados(db);
     const profile = getRiskProfileConfig(normalizedRiskProfile);
     sendJson(res, 201, {
       message: `Simulação salva com sucesso. Perfil ${profile.label.toLowerCase()} com ${profile.annualRate}% ao ano.`,
@@ -1597,7 +1597,7 @@ async function handleApi(req, res) {
       .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
     refreshAutomaticReports(db, user);
-    writeDatabase(db);
+    escreverBancoDados(db);
     sendJson(res, 200, {
       summary: buildInvestmentSummary(investments),
       evolution: buildInvestmentEvolution(investments),
@@ -1646,7 +1646,7 @@ async function handleApi(req, res) {
     });
 
     db.goals = db.goals.map((entry) => normalizeGoal(entry.userId, entry));
-    writeDatabase(db);
+    escreverBancoDados(db);
     sendJson(res, 201, { message: 'Meta criada com sucesso.' });
     return;
   }
@@ -1660,7 +1660,7 @@ async function handleApi(req, res) {
 
     const status = parsedUrl.searchParams.get('status') || 'all';
     const goals = getFilteredGoals(db, user.id, status);
-    writeDatabase(db);
+    escreverBancoDados(db);
     sendJson(res, 200, {
       summary: buildGoalsSummary(db.goals.filter((goal) => goal.userId === user.id)),
       goals,
@@ -1686,7 +1686,7 @@ async function handleApi(req, res) {
 
     if (req.method === 'DELETE') {
       db.goals.splice(index, 1);
-      writeDatabase(db);
+      escreverBancoDados(db);
       sendJson(res, 200, { message: 'Meta removida com sucesso.' });
       return;
     }
@@ -1721,7 +1721,7 @@ async function handleApi(req, res) {
       updatedAt: new Date().toISOString(),
     });
 
-    writeDatabase(db);
+    escreverBancoDados(db);
     sendJson(res, 200, { message: 'Meta atualizada com sucesso.', goal: db.goals[index] });
     return;
   }
@@ -1745,7 +1745,7 @@ async function handleApi(req, res) {
     if (req.method === 'DELETE') {
       db.investments.splice(index, 1);
       refreshAutomaticReports(db, user);
-      writeDatabase(db);
+      escreverBancoDados(db);
       sendJson(res, 200, { message: 'Investimento excluído com sucesso.' });
       return;
     }
@@ -1772,7 +1772,7 @@ async function handleApi(req, res) {
     };
 
     refreshAutomaticReports(db, user);
-    writeDatabase(db);
+    escreverBancoDados(db);
     sendJson(res, 200, { message: 'Simulação atualizada com sucesso.' });
     return;
   }
@@ -1786,7 +1786,7 @@ async function handleApi(req, res) {
     }
 
     const report = ensureStoredReport(db, user, month);
-    writeDatabase(db);
+    escreverBancoDados(db);
     sendJson(res, 201, {
       message: 'Relatório gerado com sucesso.',
       report: report.payload,
@@ -1811,7 +1811,7 @@ async function handleApi(req, res) {
       .filter((entry) => entry.userId === user.id)
       .sort((a, b) => b.month.localeCompare(a.month));
 
-    writeDatabase(db);
+    escreverBancoDados(db);
     sendJson(res, 200, {
       reports: reports.map((entry) => entry.payload),
       selectedReport: selectedReport.payload,
@@ -1829,7 +1829,7 @@ async function handleApi(req, res) {
     const month = parsedUrl.searchParams.get('month') || new Date().toISOString().slice(0, 7);
     const report = ensureStoredReport(db, user, month);
     const transactions = getFilteredTransactions(db, user.id, { month: report.payload.month });
-    writeDatabase(db);
+    escreverBancoDados(db);
     sendHtml(res, 200, buildReportHtml(user, report, transactions));
     return;
   }
@@ -1852,7 +1852,7 @@ async function handleApi(req, res) {
     });
     const pdfBuffer = await generateReportPdf(html);
 
-    writeDatabase(db);
+    escreverBancoDados(db);
     sendPdf(res, pdfBuffer, buildReportFileName(report.payload.month));
     return;
   }
@@ -1860,7 +1860,7 @@ async function handleApi(req, res) {
   sendJson(res, 404, { message: 'Endpoint não encontrado.' });
 }
 
-ensureDatabase();
+garantirBancoDados();
 
 const server = http.createServer(async (req, res) => {
   try {
@@ -1885,7 +1885,7 @@ const server = http.createServer(async (req, res) => {
 server.on('error', (error) => {
   if (error && error.code === 'EADDRINUSE') {
     console.error(
-      `A porta ${PORT} ja esta em uso. Encerre o processo que esta usando essa porta ou inicie com outra, por exemplo: $env:PORT=3001; node server.js`
+      `A porta ${PORTA} ja esta em uso. Encerre o processo que esta usando essa porta ou inicie com outra, por exemplo: $env:PORTA=3001; node server.js`
     );
     process.exit(1);
   }
@@ -1894,7 +1894,8 @@ server.on('error', (error) => {
   process.exit(1);
 });
 
-server.listen(PORT, () => {
+server.listen(PORTA, () => {
   ensureUploadsDir();
-  console.log(`Servidor executando em http://localhost:${PORT}`);
+  console.log(`Servidor executando em http://localhost:${PORTA}`);
 });
+

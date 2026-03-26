@@ -1,9 +1,9 @@
 const fs = require('fs');
 const path = require('path');
 
-const DATABASE_PATH = path.join(__dirname, 'database.json');
+const CAMINHO_BANCO_DADOS = path.join(__dirname, 'database.json');
 
-function createInitialData() {
+function criarDadosIniciais() {
   return {
     users: [],
     pendingUsers: [],
@@ -26,60 +26,60 @@ function createInitialData() {
   };
 }
 
-function ensureDatabase() {
-  if (!fs.existsSync(DATABASE_PATH)) {
-    fs.writeFileSync(DATABASE_PATH, JSON.stringify(createInitialData(), null, 2), 'utf-8');
+function garantirBancoDados() {
+  if (!fs.existsSync(CAMINHO_BANCO_DADOS)) {
+    fs.writeFileSync(CAMINHO_BANCO_DADOS, JSON.stringify(criarDadosIniciais(), null, 2), 'utf-8');
   }
 }
 
-function ensureCounter(data, key) {
-  if (typeof data.counters[key] !== 'number' || Number.isNaN(data.counters[key])) {
-    data.counters[key] = 1;
+function garantirContador(dados, chave) {
+  if (typeof dados.counters[chave] !== 'number' || Number.isNaN(dados.counters[chave])) {
+    dados.counters[chave] = 1;
   }
 }
 
-function normalizeCollection(data, key) {
-  if (!Array.isArray(data[key])) {
-    data[key] = [];
+function normalizarColecao(dados, chave) {
+  if (!Array.isArray(dados[chave])) {
+    dados[chave] = [];
   }
 }
 
-function readDatabase() {
-  ensureDatabase();
-  const raw = fs.readFileSync(DATABASE_PATH, 'utf-8');
-  const data = JSON.parse(raw);
+function lerBancoDados() {
+  garantirBancoDados();
+  const conteudoBruto = fs.readFileSync(CAMINHO_BANCO_DADOS, 'utf-8');
+  const dados = JSON.parse(conteudoBruto);
 
-  normalizeCollection(data, 'users');
-  normalizeCollection(data, 'pendingUsers');
-  normalizeCollection(data, 'otps');
-  normalizeCollection(data, 'transactions');
-  normalizeCollection(data, 'investments');
-  normalizeCollection(data, 'goals');
-  normalizeCollection(data, 'customCategories');
-  normalizeCollection(data, 'reports');
+  normalizarColecao(dados, 'users');
+  normalizarColecao(dados, 'pendingUsers');
+  normalizarColecao(dados, 'otps');
+  normalizarColecao(dados, 'transactions');
+  normalizarColecao(dados, 'investments');
+  normalizarColecao(dados, 'goals');
+  normalizarColecao(dados, 'customCategories');
+  normalizarColecao(dados, 'reports');
 
-  if (!data.counters || typeof data.counters !== 'object') {
-    data.counters = {};
+  if (!dados.counters || typeof dados.counters !== 'object') {
+    dados.counters = {};
   }
 
-  ensureCounter(data, 'userId');
-  ensureCounter(data, 'otpId');
-  ensureCounter(data, 'transactionId');
-  ensureCounter(data, 'investmentId');
-  ensureCounter(data, 'goalId');
-  ensureCounter(data, 'reportId');
-  ensureCounter(data, 'categoryId');
-  ensureCounter(data, 'pendingUserId');
+  garantirContador(dados, 'userId');
+  garantirContador(dados, 'otpId');
+  garantirContador(dados, 'transactionId');
+  garantirContador(dados, 'investmentId');
+  garantirContador(dados, 'goalId');
+  garantirContador(dados, 'reportId');
+  garantirContador(dados, 'categoryId');
+  garantirContador(dados, 'pendingUserId');
 
-  return data;
+  return dados;
 }
 
-function writeDatabase(data) {
-  fs.writeFileSync(DATABASE_PATH, JSON.stringify(data, null, 2), 'utf-8');
+function escreverBancoDados(dados) {
+  fs.writeFileSync(CAMINHO_BANCO_DADOS, JSON.stringify(dados, null, 2), 'utf-8');
 }
 
 module.exports = {
-  readDatabase,
-  writeDatabase,
-  ensureDatabase,
+  lerBancoDados,
+  escreverBancoDados,
+  garantirBancoDados,
 };

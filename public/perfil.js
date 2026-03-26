@@ -41,7 +41,7 @@ function saveSession(session) {
 
 function showMessage(element, text, type = '') {
   element.textContent = text;
-  element.className = type ? `message ${type}` : 'message';
+  element.className = type ? `mensagem-status ${type}` : 'mensagem-status';
 }
 
 function formatCurrency(value) {
@@ -88,7 +88,7 @@ function openCropperModal(imageUrl) {
   if (typeof Cropper === 'undefined') {
     throw new Error('O editor de corte não foi carregado. Recarregue a página e tente novamente.');
   }
-  cropperModal.classList.remove('hidden');
+  cropperModal.classList.remove('oculto');
   cropperImage.src = imageUrl;
   if (cropperInstance) {
     cropperInstance.destroy();
@@ -104,7 +104,7 @@ function openCropperModal(imageUrl) {
 }
 
 function closeCropperModal() {
-  cropperModal.classList.add('hidden');
+  cropperModal.classList.add('oculto');
   if (cropperInstance) {
     cropperInstance.destroy();
     cropperInstance = null;

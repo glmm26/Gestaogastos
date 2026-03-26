@@ -1,186 +1,186 @@
-const splash = document.getElementById('splash');
-const authScreen = document.getElementById('auth-screen');
-const verifyScreen = document.getElementById('verify-screen');
-const homeScreen = document.getElementById('home-screen');
-const enterAppButton = document.getElementById('enter-app');
-const splashProgressBar = document.getElementById('splash-progress-bar');
+const telaSplash = document.getElementById('tela-splash');
+const telaAutenticacao = document.getElementById('tela-autenticacao');
+const telaVerificacao = document.getElementById('tela-verificacao');
+const telaHome = document.getElementById('tela-home');
+const botaoEntrarApp = document.getElementById('botao-entrar-app');
+const barraProgressoSplash = document.getElementById('barra-progresso-splash');
 
-const tabRegister = document.getElementById('tab-register');
-const tabLogin = document.getElementById('tab-login');
-const registerForm = document.getElementById('register-form');
-const loginForm = document.getElementById('login-form');
-const registerSubmitButton = document.getElementById('register-submit');
-const loginSubmitButton = document.getElementById('login-submit');
-const verifyEmailForm = document.getElementById('verify-email-form');
-const authMessage = document.getElementById('auth-message');
-const verifyMessage = document.getElementById('verify-message');
-const verifyEmailInput = document.getElementById('verify-email');
-const otpDigits = Array.from(document.querySelectorAll('.otp-digit'));
-const backToLoginButton = document.getElementById('back-to-login');
-const authParticlesCanvas = document.getElementById('auth-particles');
+const abaCadastro = document.getElementById('aba-cadastro');
+const abaLogin = document.getElementById('aba-login');
+const formularioCadastro = document.getElementById('formulario-cadastro');
+const formularioLogin = document.getElementById('formulario-login');
+const botaoEnviarCadastro = document.getElementById('botao-cadastro');
+const botaoEnviarLogin = document.getElementById('botao-login');
+const formularioVerificacaoEmail = document.getElementById('formulario-verificacao-email');
+const mensagemAutenticacao = document.getElementById('mensagem-autenticacao');
+const mensagemVerificacao = document.getElementById('mensagem-verificacao');
+const campoEmailVerificacao = document.getElementById('email-verificacao');
+const digitosOtp = Array.from(document.querySelectorAll('.digito-otp'));
+const botaoVoltarLogin = document.getElementById('voltar-login');
+const canvasParticulasAutenticacao = document.getElementById('particulas-autenticacao');
 
-const sidebarUserProfile = document.getElementById('sidebar-user-profile');
-const sidebarUserPhoto = document.getElementById('sidebar-user-photo');
-const sidebarUserName = document.getElementById('sidebar-user-name');
-const openProfilePageButton = document.getElementById('open-profile-page');
-const logoutButton = document.getElementById('logout-button');
-const refreshDataButton = document.getElementById('refresh-data');
-const sectionTitle = document.getElementById('section-title');
-const navButtons = Array.from(document.querySelectorAll('.nav-button'));
-const appSections = Array.from(document.querySelectorAll('.app-section'));
+const perfilUsuarioBarraLateral = document.getElementById('perfil-usuario-barra-lateral');
+const fotoUsuarioBarraLateral = document.getElementById('foto-usuario-barra-lateral');
+const nomeUsuarioBarraLateral = document.getElementById('nome-usuario-barra-lateral');
+const botaoAbrirPaginaPerfil = document.getElementById('abrir-pagina-perfil');
+const botaoLogout = document.getElementById('botao-sair');
+const botaoAtualizarDados = document.getElementById('atualizar-dados');
+const tituloSecao = document.getElementById('titulo-secao');
+const botoesNavegacao = Array.from(document.querySelectorAll('.botao-navegacao'));
+const secoesAplicacao = Array.from(document.querySelectorAll('.secao-aplicacao'));
 
-const incomeTotal = document.getElementById('income-total');
-const expenseTotal = document.getElementById('expense-total');
-const balanceTotal = document.getElementById('balance-total');
-const latestTransactionList = document.getElementById('latest-transaction-list');
-const dashboardMonthInput = document.getElementById('dashboard-month');
-const welcomeOverlay = document.getElementById('welcome-overlay');
-const welcomeTitle = document.getElementById('welcome-title');
-const welcomeSubtitle = document.getElementById('welcome-subtitle');
-const welcomeBalance = document.getElementById('welcome-balance');
-const welcomeExpense = document.getElementById('welcome-expense');
-const welcomeInsight = document.getElementById('welcome-insight');
-const closeWelcomeOverlayButton = document.getElementById('close-welcome-overlay');
+const totalEntradas = document.getElementById('total-entradas');
+const totalSaidas = document.getElementById('total-saidas');
+const totalSaldo = document.getElementById('total-saldo');
+const listaUltimasMovimentacoes = document.getElementById('lista-ultimas-movimentacoes');
+const campoMesDashboard = document.getElementById('mes-dashboard');
+const overlayBoasVindas = document.getElementById('overlay-boas-vindas');
+const tituloBoasVindas = document.getElementById('titulo-boas-vindas');
+const subtituloBoasVindas = document.getElementById('subtitulo-boas-vindas');
+const saldoBoasVindas = document.getElementById('saldo-boas-vindas');
+const gastoBoasVindas = document.getElementById('gasto-boas-vindas');
+const insightBoasVindas = document.getElementById('insight-boas-vindas');
+const botaoFecharBoasVindas = document.getElementById('fechar-overlay-boas-vindas');
 
-const transactionForm = document.getElementById('transaction-form');
-const transactionMessage = document.getElementById('transaction-message');
-const transactionCategory = document.getElementById('transaction-category');
-const customCategoryRow = document.getElementById('custom-category-row');
-const customCategoryInput = document.getElementById('custom-category-input');
-const newCategoryName = document.getElementById('new-category-name');
-const addCategoryButton = document.getElementById('add-category-button');
-const transactionSubmitButton = document.getElementById('transaction-submit-button');
-const cancelTransactionEditButton = document.getElementById('cancel-transaction-edit');
+const formularioMovimentacao = document.getElementById('formulario-movimentacao');
+const mensagemMovimentacao = document.getElementById('mensagem-movimentacao');
+const categoriaMovimentacao = document.getElementById('categoria-movimentacao');
+const linhaCategoriaPersonalizada = document.getElementById('linha-categoria-personalizada');
+const campoCategoriaPersonalizada = document.getElementById('campo-categoria-personalizada');
+const nomeNovaCategoria = document.getElementById('nome-nova-categoria');
+const botaoAdicionarCategoria = document.getElementById('botao-adicionar-categoria');
+const botaoSalvarMovimentacao = document.getElementById('botao-salvar-movimentacao');
+const botaoCancelarEdicaoMovimentacao = document.getElementById('botao-cancelar-edicao-movimentacao');
 
-const filtersForm = document.getElementById('filters-form');
-const clearFiltersButton = document.getElementById('clear-filters');
-const filterType = document.getElementById('filter-type');
-const filterCategory = document.getElementById('filter-category');
-const filterMonth = document.getElementById('filter-month');
-const filterPeriod = document.getElementById('filter-period');
-const filterStartDate = document.getElementById('filter-start-date');
-const filterEndDate = document.getElementById('filter-end-date');
-const transactionList = document.getElementById('transaction-list');
-const filteredIncome = document.getElementById('filtered-income');
-const filteredExpense = document.getElementById('filtered-expense');
-const filteredBalance = document.getElementById('filtered-balance');
-const filteredCount = document.getElementById('filtered-count');
+const formularioFiltros = document.getElementById('formulario-filtros');
+const botaoLimparFiltros = document.getElementById('botao-limpar-filtros');
+const filtroTipo = document.getElementById('filtro-tipo');
+const filtroCategoria = document.getElementById('filtro-categoria');
+const filtroMes = document.getElementById('filtro-mes');
+const filtroPeriodo = document.getElementById('filtro-periodo');
+const filtroDataInicial = document.getElementById('filtro-data-inicial');
+const filtroDataFinal = document.getElementById('filtro-data-final');
+const listaMovimentacoes = document.getElementById('lista-movimentacoes');
+const entradasFiltradas = document.getElementById('entradas-filtradas');
+const saidasFiltradas = document.getElementById('saidas-filtradas');
+const saldoFiltrado = document.getElementById('saldo-filtrado');
+const quantidadeFiltrada = document.getElementById('quantidade-filtrada');
 
-const investmentForm = document.getElementById('investment-form');
-const investmentMessage = document.getElementById('investment-message');
-const investedTotal = document.getElementById('invested-total');
-const profitLossTotal = document.getElementById('profit-loss-total');
-const currentValueTotal = document.getElementById('current-value-total');
-const investmentList = document.getElementById('investment-list');
-const investmentSubmitButton = document.getElementById('investment-submit-button');
-const cancelInvestmentEditButton = document.getElementById('cancel-investment-edit');
-const investmentDetailPanel = document.getElementById('investment-detail-panel');
-const selectedInvestmentProfile = document.getElementById('selected-investment-profile');
-const selectedInvestmentAmount = document.getElementById('selected-investment-amount');
-const selectedInvestmentYearsText = document.getElementById('selected-investment-years');
-const selectedInvestmentProjected = document.getElementById('selected-investment-projected');
-const investmentAmountInput = document.getElementById('investment-amount');
-const riskProfileButtons = Array.from(document.querySelectorAll('[data-risk-profile]'));
-const investmentYearsButtons = Array.from(document.querySelectorAll('[data-investment-years]'));
-const riskProfileHelp = document.getElementById('risk-profile-help');
-const investmentHeadline = document.getElementById('investment-headline');
-const investmentSubheadline = document.getElementById('investment-subheadline');
-const goalForm = document.getElementById('goal-form');
-const goalMessage = document.getElementById('goal-message');
-const goalSubmitButton = document.getElementById('goal-submit-button');
-const cancelGoalEditButton = document.getElementById('cancel-goal-edit');
-const goalStatusFilter = document.getElementById('goal-status-filter');
-const goalFiltersForm = document.getElementById('goal-filters-form');
-const clearGoalFiltersButton = document.getElementById('clear-goal-filters');
-const goalList = document.getElementById('goal-list');
-const goalsTotalCount = document.getElementById('goals-total-count');
-const goalsCompletedCount = document.getElementById('goals-completed-count');
-const goalsFailedCount = document.getElementById('goals-failed-count');
-const goalsHeadline = document.getElementById('goals-headline');
-const goalsSubheadline = document.getElementById('goals-subheadline');
-const taxForm = document.getElementById('tax-form');
-const clearTaxFormButton = document.getElementById('clear-tax-form');
-const taxMessage = document.getElementById('tax-message');
-const taxAnnualIncome = document.getElementById('tax-annual-income');
-const taxBaseIncome = document.getElementById('tax-base-income');
-const taxBracket = document.getElementById('tax-bracket');
-const taxEstimated = document.getElementById('tax-estimated');
-const taxNetIncome = document.getElementById('tax-net-income');
-const taxHighlightValue = document.getElementById('tax-highlight-value');
-const taxFeedbackPrimary = document.getElementById('tax-feedback-primary');
-const taxFeedbackSecondary = document.getElementById('tax-feedback-secondary');
-const taxSuggestions = document.getElementById('tax-suggestions');
-const taxResultsPanel = document.getElementById('tax-results-panel');
-const taxInsightsPanel = document.getElementById('tax-insights-panel');
-const taxChartPanel = document.getElementById('tax-chart-panel');
-const taxWarningModal = document.getElementById('tax-warning-modal');
-const hideTaxWarningCheckbox = document.getElementById('hide-tax-warning');
-const continueTaxWarningButton = document.getElementById('continue-tax-warning');
-const backTaxWarningButton = document.getElementById('back-tax-warning');
-const openTaxTipsButton = document.getElementById('open-tax-tips');
-const taxTipsModal = document.getElementById('tax-tips-modal');
-const closeTaxTipsButton = document.getElementById('close-tax-tips');
-const goalProgressModal = document.getElementById('goal-progress-modal');
-const goalProgressForm = document.getElementById('goal-progress-form');
-const goalProgressAmountInput = document.getElementById('goal-progress-amount');
-const goalProgressModalTitle = document.getElementById('goal-progress-modal-title');
-const goalProgressModalText = document.getElementById('goal-progress-modal-text');
-const goalProgressPreviewValue = document.getElementById('goal-progress-preview-value');
-const goalProgressSubmitButton = document.getElementById('goal-progress-submit');
-const goalProgressCancelButton = document.getElementById('goal-progress-cancel');
-const confirmActionModal = document.getElementById('confirm-action-modal');
-const confirmActionEyebrow = document.getElementById('confirm-action-eyebrow');
-const confirmActionTitle = document.getElementById('confirm-action-title');
-const confirmActionText = document.getElementById('confirm-action-text');
-const confirmActionSubmitButton = document.getElementById('confirm-action-submit');
-const confirmActionCancelButton = document.getElementById('confirm-action-cancel');
+const formularioInvestimento = document.getElementById('formulario-investimento');
+const mensagemInvestimento = document.getElementById('mensagem-investimento');
+const totalInvestido = document.getElementById('total-investido');
+const totalLucroPrejuizo = document.getElementById('total-lucro-prejuizo');
+const totalValorAtual = document.getElementById('total-valor-atual');
+const listaInvestimentos = document.getElementById('lista-investimentos');
+const botaoSalvarInvestimento = document.getElementById('botao-salvar-investimento');
+const botaoCancelarEdicaoInvestimento = document.getElementById('botao-cancelar-edicao-investimento');
+const painelDetalhesInvestimento = document.getElementById('painel-detalhes-investimento');
+const perfilInvestimentoSelecionado = document.getElementById('perfil-investimento-selecionado');
+const valorInvestimentoSelecionado = document.getElementById('valor-investimento-selecionado');
+const textoAnosInvestimentoSelecionado = document.getElementById('anos-investimento-selecionado');
+const projecaoInvestimentoSelecionado = document.getElementById('projecao-investimento-selecionado');
+const campoValorInvestimento = document.getElementById('valor-investimento');
+const botoesPerfilRisco = Array.from(document.querySelectorAll('[data-perfil-risco]'));
+const botoesAnosInvestimento = Array.from(document.querySelectorAll('[data-anos-investimento]'));
+const ajudaPerfilRisco = document.getElementById('ajuda-perfil-risco');
+const tituloInvestimento = document.getElementById('titulo-investimento');
+const subtituloInvestimento = document.getElementById('subtitulo-investimento');
+const formularioMeta = document.getElementById('formulario-meta');
+const mensagemMeta = document.getElementById('mensagem-meta');
+const botaoSalvarMeta = document.getElementById('botao-salvar-meta');
+const botaoCancelarEdicaoMeta = document.getElementById('botao-cancelar-edicao-meta');
+const filtroStatusMeta = document.getElementById('filtro-status-meta');
+const formularioFiltrosMeta = document.getElementById('formulario-filtros-meta');
+const botaoLimparFiltrosMeta = document.getElementById('botao-limpar-filtros-meta');
+const listaMetas = document.getElementById('lista-metas');
+const quantidadeTotalMetas = document.getElementById('quantidade-total-metas');
+const quantidadeMetasConcluidas = document.getElementById('quantidade-metas-concluidas');
+const quantidadeMetasNaoConcluidas = document.getElementById('quantidade-metas-nao-concluidas');
+const tituloMetas = document.getElementById('titulo-metas');
+const subtituloMetas = document.getElementById('subtitulo-metas');
+const formularioImposto = document.getElementById('formulario-imposto');
+const botaoLimparFormularioImposto = document.getElementById('botao-limpar-formulario-imposto');
+const mensagemImposto = document.getElementById('mensagem-imposto');
+const rendaAnualImposto = document.getElementById('renda-anual-imposto');
+const rendaBaseImposto = document.getElementById('renda-base-imposto');
+const faixaImposto = document.getElementById('faixa-imposto');
+const impostoEstimado = document.getElementById('imposto-estimado');
+const rendaLiquidaImposto = document.getElementById('renda-liquida-imposto');
+const valorDestaqueImposto = document.getElementById('valor-destaque-imposto');
+const feedbackPrimarioImposto = document.getElementById('feedback-primario-imposto');
+const feedbackSecundarioImposto = document.getElementById('feedback-secundario-imposto');
+const sugestoesImposto = document.getElementById('sugestoes-imposto');
+const painelResultadosImposto = document.getElementById('painel-resultados-imposto');
+const painelInsightsImposto = document.getElementById('painel-insights-imposto');
+const painelGraficoImposto = document.getElementById('painel-grafico-imposto');
+const modalAvisoImposto = document.getElementById('modal-aviso-imposto');
+const caixaOcultarAvisoImposto = document.getElementById('ocultar-aviso-imposto');
+const botaoContinuarAvisoImposto = document.getElementById('botao-continuar-aviso-imposto');
+const botaoVoltarAvisoImposto = document.getElementById('botao-voltar-aviso-imposto');
+const botaoAbrirDicasImposto = document.getElementById('botao-abrir-dicas-imposto');
+const modalDicasImposto = document.getElementById('modal-dicas-imposto');
+const botaoFecharDicasImposto = document.getElementById('botao-fechar-dicas-imposto');
+const modalProgressoMeta = document.getElementById('modal-progresso-meta');
+const formularioProgressoMeta = document.getElementById('formulario-progresso-meta');
+const campoValorProgressoMeta = document.getElementById('valor-progresso-meta');
+const tituloModalProgressoMeta = document.getElementById('titulo-modal-progresso-meta');
+const textoModalProgressoMeta = document.getElementById('texto-modal-progresso-meta');
+const valorPreviaProgressoMeta = document.getElementById('valor-previa-progresso-meta');
+const botaoSalvarProgressoMeta = document.getElementById('botao-salvar-progresso-meta');
+const botaoCancelarProgressoMeta = document.getElementById('botao-cancelar-progresso-meta');
+const modalConfirmacaoAcao = document.getElementById('modal-confirmacao-acao');
+const sobretituloConfirmacaoAcao = document.getElementById('sobretitulo-confirmacao-acao');
+const tituloConfirmacaoAcao = document.getElementById('titulo-confirmacao-acao');
+const textoConfirmacaoAcao = document.getElementById('texto-confirmacao-acao');
+const botaoConfirmarAcao = document.getElementById('botao-confirmar-acao');
+const botaoCancelarConfirmacao = document.getElementById('botao-cancelar-confirmacao');
 
-const reportForm = document.getElementById('report-form');
-const reportMonthInput = document.getElementById('report-month');
-const reportMessage = document.getElementById('report-message');
-const exportReportButton = document.getElementById('export-report');
-const exportReportPdfButton = document.getElementById('export-report-pdf');
-const reportsHistory = document.getElementById('reports-history');
-const reportTitle = document.getElementById('report-title');
-const reportIncome = document.getElementById('report-income');
-const reportExpense = document.getElementById('report-expense');
-const reportBalance = document.getElementById('report-balance');
-const reportTransactionsCount = document.getElementById('report-transactions-count');
-const reportTopCategories = document.getElementById('report-top-categories');
-const reportInsights = document.getElementById('report-insights');
+const formularioRelatorio = document.getElementById('formulario-relatorio');
+const campoMesRelatorio = document.getElementById('mes-relatorio');
+const mensagemRelatorio = document.getElementById('mensagem-relatorio');
+const botaoExportarRelatorio = document.getElementById('botao-exportar-relatorio');
+const botaoExportarRelatorioPdf = document.getElementById('botao-exportar-relatorio-pdf');
+const historicoRelatorios = document.getElementById('historico-relatorios');
+const tituloRelatorio = document.getElementById('titulo-relatorio');
+const entradaRelatorio = document.getElementById('entrada-relatorio');
+const saidaRelatorio = document.getElementById('saida-relatorio');
+const saldoRelatorio = document.getElementById('saldo-relatorio');
+const quantidadeMovimentacoesRelatorio = document.getElementById('quantidade-movimentacoes-relatorio');
+const categoriasPrincipaisRelatorio = document.getElementById('categorias-principais-relatorio');
+const insightsRelatorio = document.getElementById('insights-relatorio');
 
-let pendingVerificationEmail = '';
-let currentUserEmail = '';
-let currentUserName = '';
-let categoriesCache = [];
-let selectedDashboardMonth = new Date().toISOString().slice(0, 7);
-let selectedReportMonth = new Date().toISOString().slice(0, 7);
-let editingTransactionId = null;
-let editingInvestmentId = null;
-let editingGoalId = null;
-let selectedInvestmentViewId = null;
-let selectedRiskProfile = 'low';
-let selectedInvestmentYears = 3;
-let pendingSectionAfterWarning = null;
-let pendingGoalProgress = null;
-let pendingConfirmResolver = null;
-const chartInstances = {};
-let authParticlesAnimationId = null;
-let authParticlesState = null;
-let splashTimerId = null;
-let splashStartTime = 0;
-let splashProgressAnimationId = null;
-let welcomeOverlayTimerId = null;
-let shouldShowWelcomeOverlay = false;
-let lastCelebratedGoalId = null;
+let emailVerificacaoPendente = '';
+let emailUsuarioAtual = '';
+let nomeUsuarioAtual = '';
+let cacheCategorias = [];
+let mesDashboardSelecionado = new Date().toISOString().slice(0, 7);
+let mesRelatorioSelecionado = new Date().toISOString().slice(0, 7);
+let idMovimentacaoEdicao = null;
+let idInvestimentoEdicao = null;
+let idMetaEdicao = null;
+let idVisualizacaoInvestimento = null;
+let perfilRiscoSelecionado = 'low';
+let anosInvestimentoSelecionados = 3;
+let secaoPendenteAposAviso = null;
+let progressoMetaPendente = null;
+let resolvedorConfirmacaoPendente = null;
+const instanciasGraficos = {};
+let idAnimacaoParticulasAuth = null;
+let estadoParticulasAuth = null;
+let idTemporizadorSplash = null;
+let inicioSplash = 0;
+let idAnimacaoProgressoSplash = null;
+let idTemporizadorBoasVindas = null;
+let deveExibirBoasVindas = false;
+let idUltimaMetaCelebrada = null;
 
-const SPLASH_DURATION_MS = 10000;
+const DURACAO_SPLASH_MS = 10000;
 
-const TAX_WARNING_STORAGE_KEY = 'ocultarAvisoImposto';
-const SESSION_STORAGE_KEY = 'gestaoGastosSessao';
-const DEPENDENT_DEDUCTION = 2275.08;
+const CHAVE_ARMAZENAMENTO_AVISO_IMPOSTO = 'ocultarAvisoImposto';
+const CHAVE_ARMAZENAMENTO_SESSAO = 'gestaoGastosSessao';
+const DEDUCAO_DEPENDENTE = 2275.08;
 
-const RISK_PROFILES = {
+const PERFIS_RISCO = {
   low: {
     label: 'Baixo risco',
     annualRate: 8,
@@ -203,41 +203,41 @@ const RISK_PROFILES = {
 
 function showMessage(element, text, type = '') {
   element.textContent = text;
-  element.className = type ? `message ${type}` : 'message';
+  element.className = type ? `mensagem-status ${type}` : 'mensagem-status';
 }
 
 function showAuthMessage(text, type = '') {
-  showMessage(authMessage, text, type);
+  showMessage(mensagemAutenticacao, text, type);
 }
 
 function showVerifyMessage(text, type = '') {
-  showMessage(verifyMessage, text, type);
+  showMessage(mensagemVerificacao, text, type);
 }
 
 function showTransactionMessage(text, type = '') {
-  showMessage(transactionMessage, text, type);
+  showMessage(mensagemMovimentacao, text, type);
 }
 
 function showInvestmentMessage(text, type = '') {
-  showMessage(investmentMessage, text, type);
+  showMessage(mensagemInvestimento, text, type);
 }
 
 function showReportMessage(text, type = '') {
-  showMessage(reportMessage, text, type);
+  showMessage(mensagemRelatorio, text, type);
 }
 
 function showTaxMessage(text, type = '') {
-  showMessage(taxMessage, text, type);
+  showMessage(mensagemImposto, text, type);
 }
 
 function showGoalMessage(text, type = '') {
-  showMessage(goalMessage, text, type);
+  showMessage(mensagemMeta, text, type);
 }
 
 function showScreen(screen) {
-  [splash, authScreen, verifyScreen, homeScreen].forEach((item) => item.classList.add('hidden'));
-  screen.classList.remove('hidden');
-  toggleAuthParticles(screen === authScreen);
+  [telaSplash, telaAutenticacao, telaVerificacao, telaHome].forEach((item) => item.classList.add('oculto'));
+  screen.classList.remove('oculto');
+  toggleAuthParticles(screen === telaAutenticacao);
 }
 
 function formatCurrency(value) {
@@ -262,115 +262,115 @@ function setButtonLoading(button, isLoading, loadingText) {
 }
 
 function saveSession(session) {
-  window.localStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify(session));
+  window.localStorage.setItem(CHAVE_ARMAZENAMENTO_SESSAO, JSON.stringify(session));
 }
 
 function readSession() {
   try {
-    return JSON.parse(window.localStorage.getItem(SESSION_STORAGE_KEY) || 'null');
+    return JSON.parse(window.localStorage.getItem(CHAVE_ARMAZENAMENTO_SESSAO) || 'null');
   } catch (error) {
     return null;
   }
 }
 
 function clearSession() {
-  window.localStorage.removeItem(SESSION_STORAGE_KEY);
+  window.localStorage.removeItem(CHAVE_ARMAZENAMENTO_SESSAO);
 }
 
-function buildSidebarPhotoUrl(photo) {
-  if (!photo) return '/avatar-default.svg';
-  if (photo.includes('?')) return photo;
-  return `${photo}?t=${Date.now()}`;
+function montarUrlFotoBarraLateral(foto) {
+  if (!foto) return '/avatar-default.svg';
+  if (foto.includes('?')) return foto;
+  return `${foto}?t=${Date.now()}`;
 }
 
-function updateSidebarProfile(user = {}) {
-  const name = user.name || currentUserName || 'Usuario';
-  const photo = buildSidebarPhotoUrl(user.foto || user.photo || readSession()?.foto || '');
-  currentUserName = user.name || currentUserName;
-  currentUserEmail = user.email || currentUserEmail;
-  sidebarUserName.textContent = name;
-  sidebarUserPhoto.src = photo;
+function atualizarPerfilBarraLateral(usuario = {}) {
+  const nome = usuario.name || nomeUsuarioAtual || 'Usuario';
+  const foto = montarUrlFotoBarraLateral(usuario.foto || usuario.photo || readSession()?.foto || '');
+  nomeUsuarioAtual = usuario.name || nomeUsuarioAtual;
+  emailUsuarioAtual = usuario.email || emailUsuarioAtual;
+  nomeUsuarioBarraLateral.textContent = nome;
+  fotoUsuarioBarraLateral.src = foto;
 }
 
-async function loadSidebarProfile() {
-  if (!currentUserEmail) return;
-  const data = await apiFetch(`/perfil?email=${encodeURIComponent(currentUserEmail)}`);
-  updateSidebarProfile({
-    name: data.name,
-    email: data.email,
-    foto: data.foto,
+async function carregarPerfilBarraLateral() {
+  if (!emailUsuarioAtual) return;
+  const dados = await apiFetch(`/perfil?email=${encodeURIComponent(emailUsuarioAtual)}`);
+  atualizarPerfilBarraLateral({
+    name: dados.name,
+    email: dados.email,
+    foto: dados.foto,
   });
-  const session = readSession() || {};
-  saveSession({ ...session, name: data.name, email: data.email, foto: data.foto });
+  const sessao = readSession() || {};
+  saveSession({ ...sessao, name: dados.name, email: dados.email, foto: dados.foto });
 }
 
 function hideWelcomeOverlay() {
-  if (welcomeOverlayTimerId) {
-    window.clearTimeout(welcomeOverlayTimerId);
-    welcomeOverlayTimerId = null;
+  if (idTemporizadorBoasVindas) {
+    window.clearTimeout(idTemporizadorBoasVindas);
+    idTemporizadorBoasVindas = null;
   }
-  welcomeOverlay.classList.add('hidden');
+  overlayBoasVindas.classList.add('oculto');
 }
 
 function showWelcomeOverlay(data, userName) {
-  const displayName = userName || currentUserEmail || 'Usuário';
-  welcomeTitle.textContent = `Bem-vindo, ${displayName}`;
-  welcomeSubtitle.textContent = `Resumo rápido de ${data.label || 'seu mês atual'}.`;
-  welcomeBalance.textContent = formatCurrency(data.summary?.balance || 0);
-  welcomeExpense.textContent = formatCurrency(data.welcome?.totalExpenses || data.summary?.expense || 0);
-  welcomeInsight.textContent = data.welcome?.insight || 'Seu painel já está atualizado.';
-  welcomeOverlay.classList.remove('hidden');
-  if (welcomeOverlayTimerId) {
-    window.clearTimeout(welcomeOverlayTimerId);
+  const displayName = userName || emailUsuarioAtual || 'Usuário';
+  tituloBoasVindas.textContent = `Bem-vindo, ${displayName}`;
+  subtituloBoasVindas.textContent = `Resumo rápido de ${data.label || 'seu mês atual'}.`;
+  saldoBoasVindas.textContent = formatCurrency(data.summary?.balance || 0);
+  gastoBoasVindas.textContent = formatCurrency(data.welcome?.totalExpenses || data.summary?.expense || 0);
+  insightBoasVindas.textContent = data.welcome?.insight || 'Seu painel já está atualizado.';
+  overlayBoasVindas.classList.remove('oculto');
+  if (idTemporizadorBoasVindas) {
+    window.clearTimeout(idTemporizadorBoasVindas);
   }
-  welcomeOverlayTimerId = window.setTimeout(() => {
+  idTemporizadorBoasVindas = window.setTimeout(() => {
     hideWelcomeOverlay();
   }, 2600);
 }
 
 function openAuth() {
-  if (splashTimerId) {
-    window.clearTimeout(splashTimerId);
-    splashTimerId = null;
+  if (idTemporizadorSplash) {
+    window.clearTimeout(idTemporizadorSplash);
+    idTemporizadorSplash = null;
   }
-  if (splashProgressAnimationId) {
-    window.cancelAnimationFrame(splashProgressAnimationId);
-    splashProgressAnimationId = null;
+  if (idAnimacaoProgressoSplash) {
+    window.cancelAnimationFrame(idAnimacaoProgressoSplash);
+    idAnimacaoProgressoSplash = null;
   }
-  if (splashProgressBar) {
-    splashProgressBar.style.width = '100%';
+  if (barraProgressoSplash) {
+    barraProgressoSplash.style.width = '100%';
   }
-  showScreen(authScreen);
+  showScreen(telaAutenticacao);
 }
 
 function updateSplashProgress() {
-  const elapsed = Date.now() - splashStartTime;
-  const progress = Math.min(elapsed / SPLASH_DURATION_MS, 1);
-  splashProgressBar.style.width = `${progress * 100}%`;
+  const elapsed = Date.now() - inicioSplash;
+  const progress = Math.min(elapsed / DURACAO_SPLASH_MS, 1);
+  barraProgressoSplash.style.width = `${progress * 100}%`;
 
   if (progress >= 1) {
-    splashProgressAnimationId = null;
+    idAnimacaoProgressoSplash = null;
     return;
   }
 
-  splashProgressAnimationId = window.requestAnimationFrame(updateSplashProgress);
+  idAnimacaoProgressoSplash = window.requestAnimationFrame(updateSplashProgress);
 }
 
 function startSplashTimer() {
-  splashStartTime = Date.now();
-  splashProgressBar.style.width = '0%';
-  if (splashProgressAnimationId) {
-    window.cancelAnimationFrame(splashProgressAnimationId);
+  inicioSplash = Date.now();
+  barraProgressoSplash.style.width = '0%';
+  if (idAnimacaoProgressoSplash) {
+    window.cancelAnimationFrame(idAnimacaoProgressoSplash);
   }
-  splashProgressAnimationId = window.requestAnimationFrame(updateSplashProgress);
-  splashTimerId = window.setTimeout(() => {
-    splashTimerId = null;
+  idAnimacaoProgressoSplash = window.requestAnimationFrame(updateSplashProgress);
+  idTemporizadorSplash = window.setTimeout(() => {
+    idTemporizadorSplash = null;
     openAuth();
-  }, SPLASH_DURATION_MS);
+  }, DURACAO_SPLASH_MS);
 }
 
 function createAuthParticlesState() {
-  const ctx = authParticlesCanvas.getContext('2d');
+  const ctx = canvasParticulasAutenticacao.getContext('2d');
   const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const isCompactScreen = window.innerWidth < 768;
   const particleCount = prefersReducedMotion ? 16 : isCompactScreen ? 24 : 42;
@@ -391,22 +391,22 @@ function createAuthParticlesState() {
 }
 
 function resizeAuthParticlesCanvas() {
-  if (!authParticlesCanvas) return;
+  if (!canvasParticulasAutenticacao) return;
   const ratio = Math.min(window.devicePixelRatio || 1, 1.6);
-  authParticlesCanvas.width = Math.floor(authScreen.clientWidth * ratio);
-  authParticlesCanvas.height = Math.floor(authScreen.clientHeight * ratio);
-  authParticlesCanvas.style.width = `${authScreen.clientWidth}px`;
-  authParticlesCanvas.style.height = `${authScreen.clientHeight}px`;
-  if (authParticlesState?.ctx) {
-    authParticlesState.ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+  canvasParticulasAutenticacao.width = Math.floor(telaAutenticacao.clientWidth * ratio);
+  canvasParticulasAutenticacao.height = Math.floor(telaAutenticacao.clientHeight * ratio);
+  canvasParticulasAutenticacao.style.width = `${telaAutenticacao.clientWidth}px`;
+  canvasParticulasAutenticacao.style.height = `${telaAutenticacao.clientHeight}px`;
+  if (estadoParticulasAuth?.ctx) {
+    estadoParticulasAuth.ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
   }
 }
 
 function drawAuthParticles() {
-  if (!authParticlesState || authScreen.classList.contains('hidden')) return;
-  const { ctx, particles, pointer, prefersReducedMotion } = authParticlesState;
-  const width = authScreen.clientWidth;
-  const height = authScreen.clientHeight;
+  if (!estadoParticulasAuth || telaAutenticacao.classList.contains('oculto')) return;
+  const { ctx, particles, pointer, prefersReducedMotion } = estadoParticulasAuth;
+  const width = telaAutenticacao.clientWidth;
+  const height = telaAutenticacao.clientHeight;
 
   ctx.clearRect(0, 0, width, height);
 
@@ -440,20 +440,20 @@ function drawAuthParticles() {
     ctx.fill();
   });
 
-  authParticlesAnimationId = window.requestAnimationFrame(drawAuthParticles);
+  idAnimacaoParticulasAuth = window.requestAnimationFrame(drawAuthParticles);
 }
 
 function startAuthParticles() {
-  if (!authParticlesCanvas || authParticlesAnimationId !== null) return;
-  authParticlesState = createAuthParticlesState();
+  if (!canvasParticulasAutenticacao || idAnimacaoParticulasAuth !== null) return;
+  estadoParticulasAuth = createAuthParticlesState();
   resizeAuthParticlesCanvas();
   drawAuthParticles();
 }
 
 function stopAuthParticles() {
-  if (authParticlesAnimationId !== null) {
-    window.cancelAnimationFrame(authParticlesAnimationId);
-    authParticlesAnimationId = null;
+  if (idAnimacaoParticulasAuth !== null) {
+    window.cancelAnimationFrame(idAnimacaoParticulasAuth);
+    idAnimacaoParticulasAuth = null;
   }
 }
 
@@ -466,106 +466,106 @@ function toggleAuthParticles(shouldRun) {
 }
 
 function hideAuthForms() {
-  registerForm.classList.remove('active');
-  registerForm.classList.add('hidden');
-  loginForm.classList.remove('active');
-  loginForm.classList.add('hidden');
+  formularioCadastro.classList.remove('ativo');
+  formularioCadastro.classList.add('oculto');
+  formularioLogin.classList.remove('ativo');
+  formularioLogin.classList.add('oculto');
 }
 
 function showRegister() {
-  tabRegister.classList.add('active');
-  tabLogin.classList.remove('active');
+  abaCadastro.classList.add('ativo');
+  abaLogin.classList.remove('ativo');
   hideAuthForms();
-  registerForm.classList.remove('hidden');
-  registerForm.classList.add('active');
+  formularioCadastro.classList.remove('oculto');
+  formularioCadastro.classList.add('ativo');
   showAuthMessage('');
 }
 
 function showLogin() {
-  tabLogin.classList.add('active');
-  tabRegister.classList.remove('active');
+  abaLogin.classList.add('ativo');
+  abaCadastro.classList.remove('ativo');
   hideAuthForms();
-  loginForm.classList.remove('hidden');
-  loginForm.classList.add('active');
+  formularioLogin.classList.remove('oculto');
+  formularioLogin.classList.add('ativo');
   showAuthMessage('');
 }
 
 function clearOtpInputs() {
-  otpDigits.forEach((input) => {
+  digitosOtp.forEach((input) => {
     input.value = '';
   });
 }
 
 function getOtpCode() {
-  return otpDigits.map((input) => input.value).join('');
+  return digitosOtp.map((input) => input.value).join('');
 }
 
 function showVerifyEmail(email) {
-  pendingVerificationEmail = email;
-  verifyEmailInput.value = email;
+  emailVerificacaoPendente = email;
+  campoEmailVerificacao.value = email;
   clearOtpInputs();
   showVerifyMessage('Digite o código de 6 dígitos para confirmar o cadastro.', 'success');
-  showScreen(verifyScreen);
-  otpDigits[0].focus();
+  showScreen(telaVerificacao);
+  digitosOtp[0].focus();
 }
 
 function setActiveSection(sectionId) {
-  appSections.forEach((section) => {
-    section.classList.toggle('hidden', section.id !== sectionId);
+  secoesAplicacao.forEach((section) => {
+    section.classList.toggle('oculto', section.id !== sectionId);
   });
 
-  navButtons.forEach((button) => {
-    const active = button.dataset.section === sectionId;
-    button.classList.toggle('active', active);
-    if (active) sectionTitle.textContent = button.textContent;
+  botoesNavegacao.forEach((button) => {
+    const estaAtivo = button.dataset.section === sectionId;
+    button.classList.toggle('ativo', estaAtivo);
+    if (estaAtivo) tituloSecao.textContent = button.textContent;
   });
 }
 
 function hideTaxWarningModal() {
-  taxWarningModal.classList.add('hidden');
+  modalAvisoImposto.classList.add('oculto');
 }
 
 function showTaxWarningModal() {
-  hideTaxWarningCheckbox.checked = getTaxWarningHiddenPreference();
-  taxWarningModal.classList.remove('hidden');
+  caixaOcultarAvisoImposto.checked = getTaxWarningHiddenPreference();
+  modalAvisoImposto.classList.remove('oculto');
 }
 
 function hideTaxTipsModal() {
-  taxTipsModal.classList.add('hidden');
+  modalDicasImposto.classList.add('oculto');
 }
 
 function showTaxTipsModal() {
-  taxTipsModal.classList.remove('hidden');
+  modalDicasImposto.classList.remove('oculto');
 }
 
 function updateGoalProgressPreview() {
-  const baseAmount = pendingGoalProgress?.currentAmount || 0;
-  const increment = Number(goalProgressAmountInput.value || 0);
+  const baseAmount = progressoMetaPendente?.currentAmount || 0;
+  const increment = Number(campoValorProgressoMeta.value || 0);
   const nextTotal = Number.isFinite(increment) && increment > 0 ? baseAmount + increment : baseAmount;
-  goalProgressPreviewValue.textContent = formatCurrency(nextTotal);
+  valorPreviaProgressoMeta.textContent = formatCurrency(nextTotal);
 }
 
 function hideGoalProgressModal() {
-  pendingGoalProgress = null;
-  goalProgressForm.reset();
-  goalProgressPreviewValue.textContent = formatCurrency(0);
-  goalProgressModal.classList.add('hidden');
+  progressoMetaPendente = null;
+  formularioProgressoMeta.reset();
+  valorPreviaProgressoMeta.textContent = formatCurrency(0);
+  modalProgressoMeta.classList.add('oculto');
 }
 
 function showGoalProgressModal(goal) {
-  pendingGoalProgress = goal;
-  goalProgressModalTitle.textContent = `Adicionar valor em ${goal.name}`;
-  goalProgressModalText.textContent = `Informe quanto deseja adicionar ao progresso da meta "${goal.name}".`;
-  goalProgressAmountInput.value = '';
-  goalProgressPreviewValue.textContent = formatCurrency(goal.currentAmount);
-  goalProgressModal.classList.remove('hidden');
-  window.setTimeout(() => goalProgressAmountInput.focus(), 20);
+  progressoMetaPendente = goal;
+  tituloModalProgressoMeta.textContent = `Adicionar valor em ${goal.name}`;
+  textoModalProgressoMeta.textContent = `Informe quanto deseja adicionar ao progresso da meta "${goal.name}".`;
+  campoValorProgressoMeta.value = '';
+  valorPreviaProgressoMeta.textContent = formatCurrency(goal.currentAmount);
+  modalProgressoMeta.classList.remove('oculto');
+  window.setTimeout(() => campoValorProgressoMeta.focus(), 20);
 }
 
 function hideConfirmActionModal(confirmed = false) {
-  const resolver = pendingConfirmResolver;
-  pendingConfirmResolver = null;
-  confirmActionModal.classList.add('hidden');
+  const resolver = resolvedorConfirmacaoPendente;
+  resolvedorConfirmacaoPendente = null;
+  modalConfirmacaoAcao.classList.add('oculto');
   if (resolver) resolver(confirmed);
 }
 
@@ -575,47 +575,47 @@ function requestConfirmAction({
   text = 'Revise a ação antes de continuar.',
   confirmText = 'Confirmar',
 } = {}) {
-  confirmActionEyebrow.textContent = eyebrow;
-  confirmActionTitle.textContent = title;
-  confirmActionText.textContent = text;
-  confirmActionSubmitButton.textContent = confirmText;
-  confirmActionModal.classList.remove('hidden');
+  sobretituloConfirmacaoAcao.textContent = eyebrow;
+  tituloConfirmacaoAcao.textContent = title;
+  textoConfirmacaoAcao.textContent = text;
+  botaoConfirmarAcao.textContent = confirmText;
+  modalConfirmacaoAcao.classList.remove('oculto');
 
   return new Promise((resolve) => {
-    pendingConfirmResolver = resolve;
+    resolvedorConfirmacaoPendente = resolve;
   });
 }
 
 function getTaxWarningHiddenPreference() {
-  return window.localStorage.getItem(TAX_WARNING_STORAGE_KEY) === 'true';
+  return window.localStorage.getItem(CHAVE_ARMAZENAMENTO_AVISO_IMPOSTO) === 'true';
 }
 
 function saveTaxWarningPreference() {
-  if (hideTaxWarningCheckbox.checked) {
-    window.localStorage.setItem(TAX_WARNING_STORAGE_KEY, 'true');
+  if (caixaOcultarAvisoImposto.checked) {
+    window.localStorage.setItem(CHAVE_ARMAZENAMENTO_AVISO_IMPOSTO, 'true');
     return;
   }
-  window.localStorage.removeItem(TAX_WARNING_STORAGE_KEY);
+  window.localStorage.removeItem(CHAVE_ARMAZENAMENTO_AVISO_IMPOSTO);
 }
 
 function openTaxesSection() {
-  setActiveSection('taxes-section');
+  setActiveSection('secao-impostos');
 }
 
 function applyDefaultTransactionFilters() {
-  filtersForm.reset();
-  filterMonth.value = getCurrentMonthKey();
-  filterPeriod.value = 'all';
-  filterStartDate.value = '';
-  filterEndDate.value = '';
+  formularioFiltros.reset();
+  filtroMes.value = getCurrentMonthKey();
+  filtroPeriodo.value = 'all';
+  filtroDataInicial.value = '';
+  filtroDataFinal.value = '';
 }
 
 function resetGoalForm() {
-  goalForm.reset();
-  document.getElementById('goal-current-amount').value = 0;
-  editingGoalId = null;
-  goalSubmitButton.textContent = 'Salvar meta';
-  cancelGoalEditButton.classList.add('hidden');
+  formularioMeta.reset();
+  document.getElementById('valor-atual-meta').value = 0;
+  idMetaEdicao = null;
+  botaoSalvarMeta.textContent = 'Salvar meta';
+  botaoCancelarEdicaoMeta.classList.add('oculto');
 }
 
 function formatGoalStatus(status) {
@@ -625,56 +625,56 @@ function formatGoalStatus(status) {
 }
 
 function openSectionWithGuard(sectionId) {
-  if (sectionId !== 'taxes-section') {
-    pendingSectionAfterWarning = null;
+  if (sectionId !== 'secao-impostos') {
+    secaoPendenteAposAviso = null;
     hideTaxWarningModal();
     setActiveSection(sectionId);
     return;
   }
 
   if (getTaxWarningHiddenPreference()) {
-    pendingSectionAfterWarning = null;
+    secaoPendenteAposAviso = null;
     hideTaxWarningModal();
     openTaxesSection();
     return;
   }
 
-  pendingSectionAfterWarning = sectionId;
+  secaoPendenteAposAviso = sectionId;
   showTaxWarningModal();
 }
 
 function showHome(userOrEmail) {
-  if (splashTimerId) {
-    window.clearTimeout(splashTimerId);
-    splashTimerId = null;
+  if (idTemporizadorSplash) {
+    window.clearTimeout(idTemporizadorSplash);
+    idTemporizadorSplash = null;
   }
-  if (splashProgressAnimationId) {
-    window.cancelAnimationFrame(splashProgressAnimationId);
-    splashProgressAnimationId = null;
+  if (idAnimacaoProgressoSplash) {
+    window.cancelAnimationFrame(idAnimacaoProgressoSplash);
+    idAnimacaoProgressoSplash = null;
   }
   const user = typeof userOrEmail === 'string' ? { email: userOrEmail } : userOrEmail;
-  currentUserEmail = user.email;
-  currentUserName = user.name || '';
-  updateSidebarProfile({
+  emailUsuarioAtual = user.email;
+  nomeUsuarioAtual = user.name || '';
+  atualizarPerfilBarraLateral({
     name: user.name,
     email: user.email,
     foto: user.foto || user.photo || readSession()?.foto,
   });
-  showScreen(homeScreen);
-  setActiveSection('dashboard-section');
-  selectedDashboardMonth = getCurrentMonthKey();
-  dashboardMonthInput.value = selectedDashboardMonth;
+  showScreen(telaHome);
+  setActiveSection('secao-dashboard');
+  mesDashboardSelecionado = getCurrentMonthKey();
+  campoMesDashboard.value = mesDashboardSelecionado;
   resetTransactionForm();
   resetInvestmentForm();
   applyDefaultTransactionFilters();
-  reportMonthInput.value = selectedReportMonth;
+  campoMesRelatorio.value = mesRelatorioSelecionado;
   loadAllData();
 }
 
 function destroyChart(key) {
-  if (chartInstances[key]) {
-    chartInstances[key].destroy();
-    delete chartInstances[key];
+  if (instanciasGraficos[key]) {
+    instanciasGraficos[key].destroy();
+    delete instanciasGraficos[key];
   }
 }
 
@@ -682,7 +682,7 @@ function renderChart(key, canvasId, config) {
   const canvas = document.getElementById(canvasId);
   if (!canvas || typeof Chart === 'undefined') return;
   destroyChart(key);
-  chartInstances[key] = new Chart(canvas, config);
+  instanciasGraficos[key] = new Chart(canvas, config);
 }
 
 function renderList(container, items, emptyText, renderer) {
@@ -697,29 +697,29 @@ function renderList(container, items, emptyText, renderer) {
 }
 
 function setTransactionEditMode(item = null) {
-  editingTransactionId = item ? item.id : null;
-  transactionSubmitButton.textContent = item ? 'Salvar alterações' : 'Salvar movimentação';
-  cancelTransactionEditButton.classList.toggle('hidden', !item);
+  idMovimentacaoEdicao = item ? item.id : null;
+  botaoSalvarMovimentacao.textContent = item ? 'Salvar alterações' : 'Salvar movimentação';
+  botaoCancelarEdicaoMovimentacao.classList.toggle('oculto', !item);
 }
 
 function setInvestmentEditMode(item = null) {
-  editingInvestmentId = item ? item.id : null;
-  investmentSubmitButton.textContent = item ? 'Salvar alterações' : 'Salvar simulação';
-  cancelInvestmentEditButton.classList.toggle('hidden', !item);
+  idInvestimentoEdicao = item ? item.id : null;
+  botaoSalvarInvestimento.textContent = item ? 'Salvar alterações' : 'Salvar simulação';
+  botaoCancelarEdicaoInvestimento.classList.toggle('oculto', !item);
 }
 
 function resetTransactionForm() {
-  transactionForm.reset();
-  document.getElementById('transaction-date').value = new Date().toISOString().slice(0, 10);
-  customCategoryRow.classList.add('hidden');
-  customCategoryInput.value = '';
+  formularioMovimentacao.reset();
+  document.getElementById('data-movimentacao').value = new Date().toISOString().slice(0, 10);
+  linhaCategoriaPersonalizada.classList.add('oculto');
+  campoCategoriaPersonalizada.value = '';
   setTransactionEditMode();
 }
 
 function resetInvestmentForm() {
-  investmentForm.reset();
-  selectedRiskProfile = 'low';
-  selectedInvestmentYears = 3;
+  formularioInvestimento.reset();
+  perfilRiscoSelecionado = 'low';
+  anosInvestimentoSelecionados = 3;
   syncInvestmentChoices();
   updateInvestmentPreview();
   setInvestmentEditMode();
@@ -745,22 +745,22 @@ function calculateInvestmentProjection(monthlyAmount, annualRate, years) {
 }
 
 function syncInvestmentChoices() {
-  riskProfileButtons.forEach((button) => {
-    button.classList.toggle('active', button.dataset.riskProfile === selectedRiskProfile);
+  botoesPerfilRisco.forEach((button) => {
+    button.classList.toggle('ativo', button.dataset.perfilRisco === perfilRiscoSelecionado);
   });
-  investmentYearsButtons.forEach((button) => {
-    button.classList.toggle('active', Number(button.dataset.investmentYears) === selectedInvestmentYears);
+  botoesAnosInvestimento.forEach((button) => {
+    button.classList.toggle('ativo', Number(button.dataset.anosInvestimento) === anosInvestimentoSelecionados);
   });
-  riskProfileHelp.textContent = RISK_PROFILES[selectedRiskProfile].help;
+  ajudaPerfilRisco.textContent = PERFIS_RISCO[perfilRiscoSelecionado].help;
 }
 
 function updateInvestmentPreview() {
-  const monthlyAmount = Number(investmentAmountInput.value || 0);
-  const profile = RISK_PROFILES[selectedRiskProfile];
-  const projection = calculateInvestmentProjection(monthlyAmount, profile.annualRate, selectedInvestmentYears);
+  const monthlyAmount = Number(campoValorInvestimento.value || 0);
+  const profile = PERFIS_RISCO[perfilRiscoSelecionado];
+  const projection = calculateInvestmentProjection(monthlyAmount, profile.annualRate, anosInvestimentoSelecionados);
 
-  investmentHeadline.textContent = `Seu dinheiro pode crescer para ${formatCurrency(projection.projectedValue)} em ${selectedInvestmentYears} ano${selectedInvestmentYears > 1 ? 's' : ''}.`;
-  investmentSubheadline.textContent = monthlyAmount > 0
+  tituloInvestimento.textContent = `Seu dinheiro pode crescer para ${formatCurrency(projection.projectedValue)} em ${anosInvestimentoSelecionados} ano${anosInvestimentoSelecionados > 1 ? 's' : ''}.`;
+  subtituloInvestimento.textContent = monthlyAmount > 0
     ? `Investindo ${formatCurrency(monthlyAmount)} por mês, você pode juntar ${formatCurrency(projection.invested)} e buscar um crescimento estimado de ${formatCurrency(projection.gain)}. Para esse perfil, exemplos comuns seriam ${profile.examples}.`
     : `Investindo pouco por mês você já começa a construir resultado. Para esse perfil, exemplos comuns seriam ${profile.examples}.`;
 }
@@ -770,13 +770,13 @@ function readMoneyInput(id) {
 }
 
 function calculateTaxes() {
-  const monthlyIncome = readMoneyInput('tax-income-monthly');
-  const otherIncome = readMoneyInput('tax-other-income');
-  const dependents = Math.max(0, Number(document.getElementById('tax-dependents').value || 0));
-  const healthExpenses = readMoneyInput('tax-health');
-  const educationExpenses = readMoneyInput('tax-education');
+  const monthlyIncome = readMoneyInput('renda-mensal-imposto');
+  const otherIncome = readMoneyInput('outras-rendas-imposto');
+  const dependents = Math.max(0, Number(document.getElementById('dependentes-imposto').value || 0));
+  const healthExpenses = readMoneyInput('saude-imposto');
+  const educationExpenses = readMoneyInput('educacao-imposto');
   const annualIncome = monthlyIncome * 12 + otherIncome;
-  const deductions = dependents * DEPENDENT_DEDUCTION + healthExpenses + educationExpenses;
+  const deductions = dependents * DEDUCAO_DEPENDENTE + healthExpenses + educationExpenses;
   const baseIncome = Math.max(0, annualIncome - deductions);
 
   let rate = 0;
@@ -842,44 +842,44 @@ function buildTaxSuggestions(result, input) {
 
 function renderTaxSimulation(result) {
   const input = {
-    dependents: Math.max(0, Number(document.getElementById('tax-dependents').value || 0)),
-    healthExpenses: readMoneyInput('tax-health'),
-    educationExpenses: readMoneyInput('tax-education'),
+    dependents: Math.max(0, Number(document.getElementById('dependentes-imposto').value || 0)),
+    healthExpenses: readMoneyInput('saude-imposto'),
+    educationExpenses: readMoneyInput('educacao-imposto'),
   };
   const suggestions = buildTaxSuggestions(result, input);
 
-  taxResultsPanel.classList.remove('hidden');
-  taxInsightsPanel.classList.remove('hidden');
-  taxAnnualIncome.textContent = formatCurrency(result.annualIncome);
-  taxBaseIncome.textContent = formatCurrency(result.baseIncome);
-  taxBracket.textContent = result.bracketLabel;
-  taxEstimated.textContent = formatCurrency(result.estimatedTax);
-  taxNetIncome.textContent = formatCurrency(result.netIncome);
-  taxHighlightValue.textContent = formatCurrency(result.estimatedTax);
+  painelResultadosImposto.classList.remove('oculto');
+  painelInsightsImposto.classList.remove('oculto');
+  rendaAnualImposto.textContent = formatCurrency(result.annualIncome);
+  rendaBaseImposto.textContent = formatCurrency(result.baseIncome);
+  faixaImposto.textContent = result.bracketLabel;
+  impostoEstimado.textContent = formatCurrency(result.estimatedTax);
+  rendaLiquidaImposto.textContent = formatCurrency(result.netIncome);
+  valorDestaqueImposto.textContent = formatCurrency(result.estimatedTax);
 
   if (result.rate === 0) {
-    taxFeedbackPrimary.textContent = 'Você está isento de imposto.';
-    taxFeedbackSecondary.textContent = 'Pela estimativa simplificada, hoje você não teria imposto a pagar.';
+    feedbackPrimarioImposto.textContent = 'Você está isento de imposto.';
+    feedbackSecundarioImposto.textContent = 'Pela estimativa simplificada, hoje você não teria imposto a pagar.';
   } else if (result.rate >= 27.5) {
-    taxFeedbackPrimary.textContent = 'Você está na faixa mais alta de imposto (27,5%).';
-    taxFeedbackSecondary.textContent = 'Você já paga um valor considerável de imposto.';
+    feedbackPrimarioImposto.textContent = 'Você está na faixa mais alta de imposto (27,5%).';
+    feedbackSecundarioImposto.textContent = 'Você já paga um valor considerável de imposto.';
   } else if (result.rate >= 15) {
-    taxFeedbackPrimary.textContent = 'Você está em uma faixa intermediária de imposto.';
-    taxFeedbackSecondary.textContent = 'Sua alíquota já merece atenção para não perder deduções importantes.';
+    feedbackPrimarioImposto.textContent = 'Você está em uma faixa intermediária de imposto.';
+    feedbackSecundarioImposto.textContent = 'Sua alíquota já merece atenção para não perder deduções importantes.';
   } else {
-    taxFeedbackPrimary.textContent = `Sua alíquota é ${result.rate.toFixed(1)}%.`;
-    taxFeedbackSecondary.textContent = 'Você está em uma faixa menor, mas ainda pode melhorar sua declaração com deduções.';
+    feedbackPrimarioImposto.textContent = `Sua alíquota é ${result.rate.toFixed(1)}%.`;
+    feedbackSecundarioImposto.textContent = 'Você está em uma faixa menor, mas ainda pode melhorar sua declaração com deduções.';
   }
 
-  taxSuggestions.innerHTML = '';
+  sugestoesImposto.innerHTML = '';
   suggestions.forEach((suggestion) => {
     const li = document.createElement('li');
     li.textContent = suggestion;
-    taxSuggestions.appendChild(li);
+    sugestoesImposto.appendChild(li);
   });
-  taxSuggestions.classList.remove('hidden');
+  sugestoesImposto.classList.remove('oculto');
 
-  renderChart('taxSummary', 'tax-chart', {
+  renderChart('taxSummary', 'grafico-imposto', {
     type: 'bar',
     data: {
       labels: [
@@ -907,22 +907,22 @@ function renderTaxSimulation(result) {
 }
 
 function resetTaxSimulation() {
-  taxForm.reset();
-  document.getElementById('tax-dependents').value = 0;
-  taxResultsPanel.classList.add('hidden');
-  taxInsightsPanel.classList.add('hidden');
-  taxAnnualIncome.textContent = formatCurrency(0);
-  taxBaseIncome.textContent = formatCurrency(0);
-  taxBracket.textContent = 'Isento';
-  taxEstimated.textContent = formatCurrency(0);
-  taxNetIncome.textContent = formatCurrency(0);
-  taxHighlightValue.textContent = formatCurrency(0);
-  taxFeedbackPrimary.textContent = 'Você está isento.';
-  taxFeedbackSecondary.textContent = 'Preencha os campos para ver sua estimativa.';
-  taxSuggestions.innerHTML = '';
-  taxSuggestions.classList.add('hidden');
+  formularioImposto.reset();
+  document.getElementById('dependentes-imposto').value = 0;
+  painelResultadosImposto.classList.add('oculto');
+  painelInsightsImposto.classList.add('oculto');
+  rendaAnualImposto.textContent = formatCurrency(0);
+  rendaBaseImposto.textContent = formatCurrency(0);
+  faixaImposto.textContent = 'Isento';
+  impostoEstimado.textContent = formatCurrency(0);
+  rendaLiquidaImposto.textContent = formatCurrency(0);
+  valorDestaqueImposto.textContent = formatCurrency(0);
+  feedbackPrimarioImposto.textContent = 'Você está isento.';
+  feedbackSecundarioImposto.textContent = 'Preencha os campo para ver sua estimativa.';
+  sugestoesImposto.innerHTML = '';
+  sugestoesImposto.classList.add('oculto');
   showTaxMessage('');
-  renderChart('taxSummary', 'tax-chart', {
+  renderChart('taxSummary', 'grafico-imposto', {
     type: 'bar',
     data: {
       labels: ['Renda total (100%)', 'Imposto (0%)', 'Valor liquido (0%)'],
@@ -947,17 +947,17 @@ function resetTaxSimulation() {
 
 function buildItemActions(onEdit, onDelete) {
   const actions = document.createElement('div');
-  actions.className = 'item-actions';
+  actions.className = 'acoes-item';
 
   const editButton = document.createElement('button');
   editButton.type = 'button';
-  editButton.className = 'secondary';
+  editButton.className = 'botao-secundario';
   editButton.textContent = 'Editar';
   editButton.addEventListener('click', onEdit);
 
   const deleteButton = document.createElement('button');
   deleteButton.type = 'button';
-  deleteButton.className = 'danger-button';
+  deleteButton.className = 'botao-perigo';
   deleteButton.textContent = 'Excluir';
   deleteButton.addEventListener('click', onDelete);
 
@@ -969,7 +969,7 @@ function buildItemActions(onEdit, onDelete) {
 function getInvestmentDetailAction(onView) {
   const button = document.createElement('button');
   button.type = 'button';
-  button.className = 'secondary';
+  button.className = 'botao-secundario';
   button.textContent = 'Ver detalhes';
   button.addEventListener('click', onView);
   return button;
@@ -978,7 +978,7 @@ function getInvestmentDetailAction(onView) {
 function buildTransactionItem(item) {
   const li = document.createElement('li');
   const sign = item.type === 'income' ? '+' : '-';
-  const cls = item.type === 'income' ? 'pos' : 'neg';
+  const cls = item.type === 'income' ? 'positivo' : 'negativo';
   const note = item.notes ? `<small>${item.notes}</small>` : '';
   li.innerHTML = `
     <div>
@@ -1002,7 +1002,7 @@ function buildTransactionItem(item) {
 function buildInvestmentItem(item) {
   const li = document.createElement('li');
   const resultValue = (item.amount * item.profitability) / 100;
-  const cls = resultValue >= 0 ? 'pos' : 'neg';
+  const cls = resultValue >= 0 ? 'positivo' : 'negativo';
   li.innerHTML = `
     <div>
       <strong>${item.type}</strong>
@@ -1023,7 +1023,7 @@ function buildInvestmentItem(item) {
 
 function buildInvestmentSimulationItem(item) {
   const li = document.createElement('li');
-  li.classList.toggle('is-selected', item.id === selectedInvestmentViewId);
+  li.classList.toggle('selecionado', item.id === idVisualizacaoInvestimento);
   li.innerHTML = `
     <div>
       <strong>${item.riskLabel}</strong>
@@ -1031,13 +1031,13 @@ function buildInvestmentSimulationItem(item) {
       <small>Estimativa simples de ${item.annualRate}% ao ano</small>
     </div>
     <div>
-      <strong class="pos">${formatCurrency(item.projectedValue)}</strong>
+      <strong class="positivo">${formatCurrency(item.projectedValue)}</strong>
       <small>Pode virar ${formatCurrency(item.projectedValue)}</small>
     </div>
   `;
   li.lastElementChild.appendChild(getInvestmentDetailAction(() => {
-    selectedInvestmentViewId = item.id;
-    renderInvestments(lastInvestmentsPayload);
+    idVisualizacaoInvestimento = item.id;
+    renderInvestments(ultimoPayloadInvestimentos);
   }));
   li.lastElementChild.appendChild(
     buildItemActions(
@@ -1049,15 +1049,15 @@ function buildInvestmentSimulationItem(item) {
 }
 
 function startGoalEdit(item) {
-  document.getElementById('goal-name').value = item.name;
-  document.getElementById('goal-target-amount').value = item.targetAmount;
-  document.getElementById('goal-current-amount').value = item.currentAmount;
-  document.getElementById('goal-deadline').value = item.deadline;
-  document.getElementById('goal-category').value = item.category || '';
-  editingGoalId = item.id;
-  goalSubmitButton.textContent = 'Salvar alterações';
-  cancelGoalEditButton.classList.remove('hidden');
-  goalForm.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  document.getElementById('nome-meta').value = item.name;
+  document.getElementById('valor-alvo-meta').value = item.targetAmount;
+  document.getElementById('valor-atual-meta').value = item.currentAmount;
+  document.getElementById('prazo-meta').value = item.deadline;
+  document.getElementById('categoria-meta').value = item.category || '';
+  idMetaEdicao = item.id;
+  botaoSalvarMeta.textContent = 'Salvar alterações';
+  botaoCancelarEdicaoMeta.classList.remove('oculto');
+  formularioMeta.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
 async function deleteGoal(id) {
@@ -1070,10 +1070,10 @@ async function deleteGoal(id) {
   if (!confirmed) return;
 
   try {
-    const data = await apiFetch(`/api/goals/${id}?email=${encodeURIComponent(currentUserEmail)}`, {
+    const data = await apiFetch(`/api/goals/${id}?email=${encodeURIComponent(emailUsuarioAtual)}`, {
       method: 'DELETE',
     });
-    if (editingGoalId === id) resetGoalForm();
+    if (idMetaEdicao === id) resetGoalForm();
     showGoalMessage(data.message, 'success');
     await loadGoals();
   } catch (error) {
@@ -1087,11 +1087,11 @@ async function updateGoalStatus(goal, status) {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        email: currentUserEmail,
+        email: emailUsuarioAtual,
         status,
       }),
     });
-    lastCelebratedGoalId = status === 'completed' ? goal.id : null;
+    idUltimaMetaCelebrada = status === 'completed' ? goal.id : null;
     showGoalMessage(data.message, 'success');
     await loadGoals();
   } catch (error) {
@@ -1100,7 +1100,7 @@ async function updateGoalStatus(goal, status) {
 }
 
 async function addGoalProgress(goal) {
-  const amount = Number(String(goalProgressAmountInput.value).replace(',', '.'));
+  const amount = Number(String(campoValorProgressoMeta.value).replace(',', '.'));
   if (!Number.isFinite(amount) || amount <= 0) {
     showGoalMessage('Digite um valor válido para somar à meta.', 'error');
     return;
@@ -1111,7 +1111,7 @@ async function addGoalProgress(goal) {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        email: currentUserEmail,
+        email: emailUsuarioAtual,
         currentAmount: Number((goal.currentAmount + amount).toFixed(2)),
       }),
     });
@@ -1125,36 +1125,36 @@ async function addGoalProgress(goal) {
 
 function buildGoalCard(goal) {
   const card = document.createElement('article');
-  card.className = `goal-card status-${goal.status}`;
+  card.className = `cartao-meta status-${goal.status}`;
   const progressWidth = goal.status === 'completed' ? 100 : Math.min(100, goal.progress);
-  if (lastCelebratedGoalId === goal.id && goal.status === 'completed') {
-    card.classList.add('is-celebrating');
+  if (idUltimaMetaCelebrada === goal.id && goal.status === 'completed') {
+    card.classList.add('celebrando');
     window.setTimeout(() => {
-      card.classList.remove('is-celebrating');
+      card.classList.remove('celebrando');
     }, 2400);
-    lastCelebratedGoalId = null;
+    idUltimaMetaCelebrada = null;
   }
 
   card.innerHTML = `
-    <div class="goal-head">
+    <div class="cabecalho-meta">
       <div>
         <h4>${goal.name}</h4>
-        <p class="goal-meta">${goal.category || 'Sem categoria'} • Prazo ${formatDate(goal.deadline)}</p>
+        <p class="detalhes-meta">${goal.category || 'Sem categoria'} • Prazo ${formatDate(goal.deadline)}</p>
       </div>
-      <span class="goal-status">${formatGoalStatus(goal.status)}</span>
+      <span class="status-meta">${formatGoalStatus(goal.status)}</span>
     </div>
-    <div class="goal-progress">
+    <div class="progresso-meta">
       <strong>${formatCurrency(goal.currentAmount)} de ${formatCurrency(goal.targetAmount)} • ${goal.progress.toFixed(1)}%</strong>
-      <div class="goal-progress-bar"><div class="goal-progress-fill" style="width: ${progressWidth}%"></div></div>
+      <div class="barra-progresso-meta"><div class="preenchimento-progresso-meta" style="width: ${progressWidth}%"></div></div>
     </div>
   `;
 
   const actions = document.createElement('div');
-  actions.className = 'goal-actions';
+  actions.className = 'acoes-meta';
 
   const progressButton = document.createElement('button');
   progressButton.type = 'button';
-  progressButton.className = 'goal-primary-action';
+  progressButton.className = 'acao-primaria-meta';
   progressButton.textContent = 'Somar progresso';
   progressButton.addEventListener('click', () => showGoalProgressModal(goal));
 
@@ -1165,13 +1165,13 @@ function buildGoalCard(goal) {
 
   const failedButton = document.createElement('button');
   failedButton.type = 'button';
-  failedButton.className = 'secondary';
+    failedButton.className = 'botao-secundario';
   failedButton.textContent = '✖ Não cumprida';
   failedButton.addEventListener('click', () => updateGoalStatus(goal, 'failed'));
 
   const activeButton = document.createElement('button');
   activeButton.type = 'button';
-  activeButton.className = 'secondary';
+  activeButton.className = 'botao-secundario';
   activeButton.textContent = 'Retomar';
   activeButton.addEventListener('click', () => updateGoalStatus(goal, 'active'));
 
@@ -1186,34 +1186,34 @@ function buildGoalCard(goal) {
 }
 
 function startTransactionEdit(item) {
-  document.getElementById('transaction-type').value = item.type;
-  document.getElementById('transaction-amount').value = item.amount;
-  document.getElementById('transaction-date').value = item.date;
+  document.getElementById('tipo-movimentacao').value = item.type;
+  document.getElementById('valor-movimentacao').value = item.amount;
+  document.getElementById('data-movimentacao').value = item.date;
 
-  if (categoriesCache.includes(item.category)) {
-    transactionCategory.value = item.category;
-    customCategoryRow.classList.add('hidden');
-    customCategoryInput.value = '';
+  if (cacheCategorias.includes(item.category)) {
+    categoriaMovimentacao.value = item.category;
+    linhaCategoriaPersonalizada.classList.add('oculto');
+    campoCategoriaPersonalizada.value = '';
   } else {
-    transactionCategory.value = '__custom__';
-    customCategoryRow.classList.remove('hidden');
-    customCategoryInput.value = item.category;
+    categoriaMovimentacao.value = '__custom__';
+    linhaCategoriaPersonalizada.classList.remove('oculto');
+    campoCategoriaPersonalizada.value = item.category;
   }
 
-  document.getElementById('transaction-notes').value = item.notes || '';
+  document.getElementById('observacoes-movimentacao').value = item.notes || '';
   setTransactionEditMode(item);
-  transactionForm.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  formularioMovimentacao.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
 function startInvestmentEdit(item) {
-  investmentAmountInput.value = item.monthlyAmount;
-  selectedInvestmentViewId = item.id;
-  selectedRiskProfile = item.riskProfile;
-  selectedInvestmentYears = item.years;
+  campoValorInvestimento.value = item.monthlyAmount;
+  idVisualizacaoInvestimento = item.id;
+  perfilRiscoSelecionado = item.riskProfile;
+  anosInvestimentoSelecionados = item.years;
   syncInvestmentChoices();
   updateInvestmentPreview();
   setInvestmentEditMode(item);
-  investmentForm.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  formularioInvestimento.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
 async function deleteTransaction(id) {
@@ -1226,10 +1226,10 @@ async function deleteTransaction(id) {
   if (!confirmed) return;
 
   try {
-    const data = await apiFetch(`/api/transactions/${id}?email=${encodeURIComponent(currentUserEmail)}`, {
+    const data = await apiFetch(`/api/transactions/${id}?email=${encodeURIComponent(emailUsuarioAtual)}`, {
       method: 'DELETE',
     });
-    if (editingTransactionId === id) resetTransactionForm();
+    if (idMovimentacaoEdicao === id) resetTransactionForm();
     showTransactionMessage(data.message, 'success');
     await loadAllData();
   } catch (error) {
@@ -1247,11 +1247,11 @@ async function deleteInvestment(id) {
   if (!confirmed) return;
 
   try {
-    const data = await apiFetch(`/api/investments/${id}?email=${encodeURIComponent(currentUserEmail)}`, {
+    const data = await apiFetch(`/api/investments/${id}?email=${encodeURIComponent(emailUsuarioAtual)}`, {
       method: 'DELETE',
     });
-    if (editingInvestmentId === id) resetInvestmentForm();
-    if (selectedInvestmentViewId === id) selectedInvestmentViewId = null;
+    if (idInvestimentoEdicao === id) resetInvestmentForm();
+    if (idVisualizacaoInvestimento === id) idVisualizacaoInvestimento = null;
     showInvestmentMessage(data.message, 'success');
     await loadAllData();
   } catch (error) {
@@ -1261,8 +1261,8 @@ async function deleteInvestment(id) {
 
 function renderCategoryOptions(categories) {
   const options = categories.map((category) => `<option value="${category}">${category}</option>`).join('');
-  transactionCategory.innerHTML = `${options}<option value="__custom__">Personalizada</option>`;
-  filterCategory.innerHTML = `<option value="all">Todas</option>${options}`;
+  categoriaMovimentacao.innerHTML = `${options}<option value="__custom__">Personalizada</option>`;
+  filtroCategoria.innerHTML = `<option value="all">Todas</option>${options}`;
 }
 
 async function apiFetch(url, options = {}) {
@@ -1275,9 +1275,9 @@ async function apiFetch(url, options = {}) {
 }
 
 async function loadCategories() {
-  const data = await apiFetch(`/api/categories?email=${encodeURIComponent(currentUserEmail)}`);
-  categoriesCache = data.categories;
-  renderCategoryOptions(categoriesCache);
+  const data = await apiFetch(`/api/categories?email=${encodeURIComponent(emailUsuarioAtual)}`);
+  cacheCategorias = data.categories;
+  renderCategoryOptions(cacheCategorias);
 }
 
 function buildCategoryChartData(items) {
@@ -1305,18 +1305,18 @@ function chartBaseOptions() {
 }
 
 function renderDashboard(data) {
-  incomeTotal.textContent = formatCurrency(data.summary.income);
-  expenseTotal.textContent = formatCurrency(data.summary.expense);
-  balanceTotal.textContent = formatCurrency(data.summary.balance);
-  renderList(latestTransactionList, data.latestTransactions, 'Nenhuma movimentação cadastrada ainda.', buildTransactionItem);
+  totalEntradas.textContent = formatCurrency(data.summary.income);
+  totalSaidas.textContent = formatCurrency(data.summary.expense);
+  totalSaldo.textContent = formatCurrency(data.summary.balance);
+  renderList(listaUltimasMovimentacoes, data.latestTransactions, 'Nenhuma movimentação cadastrada ainda.', buildTransactionItem);
 
-  renderChart('dashboardCategory', 'category-chart', {
+  renderChart('dashboardCategory', 'grafico-categoria', {
     type: 'doughnut',
     data: buildCategoryChartData(data.categoryBreakdown.length ? data.categoryBreakdown : [{ category: 'Sem despesas', total: 1 }]),
     options: chartBaseOptions(),
   });
 
-  renderChart('dashboardMonthly', 'monthly-chart', {
+  renderChart('dashboardMonthly', 'grafico-mensal', {
     type: 'bar',
     data: {
       labels: data.monthlySeries.map((item) => item.label),
@@ -1334,41 +1334,41 @@ function renderDashboard(data) {
     },
   });
 
-  if (shouldShowWelcomeOverlay) {
-    showWelcomeOverlay(data, currentUserName);
-    shouldShowWelcomeOverlay = false;
+  if (deveExibirBoasVindas) {
+    showWelcomeOverlay(data, nomeUsuarioAtual);
+    deveExibirBoasVindas = false;
   }
 }
 
 async function loadDashboard() {
   renderDashboard(
     await apiFetch(
-      `/api/dashboard?email=${encodeURIComponent(currentUserEmail)}&month=${encodeURIComponent(selectedDashboardMonth)}`
+      `/api/dashboard?email=${encodeURIComponent(emailUsuarioAtual)}&month=${encodeURIComponent(mesDashboardSelecionado)}`
     )
   );
 }
 
 function readTransactionFilters() {
-  const hasSelectedMonth = Boolean(filterMonth.value);
+  const hasSelectedMonth = Boolean(filtroMes.value);
   return new URLSearchParams({
-    email: currentUserEmail,
-    type: filterType.value || 'all',
-    category: filterCategory.value || 'all',
-    month: filterMonth.value || '',
-    period: hasSelectedMonth ? 'all' : filterPeriod.value || 'all',
-    startDate: hasSelectedMonth ? '' : filterStartDate.value || '',
-    endDate: hasSelectedMonth ? '' : filterEndDate.value || '',
+    email: emailUsuarioAtual,
+    type: filtroTipo.value || 'all',
+    category: filtroCategoria.value || 'all',
+    month: filtroMes.value || '',
+    period: hasSelectedMonth ? 'all' : filtroPeriodo.value || 'all',
+    startDate: hasSelectedMonth ? '' : filtroDataInicial.value || '',
+    endDate: hasSelectedMonth ? '' : filtroDataFinal.value || '',
   });
 }
 
 function renderFilteredTransactions(data) {
-  filteredIncome.textContent = formatCurrency(data.summary.income);
-  filteredExpense.textContent = formatCurrency(data.summary.expense);
-  filteredBalance.textContent = formatCurrency(data.summary.balance);
-  filteredCount.textContent = String(data.totalCount);
-  renderList(transactionList, data.transactions, 'Nenhuma movimentação para os filtros escolhidos.', buildTransactionItem);
+  entradasFiltradas.textContent = formatCurrency(data.summary.income);
+  saidasFiltradas.textContent = formatCurrency(data.summary.expense);
+  saldoFiltrado.textContent = formatCurrency(data.summary.balance);
+  quantidadeFiltrada.textContent = String(data.totalCount);
+  renderList(listaMovimentacoes, data.transactions, 'Nenhuma movimentação para os filtros escolhidos.', buildTransactionItem);
 
-  renderChart('filteredCategory', 'filtered-category-chart', {
+  renderChart('filteredCategory', 'grafico-categoria-filtrado', {
     type: 'pie',
     data: buildCategoryChartData(data.categoryBreakdown.length ? data.categoryBreakdown : [{ category: 'Sem despesas', total: 1 }]),
     options: chartBaseOptions(),
@@ -1380,34 +1380,34 @@ async function loadTransactions() {
   renderFilteredTransactions(data);
 }
 
-let lastInvestmentsPayload = null;
+let ultimoPayloadInvestimentos = null;
 
 function renderInvestments(data) {
-  lastInvestmentsPayload = data;
-  investedTotal.textContent = formatCurrency(data.summary.totalInvested);
-  profitLossTotal.textContent = formatCurrency(data.summary.profitLoss);
-  currentValueTotal.textContent = formatCurrency(data.summary.currentValue);
+  ultimoPayloadInvestimentos = data;
+  totalInvestido.textContent = formatCurrency(data.summary.totalInvested);
+  totalLucroPrejuizo.textContent = formatCurrency(data.summary.profitLoss);
+  totalValorAtual.textContent = formatCurrency(data.summary.currentValue);
 
   if (!data.investments.length) {
-    selectedInvestmentViewId = null;
-    investmentDetailPanel.classList.add('hidden');
-  } else if (!data.investments.some((item) => item.id === selectedInvestmentViewId)) {
-    selectedInvestmentViewId = data.investments[0].id;
+    idVisualizacaoInvestimento = null;
+    painelDetalhesInvestimento.classList.add('oculto');
+  } else if (!data.investments.some((item) => item.id === idVisualizacaoInvestimento)) {
+    idVisualizacaoInvestimento = data.investments[0].id;
   }
 
-  renderList(investmentList, data.investments, 'Nenhuma simulação salva ainda.', buildInvestmentSimulationItem);
+  renderList(listaInvestimentos, data.investments, 'Nenhuma simulação salva ainda.', buildInvestmentSimulationItem);
 
-  const selectedInvestment = data.investments.find((item) => item.id === selectedInvestmentViewId) || data.investments[0];
+  const selectedInvestment = data.investments.find((item) => item.id === idVisualizacaoInvestimento) || data.investments[0];
 
   if (selectedInvestment) {
-    investmentDetailPanel.classList.remove('hidden');
-    selectedInvestmentProfile.textContent = selectedInvestment.riskLabel;
-    selectedInvestmentAmount.textContent = formatCurrency(selectedInvestment.monthlyAmount);
-    selectedInvestmentYearsText.textContent = `${selectedInvestment.years} ano${selectedInvestment.years > 1 ? 's' : ''}`;
-    selectedInvestmentProjected.textContent = formatCurrency(selectedInvestment.projectedValue);
+    painelDetalhesInvestimento.classList.remove('oculto');
+    perfilInvestimentoSelecionado.textContent = selectedInvestment.riskLabel;
+    valorInvestimentoSelecionado.textContent = formatCurrency(selectedInvestment.monthlyAmount);
+    textoAnosInvestimentoSelecionado.textContent = `${selectedInvestment.years} ano${selectedInvestment.years > 1 ? 's' : ''}`;
+    projecaoInvestimentoSelecionado.textContent = formatCurrency(selectedInvestment.projectedValue);
   }
 
-  renderChart('investments', 'investment-chart', {
+  renderChart('investments', 'grafico-investimento', {
     type: 'line',
     data: {
       labels: selectedInvestment ? selectedInvestment.yearlyPoints.map((item) => `${item.year} ano${item.year > 1 ? 's' : ''}`) : data.evolution.map((item) => item.label),
@@ -1433,74 +1433,74 @@ function renderInvestments(data) {
 }
 
 async function loadInvestments() {
-  renderInvestments(await apiFetch(`/api/investments?email=${encodeURIComponent(currentUserEmail)}`));
+  renderInvestments(await apiFetch(`/api/investments?email=${encodeURIComponent(emailUsuarioAtual)}`));
 }
 
 function renderGoals(data) {
-  goalsTotalCount.textContent = String(data.summary.total);
-  goalsCompletedCount.textContent = String(data.summary.completed);
-  goalsFailedCount.textContent = String(data.summary.failed);
+  quantidadeTotalMetas.textContent = String(data.summary.total);
+  quantidadeMetasConcluidas.textContent = String(data.summary.completed);
+  quantidadeMetasNaoConcluidas.textContent = String(data.summary.failed);
 
   if (!data.goals.length) {
-    goalList.innerHTML = '<article class="goal-card"><p>Nenhuma meta encontrada para este filtro.</p></article>';
-    goalsHeadline.textContent = 'Toda meta começa com um plano claro.';
-    goalsSubheadline.textContent = 'Crie uma meta para acompanhar sua evolução financeira.';
+    listaMetas.innerHTML = '<article class="cartao-meta"><p>Nenhuma meta encontrada para este filtro.</p></article>';
+    tituloMetas.textContent = 'Toda meta começa com um plano claro.';
+    subtituloMetas.textContent = 'Crie uma meta para acompanhar sua evolução financeira.';
     return;
   }
 
   const completedCount = data.goals.filter((goal) => goal.status === 'completed').length;
-  goalsHeadline.textContent = completedCount
+  tituloMetas.textContent = completedCount
     ? `Você já concluiu ${completedCount} meta${completedCount > 1 ? 's' : ''}.`
     : 'Você está construindo seus objetivos.';
-  goalsSubheadline.textContent = 'Atualize o progresso e ajuste o status sempre que sua situação mudar.';
+  subtituloMetas.textContent = 'Atualize o progresso e ajuste o status sempre que sua situação mudar.';
 
-  goalList.innerHTML = '';
+  listaMetas.innerHTML = '';
   data.goals.forEach((goal) => {
-    goalList.appendChild(buildGoalCard(goal));
+    listaMetas.appendChild(buildGoalCard(goal));
   });
 }
 
 async function loadGoals() {
-  const status = goalStatusFilter.value || 'all';
-  renderGoals(await apiFetch(`/api/goals?email=${encodeURIComponent(currentUserEmail)}&status=${encodeURIComponent(status)}`));
+  const status = filtroStatusMeta.value || 'all';
+  renderGoals(await apiFetch(`/api/goals?email=${encodeURIComponent(emailUsuarioAtual)}&status=${encodeURIComponent(status)}`));
 }
 
 function renderReports(data) {
   const report = data.selectedReport;
-  selectedReportMonth = report.month;
-  reportMonthInput.value = report.month;
-  reportTitle.textContent = `Relatorio de ${report.label}`;
-  reportIncome.textContent = formatCurrency(report.summary.income);
-  reportExpense.textContent = formatCurrency(report.summary.expense);
-  reportBalance.textContent = formatCurrency(report.summary.balance);
-  reportTransactionsCount.textContent = String(report.transactionsCount);
+  mesRelatorioSelecionado = report.month;
+  campoMesRelatorio.value = report.month;
+  tituloRelatorio.textContent = `Relatorio de ${report.label}`;
+  entradaRelatorio.textContent = formatCurrency(report.summary.income);
+  saidaRelatorio.textContent = formatCurrency(report.summary.expense);
+  saldoRelatorio.textContent = formatCurrency(report.summary.balance);
+  quantidadeMovimentacoesRelatorio.textContent = String(report.transactionsCount);
 
-  reportsHistory.innerHTML = '';
+  historicoRelatorios.innerHTML = '';
   data.reports.forEach((item) => {
     const button = document.createElement('button');
     button.type = 'button';
-    button.className = `history-button${item.month === report.month ? ' active' : ''}`;
+    button.className = `botao-historico${item.month === report.month ? ' ativo' : ''}`;
     button.textContent = item.label;
     button.addEventListener('click', () => loadReports(item.month));
-    reportsHistory.appendChild(button);
+    historicoRelatorios.appendChild(button);
   });
 
-  reportTopCategories.innerHTML = '';
+  categoriasPrincipaisRelatorio.innerHTML = '';
   const topCategories = report.topCategories.length ? report.topCategories : [{ category: 'Sem dados', total: 0, percentage: 0 }];
   topCategories.forEach((item) => {
     const li = document.createElement('li');
     li.textContent = `${item.category}: ${formatCurrency(item.total)} (${item.percentage}%)`;
-    reportTopCategories.appendChild(li);
+    categoriasPrincipaisRelatorio.appendChild(li);
   });
 
-  reportInsights.innerHTML = '';
+  insightsRelatorio.innerHTML = '';
   report.insights.forEach((item) => {
     const li = document.createElement('li');
     li.textContent = item;
-    reportInsights.appendChild(li);
+    insightsRelatorio.appendChild(li);
   });
 
-  renderChart('reportCategory', 'report-category-chart', {
+  renderChart('reportCategory', 'grafico-categoria-relatorio', {
     type: 'pie',
     data: buildCategoryChartData(report.categoryBreakdown.length ? report.categoryBreakdown : [{ category: 'Sem despesas', total: 1 }]),
     options: chartBaseOptions(),
@@ -1508,22 +1508,22 @@ function renderReports(data) {
 }
 
 function getChartImage(chartKey) {
-  const chart = chartInstances[chartKey];
+  const chart = instanciasGraficos[chartKey];
   if (!chart || typeof chart.toBase64Image !== 'function') return '';
   return chart.toBase64Image();
 }
 
 async function downloadReportPdf() {
-  if (!currentUserEmail) return;
+  if (!emailUsuarioAtual) return;
 
-  setButtonLoading(exportReportPdfButton, true, 'Gerando PDF...');
+  setButtonLoading(botaoExportarRelatorioPdf, true, 'Gerando PDF...');
   try {
     const response = await fetch('/relatorios/pdf', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        email: currentUserEmail,
-        month: reportMonthInput.value,
+        email: emailUsuarioAtual,
+        month: campoMesRelatorio.value,
         charts: {
           category: getChartImage('reportCategory') || getChartImage('dashboardCategory'),
           cashFlow: getChartImage('dashboardMonthly'),
@@ -1538,7 +1538,7 @@ async function downloadReportPdf() {
 
     const blob = await response.blob();
     const downloadUrl = window.URL.createObjectURL(blob);
-    const monthKey = reportMonthInput.value || selectedReportMonth || getCurrentMonthKey();
+    const monthKey = campoMesRelatorio.value || mesRelatorioSelecionado || getCurrentMonthKey();
     const anchor = document.createElement('a');
     anchor.href = downloadUrl;
     anchor.download = `relatorio_financeiro_${monthKey}.pdf`;
@@ -1550,19 +1550,19 @@ async function downloadReportPdf() {
   } catch (error) {
     showReportMessage(error.message, 'error');
   } finally {
-    setButtonLoading(exportReportPdfButton, false, 'Gerando PDF...');
+    setButtonLoading(botaoExportarRelatorioPdf, false, 'Gerando PDF...');
   }
 }
 
-async function loadReports(month = selectedReportMonth) {
-  renderReports(await apiFetch(`/api/reports?email=${encodeURIComponent(currentUserEmail)}&month=${encodeURIComponent(month)}`));
+async function loadReports(month = mesRelatorioSelecionado) {
+  renderReports(await apiFetch(`/api/reports?email=${encodeURIComponent(emailUsuarioAtual)}&month=${encodeURIComponent(month)}`));
 }
 
 async function loadAllData() {
-  if (!currentUserEmail) return;
+  if (!emailUsuarioAtual) return;
   try {
-    await Promise.all([loadCategories(), loadSidebarProfile()]);
-    await Promise.all([loadDashboard(), loadTransactions(), loadInvestments(), loadGoals(), loadReports(selectedReportMonth)]);
+    await Promise.all([loadCategories(), carregarPerfilBarraLateral()]);
+    await Promise.all([loadDashboard(), loadTransactions(), loadInvestments(), loadGoals(), loadReports(mesRelatorioSelecionado)]);
     showTransactionMessage('');
     showInvestmentMessage('');
     showGoalMessage('');
@@ -1573,64 +1573,64 @@ async function loadAllData() {
 }
 
 function setupOtpInputs() {
-  otpDigits.forEach((input, index) => {
+  digitosOtp.forEach((input, index) => {
     input.addEventListener('input', (event) => {
       const numeric = event.target.value.replace(/\D/g, '');
       event.target.value = numeric.slice(-1);
-      if (event.target.value && index < otpDigits.length - 1) {
-        otpDigits[index + 1].focus();
+      if (event.target.value && index < digitosOtp.length - 1) {
+        digitosOtp[index + 1].focus();
       }
     });
 
     input.addEventListener('keydown', (event) => {
-      if (event.key === 'Backspace' && !input.value && index > 0) otpDigits[index - 1].focus();
+      if (event.key === 'Backspace' && !input.value && index > 0) digitosOtp[index - 1].focus();
     });
 
     input.addEventListener('paste', (event) => {
       event.preventDefault();
       const pasted = (event.clipboardData || window.clipboardData).getData('text').replace(/\D/g, '').slice(0, 6);
       pasted.split('').forEach((digit, digitIndex) => {
-        if (otpDigits[digitIndex]) otpDigits[digitIndex].value = digit;
+        if (digitosOtp[digitIndex]) digitosOtp[digitIndex].value = digit;
       });
-      otpDigits[Math.min(pasted.length, otpDigits.length - 1)].focus();
+      digitosOtp[Math.min(pasted.length, digitosOtp.length - 1)].focus();
     });
   });
 }
 
 startSplashTimer();
-enterAppButton.addEventListener('click', openAuth);
-tabRegister.addEventListener('click', showRegister);
-tabLogin.addEventListener('click', showLogin);
-backToLoginButton.addEventListener('click', () => {
-  showScreen(authScreen);
+botaoEntrarApp.addEventListener('click', openAuth);
+abaCadastro.addEventListener('click', showRegister);
+abaLogin.addEventListener('click', showLogin);
+botaoVoltarLogin.addEventListener('click', () => {
+  showScreen(telaAutenticacao);
   showLogin();
 });
 
-navButtons.forEach((button) => {
+botoesNavegacao.forEach((button) => {
   button.addEventListener('click', () => openSectionWithGuard(button.dataset.section));
 });
 
-refreshDataButton.addEventListener('click', loadAllData);
-closeWelcomeOverlayButton.addEventListener('click', hideWelcomeOverlay);
+botaoAtualizarDados.addEventListener('click', loadAllData);
+botaoFecharBoasVindas.addEventListener('click', hideWelcomeOverlay);
 
-openProfilePageButton.addEventListener('click', () => {
+botaoAbrirPaginaPerfil.addEventListener('click', () => {
   window.location.href = '/perfil.html';
 });
 
-sidebarUserProfile.addEventListener('click', () => {
+perfilUsuarioBarraLateral.addEventListener('click', () => {
   window.location.href = '/perfil.html';
 });
 
-sidebarUserProfile.addEventListener('keydown', (event) => {
+perfilUsuarioBarraLateral.addEventListener('keydown', (event) => {
   if (event.key === 'Enter' || event.key === ' ') {
     event.preventDefault();
     window.location.href = '/perfil.html';
   }
 });
 
-dashboardMonthInput.addEventListener('change', async () => {
-  selectedDashboardMonth = dashboardMonthInput.value || getCurrentMonthKey();
-  dashboardMonthInput.value = selectedDashboardMonth;
+campoMesDashboard.addEventListener('change', async () => {
+  mesDashboardSelecionado = campoMesDashboard.value || getCurrentMonthKey();
+  campoMesDashboard.value = mesDashboardSelecionado;
   try {
     await loadDashboard();
   } catch (error) {
@@ -1638,14 +1638,14 @@ dashboardMonthInput.addEventListener('change', async () => {
   }
 });
 
-transactionCategory.addEventListener('change', () => {
-  const isCustom = transactionCategory.value === '__custom__';
-  customCategoryRow.classList.toggle('hidden', !isCustom);
-  if (!isCustom) customCategoryInput.value = '';
+categoriaMovimentacao.addEventListener('change', () => {
+  const isCustom = categoriaMovimentacao.value === '__custom__';
+  linhaCategoriaPersonalizada.classList.toggle('oculto', !isCustom);
+  if (!isCustom) campoCategoriaPersonalizada.value = '';
 });
 
-addCategoryButton.addEventListener('click', async () => {
-  const name = newCategoryName.value.trim();
+botaoAdicionarCategoria.addEventListener('click', async () => {
+  const name = nomeNovaCategoria.value.trim();
   if (!name) {
     showTransactionMessage('Digite o nome da nova categoria.', 'error');
     return;
@@ -1655,24 +1655,24 @@ addCategoryButton.addEventListener('click', async () => {
     const data = await apiFetch('/api/categories', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email: currentUserEmail, name }),
+      body: JSON.stringify({ email: emailUsuarioAtual, name }),
     });
-    categoriesCache = data.categories;
-    renderCategoryOptions(categoriesCache);
-    transactionCategory.value = name;
-    newCategoryName.value = '';
+    cacheCategorias = data.categories;
+    renderCategoryOptions(cacheCategorias);
+    categoriaMovimentacao.value = name;
+    nomeNovaCategoria.value = '';
     showTransactionMessage('Categoria adicionada com sucesso.', 'success');
   } catch (error) {
     showTransactionMessage(error.message, 'error');
   }
 });
 
-registerForm.addEventListener('submit', async (event) => {
+formularioCadastro.addEventListener('submit', async (event) => {
   event.preventDefault();
-  const name = document.getElementById('register-name').value.trim();
-  const email = document.getElementById('register-email').value.trim();
-  const password = document.getElementById('register-password').value;
-  const confirmPassword = document.getElementById('register-confirm-password').value;
+  const name = document.getElementById('nome-cadastro').value.trim();
+  const email = document.getElementById('email-cadastro').value.trim();
+  const password = document.getElementById('senha-cadastro').value;
+  const confirmPassword = document.getElementById('confirmar-senha-cadastro').value;
 
   if (!name) {
     showAuthMessage('Informe seu nome completo.', 'error');
@@ -1689,7 +1689,7 @@ registerForm.addEventListener('submit', async (event) => {
     return;
   }
 
-  setButtonLoading(registerSubmitButton, true, 'Enviando OTP...');
+  setButtonLoading(botaoEnviarCadastro, true, 'Enviando OTP...');
   try {
     const data = await apiFetch('/api/register', {
       method: 'POST',
@@ -1701,7 +1701,7 @@ registerForm.addEventListener('submit', async (event) => {
         confirmPassword,
       }),
     });
-    registerForm.reset();
+    formularioCadastro.reset();
     showVerifyEmail(email);
     showVerifyMessage(data.message, 'success');
     if (data.devOtp) {
@@ -1710,13 +1710,13 @@ registerForm.addEventListener('submit', async (event) => {
   } catch (error) {
     showAuthMessage(error.message, 'error');
   } finally {
-    setButtonLoading(registerSubmitButton, false, 'Enviando OTP...');
+    setButtonLoading(botaoEnviarCadastro, false, 'Enviando OTP...');
   }
 });
 
-verifyEmailForm.addEventListener('submit', async (event) => {
+formularioVerificacaoEmail.addEventListener('submit', async (event) => {
   event.preventDefault();
-  const email = verifyEmailInput.value.trim();
+  const email = campoEmailVerificacao.value.trim();
   const otp = getOtpCode();
   if (otp.length !== 6) {
     showVerifyMessage('Digite os 6 dígitos do código.', 'error');
@@ -1724,32 +1724,32 @@ verifyEmailForm.addEventListener('submit', async (event) => {
   }
 
   try {
-    await apiFetch('/api/verify-email', {
+    await apiFetch('/api/email-verificacao', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, otp }),
     });
-    pendingVerificationEmail = '';
-    showScreen(authScreen);
+    emailVerificacaoPendente = '';
+    showScreen(telaAutenticacao);
     showLogin();
-    document.getElementById('login-email').value = email;
+    document.getElementById('email-login').value = email;
     showAuthMessage('Cadastro confirmado. Agora você pode fazer login.', 'success');
   } catch (error) {
     showVerifyMessage(error.message, 'error');
   }
 });
 
-loginForm.addEventListener('submit', async (event) => {
+formularioLogin.addEventListener('submit', async (event) => {
   event.preventDefault();
-  const email = document.getElementById('login-email').value.trim();
-  setButtonLoading(loginSubmitButton, true, 'Entrando...');
+  const email = document.getElementById('email-login').value.trim();
+  setButtonLoading(botaoEnviarLogin, true, 'Entrando...');
   try {
     const data = await apiFetch('/api/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         email,
-        password: document.getElementById('login-password').value,
+        password: document.getElementById('senha-login').value,
       }),
     });
     saveSession({
@@ -1758,42 +1758,42 @@ loginForm.addEventListener('submit', async (event) => {
       token: data.token || '',
       loggedAt: new Date().toISOString(),
     });
-    shouldShowWelcomeOverlay = true;
-    loginForm.reset();
+    deveExibirBoasVindas = true;
+    formularioLogin.reset();
     showHome(data.user || { email });
   } catch (error) {
     showAuthMessage(error.message, 'error');
   } finally {
-    setButtonLoading(loginSubmitButton, false, 'Entrando...');
+    setButtonLoading(botaoEnviarLogin, false, 'Entrando...');
   }
 });
 
-logoutButton.addEventListener('click', () => {
-  currentUserEmail = '';
-  currentUserName = '';
-  pendingVerificationEmail = '';
-  categoriesCache = [];
-  updateSidebarProfile({ name: 'Usuario', email: '', foto: '/avatar-default.svg' });
+botaoLogout.addEventListener('click', () => {
+  emailUsuarioAtual = '';
+  nomeUsuarioAtual = '';
+  emailVerificacaoPendente = '';
+  cacheCategorias = [];
+  atualizarPerfilBarraLateral({ name: 'Usuario', email: '', foto: '/avatar-default.svg' });
   hideWelcomeOverlay();
   clearSession();
-  showScreen(authScreen);
+  showScreen(telaAutenticacao);
   showLogin();
 });
 
-transactionForm.addEventListener('submit', async (event) => {
+formularioMovimentacao.addEventListener('submit', async (event) => {
   event.preventDefault();
-  const category = transactionCategory.value === '__custom__' ? customCategoryInput.value.trim() : transactionCategory.value;
+  const category = categoriaMovimentacao.value === '__custom__' ? campoCategoriaPersonalizada.value.trim() : categoriaMovimentacao.value;
   try {
-    const data = await apiFetch(editingTransactionId ? `/api/transactions/${editingTransactionId}` : '/api/transactions', {
-      method: editingTransactionId ? 'PUT' : 'POST',
+    const data = await apiFetch(idMovimentacaoEdicao ? `/api/transactions/${idMovimentacaoEdicao}` : '/api/transactions', {
+      method: idMovimentacaoEdicao ? 'PUT' : 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        email: currentUserEmail,
-        type: document.getElementById('transaction-type').value,
-        amount: Number(document.getElementById('transaction-amount').value),
-        date: document.getElementById('transaction-date').value,
+        email: emailUsuarioAtual,
+        type: document.getElementById('tipo-movimentacao').value,
+        amount: Number(document.getElementById('valor-movimentacao').value),
+        date: document.getElementById('data-movimentacao').value,
         category,
-        notes: document.getElementById('transaction-notes').value.trim(),
+        notes: document.getElementById('observacoes-movimentacao').value.trim(),
       }),
     });
     resetTransactionForm();
@@ -1804,7 +1804,7 @@ transactionForm.addEventListener('submit', async (event) => {
   }
 });
 
-filtersForm.addEventListener('submit', async (event) => {
+formularioFiltros.addEventListener('submit', async (event) => {
   event.preventDefault();
   try {
     await loadTransactions();
@@ -1813,7 +1813,7 @@ filtersForm.addEventListener('submit', async (event) => {
   }
 });
 
-clearFiltersButton.addEventListener('click', async () => {
+botaoLimparFiltros.addEventListener('click', async () => {
   applyDefaultTransactionFilters();
   try {
     await loadTransactions();
@@ -1822,19 +1822,19 @@ clearFiltersButton.addEventListener('click', async () => {
   }
 });
 
-goalForm.addEventListener('submit', async (event) => {
+formularioMeta.addEventListener('submit', async (event) => {
   event.preventDefault();
   try {
-    const data = await apiFetch(editingGoalId ? `/api/goals/${editingGoalId}` : '/api/goals', {
-      method: editingGoalId ? 'PUT' : 'POST',
+    const data = await apiFetch(idMetaEdicao ? `/api/goals/${idMetaEdicao}` : '/api/goals', {
+      method: idMetaEdicao ? 'PUT' : 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        email: currentUserEmail,
-        name: document.getElementById('goal-name').value.trim(),
-        targetAmount: Number(document.getElementById('goal-target-amount').value),
-        currentAmount: Number(document.getElementById('goal-current-amount').value || 0),
-        deadline: document.getElementById('goal-deadline').value,
-        category: document.getElementById('goal-category').value.trim(),
+        email: emailUsuarioAtual,
+        name: document.getElementById('nome-meta').value.trim(),
+        targetAmount: Number(document.getElementById('valor-alvo-meta').value),
+        currentAmount: Number(document.getElementById('valor-atual-meta').value || 0),
+        deadline: document.getElementById('prazo-meta').value,
+        category: document.getElementById('categoria-meta').value.trim(),
       }),
     });
     resetGoalForm();
@@ -1845,12 +1845,12 @@ goalForm.addEventListener('submit', async (event) => {
   }
 });
 
-cancelGoalEditButton.addEventListener('click', () => {
+botaoCancelarEdicaoMeta.addEventListener('click', () => {
   resetGoalForm();
   showGoalMessage('Edição da meta cancelada.', 'success');
 });
 
-goalFiltersForm.addEventListener('submit', async (event) => {
+formularioFiltrosMeta.addEventListener('submit', async (event) => {
   event.preventDefault();
   try {
     await loadGoals();
@@ -1859,8 +1859,8 @@ goalFiltersForm.addEventListener('submit', async (event) => {
   }
 });
 
-clearGoalFiltersButton.addEventListener('click', async () => {
-  goalStatusFilter.value = 'all';
+botaoLimparFiltrosMeta.addEventListener('click', async () => {
+  filtroStatusMeta.value = 'all';
   try {
     await loadGoals();
   } catch (error) {
@@ -1868,33 +1868,33 @@ clearGoalFiltersButton.addEventListener('click', async () => {
   }
 });
 
-filterMonth.addEventListener('change', () => {
-  if (!filterMonth.value) return;
-  filterPeriod.value = 'all';
-  filterStartDate.value = '';
-  filterEndDate.value = '';
+filtroMes.addEventListener('change', () => {
+  if (!filtroMes.value) return;
+  filtroPeriodo.value = 'all';
+  filtroDataInicial.value = '';
+  filtroDataFinal.value = '';
 });
 
-[filterPeriod, filterStartDate, filterEndDate].forEach((input) => {
+[filtroPeriodo, filtroDataInicial, filtroDataFinal].forEach((input) => {
   input.addEventListener('change', () => {
-    const hasCustomPeriod = filterPeriod.value !== 'all' || filterStartDate.value || filterEndDate.value;
+    const hasCustomPeriod = filtroPeriodo.value !== 'all' || filtroDataInicial.value || filtroDataFinal.value;
     if (hasCustomPeriod) {
-      filterMonth.value = '';
+      filtroMes.value = '';
     }
   });
 });
 
-investmentForm.addEventListener('submit', async (event) => {
+formularioInvestimento.addEventListener('submit', async (event) => {
   event.preventDefault();
   try {
-    const data = await apiFetch(editingInvestmentId ? `/api/investments/${editingInvestmentId}` : '/api/investments', {
-      method: editingInvestmentId ? 'PUT' : 'POST',
+    const data = await apiFetch(idInvestimentoEdicao ? `/api/investments/${idInvestimentoEdicao}` : '/api/investments', {
+      method: idInvestimentoEdicao ? 'PUT' : 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        email: currentUserEmail,
-        monthlyAmount: Number(investmentAmountInput.value),
-        riskProfile: selectedRiskProfile,
-        years: selectedInvestmentYears,
+        email: emailUsuarioAtual,
+        monthlyAmount: Number(campoValorInvestimento.value),
+        riskProfile: perfilRiscoSelecionado,
+        years: anosInvestimentoSelecionados,
       }),
     });
     resetInvestmentForm();
@@ -1905,110 +1905,110 @@ investmentForm.addEventListener('submit', async (event) => {
   }
 });
 
-cancelTransactionEditButton.addEventListener('click', () => {
+botaoCancelarEdicaoMovimentacao.addEventListener('click', () => {
   resetTransactionForm();
     showTransactionMessage('Edição cancelada.', 'success');
 });
 
-cancelInvestmentEditButton.addEventListener('click', () => {
+botaoCancelarEdicaoInvestimento.addEventListener('click', () => {
   resetInvestmentForm();
     showInvestmentMessage('Edição cancelada.', 'success');
 });
 
-taxForm.addEventListener('submit', (event) => {
+formularioImposto.addEventListener('submit', (event) => {
   event.preventDefault();
   const result = calculateTaxes();
   renderTaxSimulation(result);
   showTaxMessage('Estimativa atualizada com sucesso.', 'success');
 });
 
-clearTaxFormButton.addEventListener('click', () => {
+botaoLimparFormularioImposto.addEventListener('click', () => {
   resetTaxSimulation();
 });
 
-openTaxTipsButton.addEventListener('click', () => {
+botaoAbrirDicasImposto.addEventListener('click', () => {
   showTaxTipsModal();
 });
 
-closeTaxTipsButton.addEventListener('click', () => {
+botaoFecharDicasImposto.addEventListener('click', () => {
   hideTaxTipsModal();
 });
 
-goalProgressCancelButton.addEventListener('click', () => {
+botaoCancelarProgressoMeta.addEventListener('click', () => {
   hideGoalProgressModal();
 });
 
-goalProgressAmountInput.addEventListener('input', () => {
+campoValorProgressoMeta.addEventListener('input', () => {
   updateGoalProgressPreview();
 });
 
-goalProgressModal.addEventListener('click', (event) => {
-  if (event.target === goalProgressModal) {
+modalProgressoMeta.addEventListener('click', (event) => {
+  if (event.target === modalProgressoMeta) {
     hideGoalProgressModal();
   }
 });
 
-goalProgressForm.addEventListener('submit', async (event) => {
+formularioProgressoMeta.addEventListener('submit', async (event) => {
   event.preventDefault();
-  if (!pendingGoalProgress) return;
-  setButtonLoading(goalProgressSubmitButton, true, 'Adicionando...');
+  if (!progressoMetaPendente) return;
+  setButtonLoading(botaoSalvarProgressoMeta, true, 'Adicionando...');
   try {
-    await addGoalProgress(pendingGoalProgress);
+    await addGoalProgress(progressoMetaPendente);
   } finally {
-    setButtonLoading(goalProgressSubmitButton, false, 'Adicionando...');
+    setButtonLoading(botaoSalvarProgressoMeta, false, 'Adicionando...');
   }
 });
 
-confirmActionCancelButton.addEventListener('click', () => {
+botaoCancelarConfirmacao.addEventListener('click', () => {
   hideConfirmActionModal(false);
 });
 
-confirmActionSubmitButton.addEventListener('click', () => {
+botaoConfirmarAcao.addEventListener('click', () => {
   hideConfirmActionModal(true);
 });
 
-confirmActionModal.addEventListener('click', (event) => {
-  if (event.target === confirmActionModal) {
+modalConfirmacaoAcao.addEventListener('click', (event) => {
+  if (event.target === modalConfirmacaoAcao) {
     hideConfirmActionModal(false);
   }
 });
 
-continueTaxWarningButton.addEventListener('click', () => {
+botaoContinuarAvisoImposto.addEventListener('click', () => {
   saveTaxWarningPreference();
   hideTaxWarningModal();
-  if (pendingSectionAfterWarning === 'taxes-section') {
+  if (secaoPendenteAposAviso === 'secao-impostos') {
     openTaxesSection();
   }
-  pendingSectionAfterWarning = null;
+  secaoPendenteAposAviso = null;
 });
 
-backTaxWarningButton.addEventListener('click', () => {
-  pendingSectionAfterWarning = null;
+botaoVoltarAvisoImposto.addEventListener('click', () => {
+  secaoPendenteAposAviso = null;
   hideTaxWarningModal();
-  hideTaxWarningCheckbox.checked = getTaxWarningHiddenPreference();
+  caixaOcultarAvisoImposto.checked = getTaxWarningHiddenPreference();
 });
 
-riskProfileButtons.forEach((button) => {
+botoesPerfilRisco.forEach((button) => {
   button.addEventListener('click', () => {
-    selectedRiskProfile = button.dataset.riskProfile;
+    perfilRiscoSelecionado = button.dataset.perfilRisco;
     syncInvestmentChoices();
     updateInvestmentPreview();
   });
 });
 
-investmentYearsButtons.forEach((button) => {
+botoesAnosInvestimento.forEach((button) => {
   button.addEventListener('click', () => {
-    selectedInvestmentYears = Number(button.dataset.investmentYears);
+    anosInvestimentoSelecionados = Number(button.dataset.anosInvestimento);
     syncInvestmentChoices();
     updateInvestmentPreview();
   });
 });
 
-investmentAmountInput.addEventListener('input', updateInvestmentPreview);
+campoValorInvestimento.addEventListener('input', updateInvestmentPreview);
 
 window.addEventListener('resize', () => {
-  if (!authScreen.classList.contains('hidden')) {
-    authParticlesState = createAuthParticlesState();
+  if (!telaAutenticacao.classList.contains('oculto')) {
+    estadoParticulasAuth = createAuthParticlesState();
     resizeAuthParticlesCanvas();
   }
 });
@@ -2016,66 +2016,66 @@ window.addEventListener('resize', () => {
 window.addEventListener('keydown', (event) => {
   if (event.key !== 'Escape') return;
 
-  if (!goalProgressModal.classList.contains('hidden')) {
+  if (!modalProgressoMeta.classList.contains('oculto')) {
     hideGoalProgressModal();
   }
 
-  if (!confirmActionModal.classList.contains('hidden')) {
+  if (!modalConfirmacaoAcao.classList.contains('oculto')) {
     hideConfirmActionModal(false);
   }
 });
 
-authScreen.addEventListener('pointermove', (event) => {
-  if (!authParticlesState) return;
-  const rect = authScreen.getBoundingClientRect();
-  authParticlesState.pointer.x = (event.clientX - rect.left) / rect.width;
-  authParticlesState.pointer.y = (event.clientY - rect.top) / rect.height;
-  authParticlesState.pointer.active = true;
+telaAutenticacao.addEventListener('pointermove', (event) => {
+  if (!estadoParticulasAuth) return;
+  const rect = telaAutenticacao.getBoundingClientRect();
+  estadoParticulasAuth.pointer.x = (event.clientX - rect.left) / rect.width;
+  estadoParticulasAuth.pointer.y = (event.clientY - rect.top) / rect.height;
+  estadoParticulasAuth.pointer.active = true;
 });
 
-authScreen.addEventListener('pointerleave', () => {
-  if (!authParticlesState) return;
-  authParticlesState.pointer.active = false;
+telaAutenticacao.addEventListener('pointerleave', () => {
+  if (!estadoParticulasAuth) return;
+  estadoParticulasAuth.pointer.active = false;
 });
 
-reportForm.addEventListener('submit', async (event) => {
+formularioRelatorio.addEventListener('submit', async (event) => {
   event.preventDefault();
   try {
     const data = await apiFetch('/api/reports/generate', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email: currentUserEmail, month: reportMonthInput.value }),
+      body: JSON.stringify({ email: emailUsuarioAtual, month: campoMesRelatorio.value }),
     });
     showReportMessage(data.message, 'success');
-    selectedReportMonth = reportMonthInput.value;
-    await loadReports(selectedReportMonth);
+    mesRelatorioSelecionado = campoMesRelatorio.value;
+    await loadReports(mesRelatorioSelecionado);
   } catch (error) {
     showReportMessage(error.message, 'error');
   }
 });
 
-exportReportButton.addEventListener('click', () => {
-  if (!currentUserEmail) return;
+botaoExportarRelatorio.addEventListener('click', () => {
+  if (!emailUsuarioAtual) return;
   window.open(
-    `/api/reports/export?email=${encodeURIComponent(currentUserEmail)}&month=${encodeURIComponent(reportMonthInput.value)}`,
+    `/api/reports/export?email=${encodeURIComponent(emailUsuarioAtual)}&month=${encodeURIComponent(campoMesRelatorio.value)}`,
     '_blank',
     'noopener'
   );
 });
 
-exportReportPdfButton.addEventListener('click', async () => {
+botaoExportarRelatorioPdf.addEventListener('click', async () => {
   await downloadReportPdf();
 });
 
 resetTransactionForm();
 resetInvestmentForm();
 resetTaxSimulation();
-hideTaxWarningCheckbox.checked = getTaxWarningHiddenPreference();
+caixaOcultarAvisoImposto.checked = getTaxWarningHiddenPreference();
 hideTaxTipsModal();
-dashboardMonthInput.value = selectedDashboardMonth;
+campoMesDashboard.value = mesDashboardSelecionado;
 applyDefaultTransactionFilters();
 resetGoalForm();
-reportMonthInput.value = selectedReportMonth;
+campoMesRelatorio.value = mesRelatorioSelecionado;
 
 setupOtpInputs();
 const storedSession = readSession();
@@ -2084,3 +2084,10 @@ if (storedSession?.email) {
 } else {
   showRegister();
 }
+
+
+
+
+
+
+
