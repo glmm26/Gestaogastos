@@ -624,6 +624,12 @@ function formatGoalStatus(status) {
   return 'Em andamento';
 }
 
+function getGoalStatusClass(status) {
+  if (status === 'completed') return 'status-concluido';
+  if (status === 'failed') return 'status-nao-concluido';
+  return 'status-em-andamento';
+}
+
 function openSectionWithGuard(sectionId) {
   if (sectionId !== 'secao-impostos') {
     secaoPendenteAposAviso = null;
@@ -1125,7 +1131,7 @@ async function addGoalProgress(goal) {
 
 function buildGoalCard(goal) {
   const card = document.createElement('article');
-  card.className = `cartao-meta status-${goal.status}`;
+  card.className = `cartao-meta ${getGoalStatusClass(goal.status)}`;
   const progressWidth = goal.status === 'completed' ? 100 : Math.min(100, goal.progress);
   if (idUltimaMetaCelebrada === goal.id && goal.status === 'completed') {
     card.classList.add('celebrando');
