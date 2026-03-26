@@ -1237,7 +1237,7 @@ async function deleteTransaction(id) {
     });
     if (idMovimentacaoEdicao === id) resetTransactionForm();
     showTransactionMessage(data.message, 'success');
-    await loadAllData();
+    await loadAllData({ clearMessages: false });
   } catch (error) {
     showTransactionMessage(error.message, 'error');
   }
@@ -1259,7 +1259,7 @@ async function deleteInvestment(id) {
     if (idInvestimentoEdicao === id) resetInvestmentForm();
     if (idVisualizacaoInvestimento === id) idVisualizacaoInvestimento = null;
     showInvestmentMessage(data.message, 'success');
-    await loadAllData();
+    await loadAllData({ clearMessages: false });
   } catch (error) {
     showInvestmentMessage(error.message, 'error');
   }
@@ -1302,6 +1302,41 @@ function buildCategoryChartData(items) {
   };
 }
 
+function truncateChartLabel(text, maxLength = 14) {
+  const normalized = String(text || '').trim();
+  if (!normalized) return 'Sem categoria';
+  if (normalized.length <= maxLength) return normalized;
+  return `${normalized.slice(0, maxLength - 3)}...`;
+}
+
+function buildDashboardTransactionChartData(items) {
+  if (!items.length) {
+    return {
+      labels: [['Sem', 'movimentacoes']],
+      datasets: [
+        { label: 'Entradas', data: [0], backgroundColor: '#22c55e' },
+        { label: 'Saidas', data: [0], backgroundColor: '#ef4444' },
+      ],
+    };
+  }
+
+  return {
+    labels: items.map((item) => [formatDate(item.date), truncateChartLabel(item.category)]),
+    datasets: [
+      {
+        label: 'Entradas',
+        data: items.map((item) => (item.type === 'income' ? item.amount : null)),
+        backgroundColor: '#22c55e',
+      },
+      {
+        label: 'Saidas',
+        data: items.map((item) => (item.type === 'expense' ? item.amount : null)),
+        backgroundColor: '#ef4444',
+      },
+    ],
+  };
+}
+
 function chartBaseOptions() {
   return {
     responsive: true,
@@ -1324,18 +1359,31 @@ function renderDashboard(data) {
 
   renderChart('dashboardMonthly', 'grafico-mensal', {
     type: 'bar',
-    data: {
-      labels: data.monthlySeries.map((item) => item.label),
-      datasets: [
-        { label: 'Entradas', data: data.monthlySeries.map((item) => item.income), backgroundColor: '#22c55e' },
-        { label: 'Saidas', data: data.monthlySeries.map((item) => item.expense), backgroundColor: '#ef4444' },
-      ],
-    },
+    data: buildDashboardTransactionChartData(data.transactionSeries || []),
     options: {
       ...chartBaseOptions(),
+      plugins: {
+        ...chartBaseOptions().plugins,
+        tooltip: {
+          callbacks: {
+            title(context) {
+              const item = data.transactionSeries?.[context[0]?.dataIndex];
+              if (!item) return 'Sem movimentacoes';
+              return `${formatDate(item.date)} - ${item.category}`;
+            },
+            label(context) {
+              const item = data.transactionSeries?.[context.dataIndex];
+              if (!item) return `${context.dataset.label}: ${formatCurrency(context.parsed.y || 0)}`;
+              const tipo = item.type === 'income' ? 'Entrada' : 'Saida';
+              const observacao = item.notes ? ` | ${item.notes}` : '';
+              return `${tipo}: ${formatCurrency(item.amount)}${observacao}`;
+            },
+          },
+        },
+      },
       scales: {
-        x: { ticks: { color: '#b7c8e2' }, grid: { color: 'rgba(255,255,255,0.08)' } },
-        y: { ticks: { color: '#b7c8e2' }, grid: { color: 'rgba(255,255,255,0.08)' } },
+        x: { ticks: { color: '#b7c8e2', autoSkip: true, maxRotation: 0 }, grid: { color: 'rgba(255,255,255,0.08)' } },
+        y: { beginAtZero: true, ticks: { color: '#b7c8e2' }, grid: { color: 'rgba(255,255,255,0.08)' } },
       },
     },
   });
@@ -1564,15 +1612,17 @@ async function loadReports(month = mesRelatorioSelecionado) {
   renderReports(await apiFetch(`/api/reports?email=${encodeURIComponent(emailUsuarioAtual)}&month=${encodeURIComponent(month)}`));
 }
 
-async function loadAllData() {
+async function loadAllData({ clearMessages = true } = {}) {
   if (!emailUsuarioAtual) return;
   try {
     await Promise.all([loadCategories(), carregarPerfilBarraLateral()]);
     await Promise.all([loadDashboard(), loadTransactions(), loadInvestments(), loadGoals(), loadReports(mesRelatorioSelecionado)]);
-    showTransactionMessage('');
-    showInvestmentMessage('');
-    showGoalMessage('');
-    showReportMessage('');
+    if (clearMessages) {
+      showTransactionMessage('');
+      showInvestmentMessage('');
+      showGoalMessage('');
+      showReportMessage('');
+    }
   } catch (error) {
     showTransactionMessage(error.message, 'error');
   }
@@ -1804,7 +1854,7 @@ formularioMovimentacao.addEventListener('submit', async (event) => {
     });
     resetTransactionForm();
     showTransactionMessage(data.message, 'success');
-    await loadAllData();
+    await loadAllData({ clearMessages: false });
   } catch (error) {
     showTransactionMessage(error.message, 'error');
   }
@@ -1905,7 +1955,7 @@ formularioInvestimento.addEventListener('submit', async (event) => {
     });
     resetInvestmentForm();
     showInvestmentMessage(data.message, 'success');
-    await loadAllData();
+    await loadAllData({ clearMessages: false });
   } catch (error) {
     showInvestmentMessage(error.message, 'error');
   }

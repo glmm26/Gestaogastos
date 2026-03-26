@@ -769,6 +769,28 @@ function buildMonthlySeries(transactions) {
     }));
 }
 
+function buildTransactionSeries(transactions) {
+  return transactions
+    .slice()
+    .sort((a, b) => {
+      const dateDiff = Date.parse(`${a.date}T00:00:00Z`) - Date.parse(`${b.date}T00:00:00Z`);
+      if (dateDiff !== 0) return dateDiff;
+
+      const createdAtDiff = Date.parse(a.createdAt || 0) - Date.parse(b.createdAt || 0);
+      if (createdAtDiff !== 0) return createdAtDiff;
+
+      return a.id - b.id;
+    })
+    .map((entry) => ({
+      id: entry.id,
+      type: entry.type,
+      amount: Number(entry.amount.toFixed(2)),
+      category: entry.category,
+      notes: entry.notes,
+      date: entry.date,
+    }));
+}
+
 function buildInvestmentSummary(investments) {
   const totalInvested = investments.reduce((sum, entry) => sum + entry.totalContributed, 0);
   const profitLoss = investments.reduce((sum, entry) => sum + entry.estimatedGain, 0);
@@ -1053,6 +1075,7 @@ function getDashboardPayload(db, userId, selectedMonth) {
     summary: currentSummary,
     latestTransactions,
     categoryBreakdown: buildCategoryBreakdown(monthTransactions),
+    transactionSeries: buildTransactionSeries(monthTransactions),
     monthlySeries: buildMonthlySeries(monthTransactions).slice(-6),
     welcome: {
       totalExpenses: currentSummary.expense,
