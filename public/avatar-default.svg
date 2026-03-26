@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" role="img" aria-labelledby="title desc">
+  <title id="title">Avatar padrão</title>
+  <desc id="desc">Ilustração padrão para foto de perfil.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#163258"/>
+      <stop offset="100%" stop-color="#08111f"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38bdf8"/>
+      <stop offset="100%" stop-color="#f59e0b"/>
+    </linearGradient>
+  </defs>
+  <rect width="240" height="240" rx="120" fill="url(#bg)"/>
+  <circle cx="120" cy="92" r="42" fill="url(#accent)" opacity="0.95"/>
+  <path d="M52 203c11-35 39-56 68-56s57 21 68 56" fill="url(#accent)" opacity="0.95"/>
+</svg>

@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Perfil | Gestão de Gastos</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.css" />
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="perfil.css" />
+  </head>
+  <body class="profile-page">
+    <main class="profile-shell">
+      <section class="profile-card">
+        <div class="profile-header">
+          <div>
+            <p class="eyebrow">MINHA CONTA</p>
+            <h1>Perfil do usuário</h1>
+            <p class="subtitle">Atualize seu nome, altere sua senha e acompanhe um resumo da sua conta.</p>
+          </div>
+          <button id="back-to-dashboard" type="button" class="secondary">Voltar para dashboard</button>
+        </div>
+
+        <section class="profile-avatar-panel">
+          <div class="avatar-uploader">
+            <img id="profile-photo" class="profile-photo" src="/avatar-default.svg" alt="Foto de perfil" />
+            <label for="profile-photo-input" class="avatar-overlay">Alterar foto</label>
+          </div>
+          <div class="avatar-copy">
+            <h3>Sua foto de perfil</h3>
+            <p class="subtitle">Use JPG ou PNG com até 2MB. A foto é atualizada na hora.</p>
+          </div>
+          <div class="avatar-actions">
+            <input id="profile-photo-input" type="file" accept=".jpg,.jpeg,.png,image/jpeg,image/png" hidden />
+            <button id="change-photo-button" type="button">Alterar foto</button>
+            <button id="remove-photo-button" type="button" class="secondary">Remover foto</button>
+          </div>
+        </section>
+        <p id="photo-message" class="message"></p>
+
+        <div class="profile-grid">
+          <article class="panel">
+            <div class="panel-header">
+              <div>
+                <p class="eyebrow">DADOS</p>
+                <h3>Informações pessoais</h3>
+              </div>
+            </div>
+            <form id="profile-form" class="form active">
+              <label for="profile-name">Nome</label>
+              <input id="profile-name" type="text" maxlength="80" required />
+              <label for="profile-email">Email</label>
+              <input id="profile-email" type="email" readonly />
+              <button id="save-profile-button" type="submit">Salvar dados</button>
+            </form>
+            <p id="profile-message" class="message"></p>
+          </article>
+
+          <article class="panel">
+            <div class="panel-header">
+              <div>
+                <p class="eyebrow">SEGURANÇA</p>
+                <h3>Alterar senha</h3>
+              </div>
+            </div>
+            <form id="password-form" class="form active">
+              <label for="current-password">Senha atual</label>
+              <input id="current-password" type="password" required />
+              <label for="new-password">Nova senha</label>
+              <input id="new-password" type="password" minlength="6" required />
+              <label for="confirm-new-password">Confirmar nova senha</label>
+              <input id="confirm-new-password" type="password" minlength="6" required />
+              <button id="save-password-button" type="submit">Atualizar senha</button>
+            </form>
+            <p id="password-message" class="message"></p>
+          </article>
+        </div>
+
+        <article class="panel summary-panel">
+          <div class="panel-header">
+            <div>
+              <p class="eyebrow">RESUMO</p>
+              <h3>Sua atividade no sistema</h3>
+            </div>
+          </div>
+          <div class="summary-stack">
+            <div class="summary-item"><span>Total de gastos cadastrados</span><strong id="profile-total-expenses">R$ 0,00</strong></div>
+            <div class="summary-item"><span>Total de movimentações</span><strong id="profile-transactions-count">0</strong></div>
+          </div>
+        </article>
+      </section>
+    </main>
+
+    <div id="cropper-modal" class="modal-overlay hidden">
+      <section class="modal-card cropper-card">
+        <div class="panel-header">
+          <div>
+            <p class="eyebrow">AJUSTE FINAL</p>
+            <h3>Corte sua nova foto</h3>
+          </div>
+        </div>
+        <div class="cropper-stage">
+          <img id="cropper-image" alt="Prévia para corte da imagem" />
+        </div>
+        <div class="button-row">
+          <button id="crop-save-button" type="button">Cortar e salvar</button>
+          <button id="crop-cancel-button" type="button" class="secondary">Cancelar</button>
+        </div>
+      </section>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.js"></script>
+    <script src="perfil.js"></script>
+  </body>
+</html>
