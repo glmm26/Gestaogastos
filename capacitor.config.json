@@ -1,0 +1,9 @@
+﻿{
+  "appId": "com.gestaogastos.app",
+  "appName": "Gestao de Gastos",
+  "webDir": "public",
+  "server": {
+    "url": "http://172.18.40.10:3000",
+    "cleartext": true
+  }
+}
