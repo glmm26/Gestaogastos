@@ -1,4 +1,8 @@
 const SESSION_STORAGE_KEY = 'gestaoGastosSessao';
+const API_BASE_URL = (
+  window.GESTAO_GASTOS_API_URL ||
+  (window.Capacitor || window.location.protocol === 'capacitor:' ? 'http://172.18.40.13:3000' : '')
+).replace(/\/$/, '');
 
 const profileForm = document.getElementById('profile-form');
 const passwordForm = document.getElementById('password-form');
@@ -57,7 +61,7 @@ function setButtonLoading(button, isLoading, loadingText) {
 }
 
 async function apiFetch(url, options = {}) {
-  const response = await fetch(url, options);
+  const response = await fetch(buildApiUrl(url), options);
   const data = await response.json().catch(() => ({}));
   if (!response.ok) {
     throw new Error(data.message || 'Erro inesperado.');
@@ -65,8 +69,13 @@ async function apiFetch(url, options = {}) {
   return data;
 }
 
+function buildApiUrl(url) {
+  if (/^https?:\/\//i.test(url) || !API_BASE_URL) return url;
+  return `${API_BASE_URL}${url.startsWith('/') ? url : `/${url}`}`;
+}
+
 function updateProfilePhoto(url) {
-  profilePhoto.src = url || '/avatar-default.svg';
+  profilePhoto.src = url && url.startsWith('/uploads/') ? buildApiUrl(url) : url || '/avatar-default.svg';
   removePhotoButton.disabled = !url || url.includes('/avatar-default.svg');
 }
 

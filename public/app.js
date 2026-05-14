@@ -4,6 +4,10 @@ const telaVerificacao = document.getElementById('tela-verificacao');
 const telaHome = document.getElementById('tela-home');
 const botaoEntrarApp = document.getElementById('botao-entrar-app');
 const barraProgressoSplash = document.getElementById('barra-progresso-splash');
+const API_BASE_URL = (
+  window.GESTAO_GASTOS_API_URL ||
+  (window.Capacitor || window.location.protocol === 'capacitor:' ? 'http://172.18.40.13:3000' : '')
+).replace(/\/$/, '');
 
 const abaCadastro = document.getElementById('aba-cadastro');
 const abaLogin = document.getElementById('aba-login');
@@ -1272,12 +1276,17 @@ function renderCategoryOptions(categories) {
 }
 
 async function apiFetch(url, options = {}) {
-  const response = await fetch(url, options);
+  const response = await fetch(buildApiUrl(url), options);
   const data = await response.json().catch(() => ({}));
   if (!response.ok) {
     throw new Error(data.message || 'Erro inesperado.');
   }
   return data;
+}
+
+function buildApiUrl(url) {
+  if (/^https?:\/\//i.test(url) || !API_BASE_URL) return url;
+  return `${API_BASE_URL}${url.startsWith('/') ? url : `/${url}`}`;
 }
 
 async function loadCategories() {
@@ -1572,7 +1581,7 @@ async function downloadReportPdf() {
 
   setButtonLoading(botaoExportarRelatorioPdf, true, 'Gerando PDF...');
   try {
-    const response = await fetch('/relatorios/pdf', {
+    const response = await fetch(buildApiUrl('/relatorios/pdf'), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -2113,7 +2122,7 @@ formularioRelatorio.addEventListener('submit', async (event) => {
 botaoExportarRelatorio.addEventListener('click', () => {
   if (!emailUsuarioAtual) return;
   window.open(
-    `/api/reports/export?email=${encodeURIComponent(emailUsuarioAtual)}&month=${encodeURIComponent(campoMesRelatorio.value)}`,
+    buildApiUrl(`/api/reports/export?email=${encodeURIComponent(emailUsuarioAtual)}&month=${encodeURIComponent(campoMesRelatorio.value)}`),
     '_blank',
     'noopener'
   );
@@ -2140,9 +2149,6 @@ if (storedSession?.email) {
 } else {
   showRegister();
 }
-
-
-
 
 
 
