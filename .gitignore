@@ -13,6 +13,11 @@ pnpm-debug.log*
 # Databases and local data
 *.sqlite
 *.sqlite3
+*.db
+*.db-journal
+*.db-wal
+*.db-shm
+data/
 database.json
 uploads/
 

@@ -29,6 +29,12 @@ const tituloSecao = document.getElementById('titulo-secao');
 const botoesNavegacao = Array.from(document.querySelectorAll('.botao-navegacao'));
 const secoesAplicacao = Array.from(document.querySelectorAll('.secao-aplicacao'));
 
+const barraLateralNavegacao = document.getElementById('barra-lateral-navegacao');
+const botaoMenuMobile = document.getElementById('botao-menu-mobile');
+const botaoPerfilMobile = document.getElementById('botao-perfil-mobile');
+const fotoUsuarioMobile = document.getElementById('foto-usuario-mobile');
+const fundoGaveta = document.getElementById('fundo-gaveta');
+
 const totalEntradas = document.getElementById('total-entradas');
 const totalSaidas = document.getElementById('total-saidas');
 const totalSaldo = document.getElementById('total-saldo');
@@ -249,16 +255,27 @@ function formatDate(dateString) {
   return new Intl.DateTimeFormat('pt-BR').format(new Date(`${dateString}T00:00:00`));
 }
 
+function escapeHtml(value) {
+  return String(value ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
 function getCurrentMonthKey() {
   return new Date().toISOString().slice(0, 7);
 }
 
 function setButtonLoading(button, isLoading, loadingText) {
-  if (!button.dataset.defaultText) {
-    button.dataset.defaultText = button.textContent;
+  if (isLoading) {
+    button.dataset.restoreText = button.textContent;
+    button.textContent = loadingText;
+  } else if (button.dataset.restoreText) {
+    button.textContent = button.dataset.restoreText;
   }
   button.disabled = isLoading;
-  button.textContent = isLoading ? loadingText : button.dataset.defaultText;
 }
 
 function saveSession(session) {
@@ -290,11 +307,36 @@ function atualizarPerfilBarraLateral(usuario = {}) {
   emailUsuarioAtual = usuario.email || emailUsuarioAtual;
   nomeUsuarioBarraLateral.textContent = nome;
   fotoUsuarioBarraLateral.src = foto;
+  fotoUsuarioMobile.src = foto;
+}
+
+function openMobileDrawer() {
+  barraLateralNavegacao.classList.add('aberta');
+  fundoGaveta.classList.add('ativo');
+  botaoMenuMobile.classList.add('botao-menu-mobile-aberto');
+  botaoMenuMobile.setAttribute('aria-expanded', 'true');
+  document.body.classList.add('gaveta-aberta');
+}
+
+function closeMobileDrawer() {
+  barraLateralNavegacao.classList.remove('aberta');
+  fundoGaveta.classList.remove('ativo');
+  botaoMenuMobile.classList.remove('botao-menu-mobile-aberto');
+  botaoMenuMobile.setAttribute('aria-expanded', 'false');
+  document.body.classList.remove('gaveta-aberta');
+}
+
+function toggleMobileDrawer() {
+  if (barraLateralNavegacao.classList.contains('aberta')) {
+    closeMobileDrawer();
+  } else {
+    openMobileDrawer();
+  }
 }
 
 async function carregarPerfilBarraLateral() {
   if (!emailUsuarioAtual) return;
-  const dados = await apiFetch(`/perfil?email=${encodeURIComponent(emailUsuarioAtual)}`);
+  const dados = await apiFetch('/perfil');
   atualizarPerfilBarraLateral({
     name: dados.name,
     email: dados.email,
@@ -985,10 +1027,10 @@ function buildTransactionItem(item) {
   const li = document.createElement('li');
   const sign = item.type === 'income' ? '+' : '-';
   const cls = item.type === 'income' ? 'positivo' : 'negativo';
-  const note = item.notes ? `<small>${item.notes}</small>` : '';
+  const note = item.notes ? `<small>${escapeHtml(item.notes)}</small>` : '';
   li.innerHTML = `
     <div>
-      <strong>${item.category}</strong>
+      <strong>${escapeHtml(item.category)}</strong>
       <span>${formatDate(item.date)} • ${item.type === 'income' ? 'Entrada' : 'Saida'}</span>
       ${note}
     </div>
@@ -1000,28 +1042,6 @@ function buildTransactionItem(item) {
     buildItemActions(
       () => startTransactionEdit(item),
       () => deleteTransaction(item.id)
-    )
-  );
-  return li;
-}
-
-function buildInvestmentItem(item) {
-  const li = document.createElement('li');
-  const resultValue = (item.amount * item.profitability) / 100;
-  const cls = resultValue >= 0 ? 'positivo' : 'negativo';
-  li.innerHTML = `
-    <div>
-      <strong>${item.type}</strong>
-      <span>${formatDate(item.date)} • Rentabilidade ${item.profitability.toFixed(2)}%</span>
-    </div>
-    <div>
-      <strong class="${cls}">${formatCurrency(item.amount + resultValue)}</strong>
-    </div>
-  `;
-  li.lastElementChild.appendChild(
-    buildItemActions(
-      () => startInvestmentEdit(item),
-      () => deleteInvestment(item.id)
     )
   );
   return li;
@@ -1076,7 +1096,7 @@ async function deleteGoal(id) {
   if (!confirmed) return;
 
   try {
-    const data = await apiFetch(`/api/goals/${id}?email=${encodeURIComponent(emailUsuarioAtual)}`, {
+    const data = await apiFetch(`/api/goals/${id}`, {
       method: 'DELETE',
     });
     if (idMetaEdicao === id) resetGoalForm();
@@ -1092,10 +1112,7 @@ async function updateGoalStatus(goal, status) {
     const data = await apiFetch(`/api/goals/${goal.id}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        email: emailUsuarioAtual,
-        status,
-      }),
+      body: JSON.stringify({ status }),
     });
     idUltimaMetaCelebrada = status === 'completed' ? goal.id : null;
     showGoalMessage(data.message, 'success');
@@ -1117,7 +1134,6 @@ async function addGoalProgress(goal) {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        email: emailUsuarioAtual,
         currentAmount: Number((goal.currentAmount + amount).toFixed(2)),
       }),
     });
@@ -1144,8 +1160,8 @@ function buildGoalCard(goal) {
   card.innerHTML = `
     <div class="cabecalho-meta">
       <div>
-        <h4>${goal.name}</h4>
-        <p class="detalhes-meta">${goal.category || 'Sem categoria'} • Prazo ${formatDate(goal.deadline)}</p>
+        <h4>${escapeHtml(goal.name)}</h4>
+        <p class="detalhes-meta">${escapeHtml(goal.category || 'Sem categoria')} • Prazo ${formatDate(goal.deadline)}</p>
       </div>
       <span class="status-meta">${formatGoalStatus(goal.status)}</span>
     </div>
@@ -1232,12 +1248,12 @@ async function deleteTransaction(id) {
   if (!confirmed) return;
 
   try {
-    const data = await apiFetch(`/api/transactions/${id}?email=${encodeURIComponent(emailUsuarioAtual)}`, {
+    const data = await apiFetch(`/api/transactions/${id}`, {
       method: 'DELETE',
     });
     if (idMovimentacaoEdicao === id) resetTransactionForm();
     showTransactionMessage(data.message, 'success');
-    await loadAllData({ clearMessages: false });
+    await reloadAfterTransactionChange();
   } catch (error) {
     showTransactionMessage(error.message, 'error');
   }
@@ -1253,27 +1269,36 @@ async function deleteInvestment(id) {
   if (!confirmed) return;
 
   try {
-    const data = await apiFetch(`/api/investments/${id}?email=${encodeURIComponent(emailUsuarioAtual)}`, {
+    const data = await apiFetch(`/api/investments/${id}`, {
       method: 'DELETE',
     });
     if (idInvestimentoEdicao === id) resetInvestmentForm();
     if (idVisualizacaoInvestimento === id) idVisualizacaoInvestimento = null;
     showInvestmentMessage(data.message, 'success');
-    await loadAllData({ clearMessages: false });
+    await reloadAfterInvestmentChange();
   } catch (error) {
     showInvestmentMessage(error.message, 'error');
   }
 }
 
 function renderCategoryOptions(categories) {
-  const options = categories.map((category) => `<option value="${category}">${category}</option>`).join('');
+  const options = categories
+    .map((category) => `<option value="${escapeHtml(category)}">${escapeHtml(category)}</option>`)
+    .join('');
   categoriaMovimentacao.innerHTML = `${options}<option value="__custom__">Personalizada</option>`;
   filtroCategoria.innerHTML = `<option value="all">Todas</option>${options}`;
 }
 
 async function apiFetch(url, options = {}) {
-  const response = await fetch(url, options);
+  const response = await fetch(url, { credentials: 'same-origin', ...options });
   const data = await response.json().catch(() => ({}));
+  if (response.status === 401) {
+    clearSession();
+    emailUsuarioAtual = '';
+    closeMobileDrawer();
+    showScreen(telaAutenticacao);
+    showLogin();
+  }
   if (!response.ok) {
     throw new Error(data.message || 'Erro inesperado.');
   }
@@ -1281,7 +1306,7 @@ async function apiFetch(url, options = {}) {
 }
 
 async function loadCategories() {
-  const data = await apiFetch(`/api/categories?email=${encodeURIComponent(emailUsuarioAtual)}`);
+  const data = await apiFetch('/api/categories');
   cacheCategorias = data.categories;
   renderCategoryOptions(cacheCategorias);
 }
@@ -1396,16 +1421,13 @@ function renderDashboard(data) {
 
 async function loadDashboard() {
   renderDashboard(
-    await apiFetch(
-      `/api/dashboard?email=${encodeURIComponent(emailUsuarioAtual)}&month=${encodeURIComponent(mesDashboardSelecionado)}`
-    )
+    await apiFetch(`/api/dashboard?month=${encodeURIComponent(mesDashboardSelecionado)}`)
   );
 }
 
 function readTransactionFilters() {
   const hasSelectedMonth = Boolean(filtroMes.value);
   return new URLSearchParams({
-    email: emailUsuarioAtual,
     type: filtroTipo.value || 'all',
     category: filtroCategoria.value || 'all',
     month: filtroMes.value || '',
@@ -1487,7 +1509,7 @@ function renderInvestments(data) {
 }
 
 async function loadInvestments() {
-  renderInvestments(await apiFetch(`/api/investments?email=${encodeURIComponent(emailUsuarioAtual)}`));
+  renderInvestments(await apiFetch('/api/investments'));
 }
 
 function renderGoals(data) {
@@ -1516,7 +1538,7 @@ function renderGoals(data) {
 
 async function loadGoals() {
   const status = filtroStatusMeta.value || 'all';
-  renderGoals(await apiFetch(`/api/goals?email=${encodeURIComponent(emailUsuarioAtual)}&status=${encodeURIComponent(status)}`));
+  renderGoals(await apiFetch(`/api/goals?status=${encodeURIComponent(status)}`));
 }
 
 function renderReports(data) {
@@ -1574,9 +1596,9 @@ async function downloadReportPdf() {
   try {
     const response = await fetch('/relatorios/pdf', {
       method: 'POST',
+      credentials: 'same-origin',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        email: emailUsuarioAtual,
         month: campoMesRelatorio.value,
         charts: {
           category: getChartImage('reportCategory') || getChartImage('dashboardCategory'),
@@ -1609,7 +1631,7 @@ async function downloadReportPdf() {
 }
 
 async function loadReports(month = mesRelatorioSelecionado) {
-  renderReports(await apiFetch(`/api/reports?email=${encodeURIComponent(emailUsuarioAtual)}&month=${encodeURIComponent(month)}`));
+  renderReports(await apiFetch(`/api/reports?month=${encodeURIComponent(month)}`));
 }
 
 async function loadAllData({ clearMessages = true } = {}) {
@@ -1626,6 +1648,17 @@ async function loadAllData({ clearMessages = true } = {}) {
   } catch (error) {
     showTransactionMessage(error.message, 'error');
   }
+}
+
+// Recarrega só o que uma mudança de movimentação realmente afeta (o valor pode ter criado
+// uma categoria nova, então categorias entram no lote em vez de disparar todos os módulos).
+async function reloadAfterTransactionChange() {
+  await Promise.all([loadCategories(), loadDashboard(), loadTransactions(), loadReports(mesRelatorioSelecionado)]);
+}
+
+// Investimentos entram no relatório mensal, mas não no dashboard nem nas metas.
+async function reloadAfterInvestmentChange() {
+  await Promise.all([loadInvestments(), loadReports(mesRelatorioSelecionado)]);
 }
 
 function setupOtpInputs() {
@@ -1664,6 +1697,7 @@ botaoVoltarLogin.addEventListener('click', () => {
 
 botoesNavegacao.forEach((button) => {
   button.addEventListener('click', () => openSectionWithGuard(button.dataset.section));
+  button.addEventListener('click', closeMobileDrawer);
 });
 
 botaoAtualizarDados.addEventListener('click', loadAllData);
@@ -1671,6 +1705,20 @@ botaoFecharBoasVindas.addEventListener('click', hideWelcomeOverlay);
 
 botaoAbrirPaginaPerfil.addEventListener('click', () => {
   window.location.href = '/perfil.html';
+});
+
+botaoMenuMobile.addEventListener('click', toggleMobileDrawer);
+fundoGaveta.addEventListener('click', closeMobileDrawer);
+botaoPerfilMobile.addEventListener('click', () => {
+  window.location.href = '/perfil.html';
+});
+
+document.addEventListener('keydown', (event) => {
+  if (event.key === 'Escape') closeMobileDrawer();
+});
+
+window.matchMedia('(min-width: 1101px)').addEventListener('change', (event) => {
+  if (event.matches) closeMobileDrawer();
 });
 
 perfilUsuarioBarraLateral.addEventListener('click', () => {
@@ -1707,11 +1755,12 @@ botaoAdicionarCategoria.addEventListener('click', async () => {
     return;
   }
 
+  setButtonLoading(botaoAdicionarCategoria, true, 'Adicionando...');
   try {
     const data = await apiFetch('/api/categories', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email: emailUsuarioAtual, name }),
+      body: JSON.stringify({ name }),
     });
     cacheCategorias = data.categories;
     renderCategoryOptions(cacheCategorias);
@@ -1720,6 +1769,8 @@ botaoAdicionarCategoria.addEventListener('click', async () => {
     showTransactionMessage('Categoria adicionada com sucesso.', 'success');
   } catch (error) {
     showTransactionMessage(error.message, 'error');
+  } finally {
+    setButtonLoading(botaoAdicionarCategoria, false);
   }
 });
 
@@ -1824,13 +1875,19 @@ formularioLogin.addEventListener('submit', async (event) => {
   }
 });
 
-botaoLogout.addEventListener('click', () => {
+botaoLogout.addEventListener('click', async () => {
+  try {
+    await apiFetch('/api/logout', { method: 'POST' });
+  } catch (error) {
+    // sessão já pode estar expirada no servidor; segue com a limpeza local
+  }
   emailUsuarioAtual = '';
   nomeUsuarioAtual = '';
   emailVerificacaoPendente = '';
   cacheCategorias = [];
   atualizarPerfilBarraLateral({ name: 'Usuario', email: '', foto: '/avatar-default.svg' });
   hideWelcomeOverlay();
+  closeMobileDrawer();
   clearSession();
   showScreen(telaAutenticacao);
   showLogin();
@@ -1839,12 +1896,12 @@ botaoLogout.addEventListener('click', () => {
 formularioMovimentacao.addEventListener('submit', async (event) => {
   event.preventDefault();
   const category = categoriaMovimentacao.value === '__custom__' ? campoCategoriaPersonalizada.value.trim() : categoriaMovimentacao.value;
+  setButtonLoading(botaoSalvarMovimentacao, true, 'Salvando...');
   try {
     const data = await apiFetch(idMovimentacaoEdicao ? `/api/transactions/${idMovimentacaoEdicao}` : '/api/transactions', {
       method: idMovimentacaoEdicao ? 'PUT' : 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        email: emailUsuarioAtual,
         type: document.getElementById('tipo-movimentacao').value,
         amount: Number(document.getElementById('valor-movimentacao').value),
         date: document.getElementById('data-movimentacao').value,
@@ -1854,9 +1911,11 @@ formularioMovimentacao.addEventListener('submit', async (event) => {
     });
     resetTransactionForm();
     showTransactionMessage(data.message, 'success');
-    await loadAllData({ clearMessages: false });
+    await reloadAfterTransactionChange();
   } catch (error) {
     showTransactionMessage(error.message, 'error');
+  } finally {
+    setButtonLoading(botaoSalvarMovimentacao, false);
   }
 });
 
@@ -1880,12 +1939,12 @@ botaoLimparFiltros.addEventListener('click', async () => {
 
 formularioMeta.addEventListener('submit', async (event) => {
   event.preventDefault();
+  setButtonLoading(botaoSalvarMeta, true, 'Salvando...');
   try {
     const data = await apiFetch(idMetaEdicao ? `/api/goals/${idMetaEdicao}` : '/api/goals', {
       method: idMetaEdicao ? 'PUT' : 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        email: emailUsuarioAtual,
         name: document.getElementById('nome-meta').value.trim(),
         targetAmount: Number(document.getElementById('valor-alvo-meta').value),
         currentAmount: Number(document.getElementById('valor-atual-meta').value || 0),
@@ -1898,6 +1957,8 @@ formularioMeta.addEventListener('submit', async (event) => {
     await loadGoals();
   } catch (error) {
     showGoalMessage(error.message, 'error');
+  } finally {
+    setButtonLoading(botaoSalvarMeta, false);
   }
 });
 
@@ -1942,12 +2003,12 @@ filtroMes.addEventListener('change', () => {
 
 formularioInvestimento.addEventListener('submit', async (event) => {
   event.preventDefault();
+  setButtonLoading(botaoSalvarInvestimento, true, 'Salvando...');
   try {
     const data = await apiFetch(idInvestimentoEdicao ? `/api/investments/${idInvestimentoEdicao}` : '/api/investments', {
       method: idInvestimentoEdicao ? 'PUT' : 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        email: emailUsuarioAtual,
         monthlyAmount: Number(campoValorInvestimento.value),
         riskProfile: perfilRiscoSelecionado,
         years: anosInvestimentoSelecionados,
@@ -1955,9 +2016,11 @@ formularioInvestimento.addEventListener('submit', async (event) => {
     });
     resetInvestmentForm();
     showInvestmentMessage(data.message, 'success');
-    await loadAllData({ clearMessages: false });
+    await reloadAfterInvestmentChange();
   } catch (error) {
     showInvestmentMessage(error.message, 'error');
+  } finally {
+    setButtonLoading(botaoSalvarInvestimento, false);
   }
 });
 
@@ -2100,7 +2163,7 @@ formularioRelatorio.addEventListener('submit', async (event) => {
     const data = await apiFetch('/api/reports/generate', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email: emailUsuarioAtual, month: campoMesRelatorio.value }),
+      body: JSON.stringify({ month: campoMesRelatorio.value }),
     });
     showReportMessage(data.message, 'success');
     mesRelatorioSelecionado = campoMesRelatorio.value;
@@ -2112,11 +2175,7 @@ formularioRelatorio.addEventListener('submit', async (event) => {
 
 botaoExportarRelatorio.addEventListener('click', () => {
   if (!emailUsuarioAtual) return;
-  window.open(
-    `/api/reports/export?email=${encodeURIComponent(emailUsuarioAtual)}&month=${encodeURIComponent(campoMesRelatorio.value)}`,
-    '_blank',
-    'noopener'
-  );
+  window.open(`/api/reports/export?month=${encodeURIComponent(campoMesRelatorio.value)}`, '_blank', 'noopener');
 });
 
 botaoExportarRelatorioPdf.addEventListener('click', async () => {

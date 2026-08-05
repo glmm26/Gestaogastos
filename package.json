@@ -3,10 +3,14 @@
   "version": "1.0.0",
   "description": "Aplicação inicial para Gestão de Gastos com splash e login OTP",
   "main": "server.js",
+  "engines": {
+    "node": ">=20.0.0"
+  },
   "scripts": {
     "start": "node server.js"
   },
   "dependencies": {
+    "better-sqlite3": "^13.0.2",
     "puppeteer": "^24.40.0"
   }
 }

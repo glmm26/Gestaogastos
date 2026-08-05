@@ -57,8 +57,12 @@ function setButtonLoading(button, isLoading, loadingText) {
 }
 
 async function apiFetch(url, options = {}) {
-  const response = await fetch(url, options);
+  const response = await fetch(url, { credentials: 'same-origin', ...options });
   const data = await response.json().catch(() => ({}));
+  if (response.status === 401) {
+    window.localStorage.removeItem(SESSION_STORAGE_KEY);
+    window.location.href = '/';
+  }
   if (!response.ok) {
     throw new Error(data.message || 'Erro inesperado.');
   }
@@ -132,7 +136,6 @@ function canvasToBlob(canvas, type = 'image/png', quality = 0.92) {
 async function uploadProfilePhoto(file) {
   const session = readSession();
   const formData = new FormData();
-  formData.append('email', session.email);
   formData.append('photo', file, file.name || 'perfil.png');
 
   setButtonLoading(changePhotoButton, true, 'Enviando...');
@@ -161,7 +164,7 @@ async function loadProfile() {
     return;
   }
 
-  const data = await apiFetch(`/perfil?email=${encodeURIComponent(session.email)}`);
+  const data = await apiFetch('/perfil');
   profileNameInput.value = data.name || '';
   profileEmailInput.value = data.email || session.email;
   updateProfilePhoto(data.foto);
@@ -185,7 +188,7 @@ profileForm.addEventListener('submit', async (event) => {
     const data = await apiFetch('/perfil', {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email: session.email, name }),
+      body: JSON.stringify({ name }),
     });
     saveSession({ ...session, ...data.user, foto: data.user?.foto || session.foto });
     showMessage(profileMessage, data.message, 'success');
@@ -198,7 +201,6 @@ profileForm.addEventListener('submit', async (event) => {
 
 passwordForm.addEventListener('submit', async (event) => {
   event.preventDefault();
-  const session = readSession();
   const currentPassword = currentPasswordInput.value;
   const newPassword = newPasswordInput.value;
   const confirmPassword = confirmNewPasswordInput.value;
@@ -219,7 +221,6 @@ passwordForm.addEventListener('submit', async (event) => {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        email: session.email,
         currentPassword,
         newPassword,
         confirmPassword,
@@ -299,8 +300,6 @@ removePhotoButton.addEventListener('click', async () => {
   try {
     const data = await apiFetch('/perfil/foto', {
       method: 'DELETE',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email: session.email }),
     });
     updateProfilePhoto(data.foto);
     saveSession({ ...session, foto: data.foto });

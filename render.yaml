@@ -1,0 +1,20 @@
+services:
+  - type: web
+    name: gestaogastos
+    runtime: node
+    plan: free
+    buildCommand: npm install
+    startCommand: node server.js
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: EMAIL_PROVIDER
+        value: api
+      - key: EMAIL_API_URL
+        value: https://api.brevo.com/v3/smtp/email
+      - key: EMAIL_API_KEY
+        sync: false
+      - key: EMAIL_API_SENDER_EMAIL
+        sync: false
+      - key: EMAIL_API_SENDER_NAME
+        value: Gestao de Gastos

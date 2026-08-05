@@ -3,6 +3,9 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Gestão de Gastos: controle suas movimentações, metas e investimentos em um painel financeiro pessoal." />
+    <meta name="theme-color" content="#08111f" />
+    <meta name="robots" content="noindex, nofollow" />
     <title>Gestão de Gastos</title>
     <link rel="stylesheet" href="styles.css" />
   </head>
@@ -96,8 +99,18 @@
     </main>
 
     <main id="tela-home" class="tela-home oculto">
+      <header class="barra-topo-mobile">
+        <button id="botao-menu-mobile" class="botao-icone" type="button" aria-label="Abrir menu" aria-expanded="false" aria-controls="barra-lateral-navegacao">
+          <span class="icone-hamburguer"></span>
+        </button>
+        <span class="marca-topo-mobile">Gestão de Gastos</span>
+        <button id="botao-perfil-mobile" class="botao-icone botao-avatar-mobile" type="button" aria-label="Abrir perfil do usuário">
+          <img id="foto-usuario-mobile" src="/avatar-default.svg" alt="" />
+        </button>
+      </header>
+      <div id="fundo-gaveta" class="fundo-gaveta"></div>
       <div class="estrutura-aplicacao">
-        <aside class="barra-lateral">
+        <aside id="barra-lateral-navegacao" class="barra-lateral">
           <div class="bloco-marca">
             <p class="eyebrow">PAINEL FINANCEIRO</p>
             <h2>Gestão de Gastos</h2>
@@ -651,8 +664,8 @@
     </main>
 
     <div id="modal-aviso-imposto" class="overlay-modal oculto">
-      <section class="cartao-modal">
-        <h2>Aviso importante</h2>
+      <section class="cartao-modal" role="dialog" aria-modal="true" aria-labelledby="titulo-aviso-imposto">
+        <h2 id="titulo-aviso-imposto">Aviso importante</h2>
         <p>Este simulador de imposto de renda é apenas uma estimativa e não substitui o cálculo oficial da Receita Federal.</p>
         <label class="linha-checkbox" for="ocultar-aviso-imposto">
           <input id="ocultar-aviso-imposto" type="checkbox" />
@@ -666,8 +679,8 @@
     </div>
 
     <div id="modal-dicas-imposto" class="overlay-modal oculto">
-      <section class="cartao-modal">
-        <h2>Como reduzir meu imposto?</h2>
+      <section class="cartao-modal" role="dialog" aria-modal="true" aria-labelledby="titulo-dicas-imposto">
+        <h2 id="titulo-dicas-imposto">Como reduzir meu imposto?</h2>
         <p>Algumas atitudes simples podem ajudar você a pagar menos dentro das regras.</p>
         <ul class="lista-insights">
           <li>Declarar despesas médicas quando tiver comprovantes válidos.</li>
@@ -682,7 +695,7 @@
     </div>
 
     <div id="modal-progresso-meta" class="overlay-modal oculto">
-      <section class="cartao-modal modal-progresso-meta-card">
+      <section class="cartao-modal modal-progresso-meta-card" role="dialog" aria-modal="true" aria-labelledby="titulo-modal-progresso-meta">
         <p class="eyebrow">ATUALIZAR META</p>
         <h2 id="titulo-modal-progresso-meta">Adicionar valor</h2>
         <p id="texto-modal-progresso-meta" class="subtitulo">Informe quanto deseja adicionar ao progresso da meta.</p>
@@ -702,7 +715,7 @@
     </div>
 
     <div id="modal-confirmacao-acao" class="overlay-modal oculto">
-      <section class="cartao-modal modal-confirmacao-acao-card">
+      <section class="cartao-modal modal-confirmacao-acao-card" role="dialog" aria-modal="true" aria-labelledby="titulo-confirmacao-acao">
         <p id="sobretitulo-confirmacao-acao" class="eyebrow">CONFIRMAR AÇÃO</p>
         <h2 id="titulo-confirmacao-acao">Tem certeza?</h2>
         <p id="texto-confirmacao-acao" class="subtitulo">Revise a ação antes de continuar.</p>
@@ -714,7 +727,7 @@
     </div>
 
     <div id="overlay-boas-vindas" class="overlay-modal overlay-boas-vindas oculto">
-      <section class="cartao-modal cartao-boas-vindas">
+      <section class="cartao-modal cartao-boas-vindas" role="dialog" aria-modal="true" aria-labelledby="titulo-boas-vindas">
         <p class="eyebrow">BEM-VINDO DE VOLTA</p>
         <h2 id="titulo-boas-vindas">Bem-vindo</h2>
         <p id="subtitulo-boas-vindas" class="subtitulo">Seu resumo rápido já está pronto.</p>
@@ -732,7 +745,7 @@
       </section>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
     <script src="app.js"></script>
   </body>
 </html>
